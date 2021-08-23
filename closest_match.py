@@ -132,8 +132,9 @@ def closest_match_ML(eos, N):
            
     match = parameter_combos[np.argmin(CSs)] # parameter combo associated with minimum chi-square result
 
-    pl.plot(target_masses, target_lambdas, label=str(target)) 
-    pl.plot(trial_m_list[np.argmin(CSs)], trial_l_list[np.argmin(CSs)], label=str(match))
+    pl.plot(target_masses, target_lambdas, label="target:"+str(target)) 
+    pl.plot(trial_m_list[np.argmin(CSs)], trial_l_list[np.argmin(CSs)], label="match:"+str(match))
+
     pl.legend()
     pl.xlabel("Masses")
     pl.ylabel("Lambdas")

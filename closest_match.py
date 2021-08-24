@@ -68,9 +68,9 @@ def closest_match_ML(eos, N):
     target = [p0,g1,g2,g3]
     
     # Get ranges for each parameter
-    p0_0 = p0 - 1
-    p0_f = p0 + 1
-    p0_space = np.arange(p0_0,p0_f+.001,.001)
+    p0_0 = p0 - .1
+    p0_f = p0 + .1
+    p0_space = np.arange(p0_0,p0_f+.01,.01)
 
     g1_0 = g1 - 1
     g1_f = g1 + 1
@@ -101,37 +101,36 @@ def closest_match_ML(eos, N):
     # Get trial eos lambdas
     parameter_combos = []
     CSs = np.array([])
-    test_counter = 1
-    trial_m_list = np.array([])
-    trial_l_list = np.array([])
+    trial_m_list = []
+    trial_l_list = []
     for p in p0_space:
         for g1 in g1_space:
             for g2 in g2_space:
                 for g3 in g3_space:
+                    print(p)
 
                     parameter_combos.append([p,g1,g2,g3]) # record of all combinations used
 
                     try:
                         s, min_mass, max_mass = modsel.getEoSInterpFrom_p_gs(p,g1,g2,g3,N=100)
+                        masses = np.linspace(min_mass,max_mass,N)
+                        trial_m_list.append(masses)
+
+                        Lambdas = s(masses)
+                        trial_lambdas = (Lambdas / lal.G_SI) * ((masses * lal.MRSUN_SI) ** 5)
+                        trial_l_list.append(trial_lambdas)
+
+                        # chi-square operation
+                        CS = np.sum((target_lambdas - trial_lambdas) ** 2)
+                        CSs = np.append(CSs,CS)
+
                     except ValueError:
                         continue
                     except RuntimeError:
                         continue
-                    masses = np.linspace(min_mass,max_mass,N)
-                    trial_m_list = np.append(trial_m_list, masses)
-                    Lambdas = s(masses)
-                    trial_lambdas = (Lambdas / lal.G_SI) * ((masses * lal.MRSUN_SI) ** 5)
-                    trial_l_list = np.append(trial_l_list,trial_lambdas)
-
-                    print(test_counter)
-                    test_counter += 1
-                    
-                    # chi-square operation
-                    CS = np.sum((target_lambdas - trial_lambdas) ** 2)
-                    CSs = np.append(CSs,CS)
            
     match = parameter_combos[np.argmin(CSs)] # parameter combo associated with minimum chi-square result
-
+    
     pl.plot(target_masses, target_lambdas, label="target:"+str(target)) 
     pl.plot(trial_m_list[np.argmin(CSs)], trial_l_list[np.argmin(CSs)], label="match:"+str(match))
 

@@ -63,6 +63,8 @@ r_eos_vals = {"SLY":[33.384,3.005,2.988,2.851]}
 
 N = 100
 
+# Essentially meant to obtain better p,g1,g2,g3 values
+
 for eos in tot_list:
 
     log_p0_SI, g1, g2, g3 = t_eos_vals[eos]

@@ -18,7 +18,7 @@ GWX_list = ["BHF_BBB2","KDE0V","KDE0V1","SKOP","HQC18","SLY2","SLY230A",
             "SKMP","RS","SK255","SLY9","APR4_EPP","SKI2","SKI4","SKI6",
             "SK272","SKI3","SKI5","MPA1","MS1B_PP","MS1_PP"]
 
-tar_list = ["BBB2","AP4","MPA1","MS1b","MS1"]
+tar_list = ["BBB2","AP4","MPA1","MS1B","MS1"]
 
 ref_eos = "SLY"
 
@@ -40,7 +40,7 @@ t_eos_vals = {"PAL6":[33.380,2.227,2.189,2.159]
              ,"MPA1":[33.495,3.446,3.572,2.887]
              ,"MS1":[33.858,3.224,3.033,1.325]
              ,"MS2":[33.605,2.447,2.184,1.855]
-             ,"MS1b":[33.855,3.456,3.011,1.425]
+             ,"MS1B":[33.855,3.456,3.011,1.425]
              ,"PS":[33.671,2.216,1.640,2.365]
              ,"GS1a":[33.504,2.350,1.267,2.421]
              ,"GS2a":[33.642,2.519,1.571,2.314]
@@ -61,27 +61,33 @@ t_eos_vals = {"PAL6":[33.380,2.227,2.189,2.159]
 
 r_eos_vals = {"SLY":[33.384,3.005,2.988,2.851]}
 
+
+
 def p_gs_bfactor():
 
-    # Obtains bayes factor of each target eos using p,g1,g2,g3 values
+    # Gets side by side bayes factor of each target eos using both
+    # lal models and p,g1,g2,g3 values
 
     r_log_p0_SI, r_g1, r_g2, r_g3 = r_eos_vals[ref_eos]
 
     bayes_factors = []
+    lal_bayes_factors = []
     for eos in tar_list:
 
         log_p0_SI, g1, g2, g3 = t_eos_vals[eos]
 
         bayes_factor = modsel.computeEvidenceRatio(EoS1=[log_p0_SI,g1,g2,g3], EoS2=[r_log_p0_SI,r_g1,r_g2,r_g3])
         bayes_factors.append(bayes_factor)
-    
-    # couldn't vstack list of strings apparently
-    #output = np.vstack((np.array(tar_list),np.array(bayes_factors))).T
-    #outputfile = "results/bayes_factors_p_gs_SLY.txt"
-    #np.savetxt(outputfile, output, fmt="%f\t%f")
+   
+        lal_bayes_factor = modsel.computeEvidenceRatio(EoS1=eos, EoS2="SLY")
+        lal_bayes_factors.append(lal_bayes_factor)
+
+    output = np.vstack((lal_bayes_factors,bayes_factors)).T
+    outputfile = "results/bayes_factors_p_gs_SLY.txt"
+    np.savetxt(outputfile, output, fmt="%f\t%f")
 
     #dictionary = {"bayes factors": bayes_factors}
-    dictionary = {str(tar_list): bayes_factors}
+    #dictionary = {str(tar_list): bayes_factors}
 
-    with open("results/bayes_factors_p_gs_SLY.json", "w") as f:
-        json.dump(dictionary, f, indent=2, sort_keys=True)
+    #with open("results/bayes_factors_p_gs_SLY.json", "w") as f:
+        #json.dump(dictionary, f, indent=2, sort_keys=True)

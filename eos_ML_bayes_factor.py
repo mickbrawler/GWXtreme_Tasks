@@ -51,3 +51,4 @@ def mass_lambda_bfactor(N):
 
     with open("results/bayes_factors_ML_SLY.json", "w") as f:
         json.dump(dictionary, f, indent=2, sort_keys=True)
+

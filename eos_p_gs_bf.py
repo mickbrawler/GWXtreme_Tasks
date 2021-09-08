@@ -7,8 +7,6 @@ import pylab as pl
 import os
 import json
 
-modsel = ems.Model_selection(posteriorFile="posterior_samples/posterior_samples_narrow_spin_prior.dat")
-
 tot_list = ["PAL6","AP1","AP2","AP3","AP4","FPS","WFF1","WFF2","WFF3"
             ,"BBB2","BPAL12","ENG","MPA1","MS1","MS2","MS1b","PS","GS1a"
             ,"GS2a","BGN1H1","GNH3","H1","H2","H3","H4","H5","H6a","H7"
@@ -61,9 +59,9 @@ t_eos_vals = {"PAL6":[33.380,2.227,2.189,2.159]
 
 r_eos_vals = {"SLY":[33.384,3.005,2.988,2.851]}
 
-
-
 def p_gs_bfactor():
+
+    modsel = ems.Model_selection(posteriorFile="posterior_samples/posterior_samples_narrow_spin_prior.dat")
 
     # Gets side by side bayes factor of each target eos using both
     # lal models and p,g1,g2,g3 values
@@ -76,7 +74,7 @@ def p_gs_bfactor():
 
         log_p0_SI, g1, g2, g3 = t_eos_vals[eos]
 
-        bayes_factor = modsel.computeEvidenceRatio(EoS1=[log_p0_SI,g1,g2,g3], EoS2=[r_log_p0_SI,r_g1,r_g2,r_g3])
+        bayes_factor = modsel.computeEvidenceRatio(EoS1=[log_p0_SI,g1,g2,g3], EoS2="SLY")
         bayes_factors.append(bayes_factor)
    
         lal_bayes_factor = modsel.computeEvidenceRatio(EoS1=eos, EoS2="SLY")
@@ -91,3 +89,29 @@ def p_gs_bfactor():
 
     #with open("results/bayes_factors_p_gs_SLY.json", "w") as f:
         #json.dump(dictionary, f, indent=2, sort_keys=True)
+
+def p_gs_j_bfactor():
+
+    stackobj = ems.Stacking(["posterior_samples/posterior_samples_narrow_spin_prior.dat","posterior_samples/posterior_samples_narrow_spin_prior.dat"], labels=["first event","second event"])
+
+    # Gets side by side joint bayes factor of each target eos using both
+    # lal models and p,g1,g2,g3 values
+
+    r_log_p0_SI, r_g1, r_g2, r_g3 = r_eos_vals[ref_eos]
+
+    j_bayes_factors = []
+    lal_j_bayes_factors = []
+    for eos in tar_list:
+
+        log_p0_SI, g1, g2, g3 = t_eos_vals[eos]
+        
+        joint_bf = stackobj.stack_events([log_p0_SI,g1,g2,g3],"SLY")
+
+        j_bayes_factors.append(joint_bf)
+   
+        lal_j_bayes_factor = stackobj.stack_events(eos,"SLY") 
+        lal_j_bayes_factors.append(lal_j_bayes_factor)
+
+    output = np.vstack((lal_j_bayes_factors,j_bayes_factors)).T
+    outputfile = "results/joint_bayes_factors_p_gs_SLY.txt"
+    np.savetxt(outputfile, output, fmt="%f\t%f")

@@ -33,7 +33,7 @@ def mass_lambda_bfactor(N):
         np.savetxt(outputfile, output, fmt="%f\t%f")
     
     min_mass = modsel.getMinMass(refer_eos)
-    s, _, _, max_mass = modsel.getEoSInterp(refer_eos, m_min=min_mass, N=100)
+    s, _, _, max_mass = modsel.getEoSInterp(refer_eos, m_min=min_mass, N=1000)
     masses = np.linspace(min_mass,max_mass,N)
     Lambdas = s(masses)
     lambdas = (Lambdas / lal.G_SI) * ((masses * lal.MRSUN_SI) ** 5)

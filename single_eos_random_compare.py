@@ -69,7 +69,7 @@ def get_eos_parameters(transitions, N):
                 trial_Lambdas = s(trial_masses)
                 trial_lambdas = (Lambdas / lal.G_SI) * ((trial_masses * lal.MRSUN_SI) ** 5)
 
-                r_val = np.log(np.sum(target_lambdas - trial_lambdas) ** 2)
+                r_val = np.sum((target_lambdas - trial_lambdas) ** 2) # Check if this is the right way. Might be square then sum
 
             except RuntimeError:
 
@@ -83,7 +83,7 @@ def get_eos_parameters(transitions, N):
 
             loop_tracker += 1
 
-            print([p_choice,g1_choice,g2_choice,g3_choice])
+            print([p_choice,g1_choice,g2_choice,g3_choice],r_val)
 
             if r_val < R_val: # Since the smaller the R-Squared Value, the better the parameters
 

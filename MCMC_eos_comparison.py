@@ -7,12 +7,20 @@ import os
 import json
 
 # list of eos GWXtreme can work with off the cuff
-#GWX_list = ["BHF_BBB2","KDE0V","KDE0V1","SKOP","HQC18","SLY2","SLY230A",
-#            "SKMP","RS","SK255","SLY9","APR4_EPP","SKI2","SKI4","SKI6",
-#            "SK272","SKI3","SKI5","MPA1","MS1B_PP","MS1_PP","BBB2","AP4",
-#            "MPA1","MS1b","MS1","SLY"]
+GWX_list = ["BHF_BBB2","KDE0V","KDE0V1","SKOP","HQC18","SLY2","SLY230A",
+            "SKMP","RS","SK255","SLY9","APR4_EPP","SKI2","SKI4","SKI6",
+            "SK272","SKI3","SKI5","MPA1","MS1B_PP","MS1_PP","BBB2","AP4",
+            "MPA1","MS1B","MS1","SLY"]
 
-GWX_list = ["SLY"]
+#GWX_list = ['ALF1','ALF2','ALF3','ALF4','AP1','AP2','AP3','AP4','APR4_EPP',
+#            'BBB2','BGN1H1','BPAL12','BSK19','BSK20','BSK21','ENG','FPS','GNH3',
+#            'GS1','GS2','H1','H2','H3','H4','H5','H6','H7','MPA1','MS1B',
+#            'MS1B_PP','MS1_PP','MS1','MS2','PAL6','PCL2','PS','QMC700','SLY4',
+#            'SLY','SQM1','SQM2','SQM3','WFF1','WFF2','WFF3','APR','BHF_BBB2',
+#            'KDE0V','KDE0V1','RS','SK255','SK272','SKA','SKB','SKI2','SKI3',
+#            'SKI4','SKI5','SKI6','SKMP','SKOP','SLY2','SLY230A','SLY9','HQC18']
+
+#GWX_list = ["APR4_EPP"]
 
 # list of eos paper found p0,g1,g2,g3 values for
 pap_list = ["PAL6","AP1","AP2","AP3","AP4","FPS","WFF1","WFF2","WFF3"
@@ -37,10 +45,10 @@ p_eos_val = {"PAL6":[33.380,2.227,2.189,2.159]
              ,"MPA1":[33.495,3.446,3.572,2.887]
              ,"MS1":[33.858,3.224,3.033,1.325]
              ,"MS2":[33.605,2.447,2.184,1.855]
-             ,"MS1b":[33.855,3.456,3.011,1.425]
+             ,"MS1B":[33.855,3.456,3.011,1.425]
              ,"PS":[33.671,2.216,1.640,2.365]
-             ,"GS1a":[33.504,2.350,1.267,2.421]
-             ,"GS2a":[33.642,2.519,1.571,2.314]
+             ,"GS1A":[33.504,2.350,1.267,2.421]
+             ,"GS2A":[33.642,2.519,1.571,2.314]
              ,"BGN1H1":[33.623,3.258,1.472,2.464]
              ,"GNH3":[33.648,2.664,2.194,2.304]
              ,"H1":[33.564,2.595,1.845,1.897]
@@ -48,7 +56,7 @@ p_eos_val = {"PAL6":[33.380,2.227,2.189,2.159]
              ,"H3":[33.646,2.787,1.951,1.901]
              ,"H4":[33.669,2.909,2.246,2.144 ]
              ,"H5":[33.609,2.793,1.974,1.915]
-             ,"H6a":[33.593,2.637,2.121,2.064]
+             ,"H6A":[33.593,2.637,2.121,2.064]
              ,"H7":[33.559,2.621,2.048,2.006 ]
              ,"PCL2":[33.507,2.554,1.880,1.977]
              ,"ALF1":[33.055,2.013,3.389,2.033]
@@ -78,6 +86,7 @@ def likelihood(p0,g1,g2,g3,min_mass,max_mass,N,target_lambdas):
     OUTPUT: Returns the value of the r-squared.
     """
 
+    print([p0,g1,g2,g3])
     s, min_mass, max_mass = modsel.getEoSInterpFrom_piecewise(p0,g1,g2,g3)
     trial_masses = np.linspace(min_mass,max_mass,N)
     trial_Lambdas = s(trial_masses)
@@ -86,7 +95,8 @@ def likelihood(p0,g1,g2,g3,min_mass,max_mass,N,target_lambdas):
            
     return(r_val)
 
-def get_eos_parameter_dist(transitions,N,filename):
+def get_eos_parameter_dist(transitions,N,filename,p0_incr=.4575,g1_incr=.927,
+                           g2_incr=1.1595,g3_incr=.9285):
     """
     METHOD: Compares the trial_lambdas resulting from different combinations of
     parameters with the target_lambdas for a certain eos. This is done for
@@ -108,14 +118,17 @@ def get_eos_parameter_dist(transitions,N,filename):
     eos_post_r2 = []
 
     for eos in GWX_list: # we want to find the p0,g1,g2,g3 values to each GWXtreme eos
-        
+
+        print(eos)
+
         if eos in pap_list: # if we have the "old" parameters for an eos, use them, otherwise use presets
 
             log_p0_SI,g1,g2,g3 = p_eos_val[eos]
 
         else:
 
-            log_p0_SI,g1,g2,g3 = 33.000,2.500,2.500,2.500
+            #log_p0_SI,g1,g2,g3 = 33.000,2.500,2.500,2.500
+            log_p0_SI,g1,g2,g3 = 33.4305,3.143,2.6315,2.7315 # .4575 .927 1.1595 .9285
 
         eos_pointer = lalsim.SimNeutronStarEOSByName(eos)
         fam_pointer = lalsim.CreateSimNeutronStarFamily(eos_pointer)
@@ -132,16 +145,16 @@ def get_eos_parameter_dist(transitions,N,filename):
 
         while no_errors == False:
 
-            p0_choice1 = (log_p0_SI + np.random.random()) # increment is .5 so .5 * 2 is 1
-            g1_choice1 = (g1 + (3 * np.random.random())) # increment is 1.5
-            g2_choice1 = (g2 + (3 * np.random.random()))
-            g3_choice1 = (g3 + (3 * np.random.random()))
+            p0_choice1 = ((log_p0_SI - p0_incr) + ((2 * p0_incr) * np.random.random())) # increment is .5 so .5 * 2 is 1
+            g1_choice1 = ((g1 - g1_incr) + ((2 * g1_incr) * np.random.random())) # increment is 1.5
+            g2_choice1 = ((g2 - g2_incr) + ((2 * g2_incr) * np.random.random()))
+            g3_choice1 = ((g3 - g3_incr) + ((2 * g3_incr) * np.random.random()))
 
             try: 
 
                 L1 = likelihood(p0_choice1,g1_choice1,g2_choice1,g3_choice1,min_mass,max_mass,N,target_lambdas)
+
                 no_errors = True # if L1 doesn't give an error, the while loop will end
-                print("worked1")
 
             # Can run into ValueError from the use of lal's piecewise function (I think)
             except ValueError: continue
@@ -155,14 +168,13 @@ def get_eos_parameter_dist(transitions,N,filename):
         
         while len(post_p0) <= (transitions-1):
 
-            p0_choice2 = (log_p0_SI + np.random.random()) # increment is .5 so .5 * 2 is 1
-            g1_choice2 = (g1 + (3 * np.random.random()))
-            g2_choice2 = (g2 + (3 * np.random.random()))
-            g3_choice2 = (g3 + (3 * np.random.random()))
+            p0_choice2 = ((log_p0_SI - p0_incr) + ((2 * p0_incr) * np.random.random())) # increment is .5 so .5 * 2 is 1
+            g1_choice2 = ((g1 - g1_incr) + ((2 * g1_incr) * np.random.random())) # increment is 1.5
+            g2_choice2 = ((g2 - g2_incr) + ((2 * g2_incr) * np.random.random()))
+            g3_choice2 = ((g3 - g3_incr) + ((2 * g3_incr) * np.random.random()))
 
             try: 
                 L2 = likelihood(p0_choice2,g1_choice2,g2_choice2,g3_choice2,min_mass,max_mass,N,target_lambdas) # if L2 gives an error it'll keep trying
-                print("worked2")
 
             except ValueError: continue
             except RuntimeError: continue

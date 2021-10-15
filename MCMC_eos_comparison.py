@@ -206,6 +206,6 @@ def get_eos_parameter_dist(transitions,N,filename,p0_incr=.4575,g1_incr=.927,
         eos_post_r2.append(post_r2)
 
     data = {"p0" : eos_post_p0, "g1" : eos_post_g1, "g2" : eos_post_g2, "g3" : eos_post_g3, "r2" : eos_post_r2}
-    outputfile = "results/{}.json".format(filename)
+    outputfile = filename
     with open(outputfile, "w") as f:
         json.dump(data, f, indent=2, sort_keys=True)

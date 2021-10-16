@@ -152,6 +152,13 @@ def plotter(eosname,N):
         pap_masses, pap_Lambdas = plot_from_piecewise(p1,g1,g2,g3,N)
         pl.plot(pap_masses,pap_Lambdas,label="Paper_piecewise")
 
+        lal_masses, lal_Lambdas = plot_from_lal(eosname,N)
+        pl.plot(lal_masses,lal_Lambdas,label="lal")
+
+        p1,g1,g2,g3 = m_eos_val[eosname]
+        pw_masses, pw_Lambdas = plot_from_piecewise(p1,g1,g2,g3,N)
+        pl.plot(pw_masses,pw_Lambdas,label="MCMC_piecewise")
+
     else:
 
         lal_masses, lal_Lambdas = plot_from_lal(eosname,N)

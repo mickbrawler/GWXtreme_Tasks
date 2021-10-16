@@ -1,8 +1,8 @@
-from GWXtreme import eos_model_selection as ems
 import lalsimulation as lalsim
 import lal
 import numpy as np
 import pylab as pl
+import json
 
 # list of eos GWXtreme can work with off the cuff
 GWX_list = ["BHF_BBB2","KDE0V","KDE0V1","SKOP","HQC18","SLY2","SLY230A",
@@ -38,6 +38,9 @@ g_eos_val = {"BHF_BBB2":[33.309,3.033,3.237,2.904]
             ,"MS1":[33.918,3.252,3.332,1.209]
             ,"SLY":[33.417,3.023,3.868,3.753]}
 
+with open("results/MCMC_results_dictionary.json","r") as f:
+    m_eos_val = json.load(f)
+
 # list of eos paper found p0,g1,g2,g3 values for
 pap_list = ["PAL6","AP1","AP2","AP3","AP4","FPS","WFF1","WFF2","WFF3"
             ,"BBB2","BPAL12","ENG","MPA1","MS1","MS2","MS1b","PS","GS1a"
@@ -46,8 +49,7 @@ pap_list = ["PAL6","AP1","AP2","AP3","AP4","FPS","WFF1","WFF2","WFF3"
 
 # https://arxiv.org/pdf/0812.2163.pdf
 # "Constraints on a phenomenologically parameterized neutron-star equation of state"
-# As feared this is useless since the rounded values cause errors
-uselessval = {"PAL6":[33.380,2.227,2.189,2.159]
+p_eos_val = {"PAL6":[33.380,2.227,2.189,2.159]
              ,"AP1":[32.943,2.442,3.256,2.908]
              ,"AP2":[33.126,2.643,3.014,2.945]
              ,"AP3":[33.392,3.166,3.573,3.281]
@@ -141,23 +143,22 @@ def plot_from_lal(eosname,N):
     return(masses,Lambdas)
 
 def plotter(eosname,N):
-    
+
     print(eosname)
 
     if eosname in pap_list:
+
         p1,g1,g2,g3 = p_eos_val[eosname]
         pap_masses, pap_Lambdas = plot_from_piecewise(p1,g1,g2,g3,N)
-        print([len(pap_masses),len(pap_Lambdas)])
         pl.plot(pap_masses,pap_Lambdas,label="Paper_piecewise")
 
     else:
+
         lal_masses, lal_Lambdas = plot_from_lal(eosname,N)
-        print([len(lal_masses),len(lal_Lambdas)])
         pl.plot(lal_masses,lal_Lambdas,label="lal")
 
-        p1,g1,g2,g3 = g_eos_val[eosname]
+        p1,g1,g2,g3 = m_eos_val[eosname]
         pw_masses, pw_Lambdas = plot_from_piecewise(p1,g1,g2,g3,N)
-        print([len(pw_masses),len(pw_Lambdas)])
         pl.plot(pw_masses,pw_Lambdas,label="MCMC_piecewise")
 
     pl.legend()

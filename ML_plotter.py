@@ -1,3 +1,4 @@
+from GWXtreme import eos_model_selection as ems
 import lalsimulation as lalsim
 import lal
 import numpy as np
@@ -152,23 +153,61 @@ def plotter(eosname,N):
         pap_masses, pap_Lambdas = plot_from_piecewise(p1,g1,g2,g3,N)
         pl.plot(pap_masses,pap_Lambdas,label="Paper_piecewise")
 
-        lal_masses, lal_Lambdas = plot_from_lal(eosname,N)
-        pl.plot(lal_masses,lal_Lambdas,label="lal")
+    lal_masses, lal_Lambdas = plot_from_lal(eosname,N)
+    pl.plot(lal_masses,lal_Lambdas,label="lal")
 
-        p1,g1,g2,g3 = m_eos_val[eosname]
-        pw_masses, pw_Lambdas = plot_from_piecewise(p1,g1,g2,g3,N)
-        pl.plot(pw_masses,pw_Lambdas,label="MCMC_piecewise")
-
-    else:
-
-        lal_masses, lal_Lambdas = plot_from_lal(eosname,N)
-        pl.plot(lal_masses,lal_Lambdas,label="lal")
-
-        p1,g1,g2,g3 = m_eos_val[eosname]
-        pw_masses, pw_Lambdas = plot_from_piecewise(p1,g1,g2,g3,N)
-        pl.plot(pw_masses,pw_Lambdas,label="MCMC_piecewise")
+    p1,g1,g2,g3 = m_eos_val[eosname]
+    pw_masses, pw_Lambdas = plot_from_piecewise(p1,g1,g2,g3,N)
+    pl.plot(pw_masses,pw_Lambdas,label="MCMC_piecewise")
 
     pl.legend()
     pl.xlabel("Masses")
     pl.ylabel("$\\Lambda$")
-    pl.savefig("mass_lambda_plots/{}_comparison.png".format(eosname))
+    pl.savefig("plots/mass_lambda_plots/{}_comparison.png".format(eosname))
+
+def plotter_runner(N):
+    # Meant to get ML plots for every GWXtreme eos
+
+    for eos in GWX_list:
+
+        plotter(eos,N)
+        pl.clf()
+
+def global_max_dictionary():
+    # Meant to get a dictionary with the best fit parameters for each
+    # GWXtreme eos
+
+    m_eos_val = {}                                                              
+    for eos in GWX_list:
+
+        eos_ind = GWX_list.index(eos)
+        max_ind = np.argmax(data["r2"][eos_ind])
+        max_p1 = data["p0"][eos_ind][max_ind]                                       
+        max_g1 = data["g1"][eos_ind][max_ind]
+        max_g2 = data["g2"][eos_ind][max_ind]                                       
+        max_g3 = data["g3"][eos_ind][max_ind]
+        m_eos_val.update({eos:[max_p1,max_g1,max_g2,max_g3]})
+
+    with open("results/final_working_test.json","r") as f:                          
+        data = json.load(f)
+
+def eos_kde_plot():
+
+    modsel = ems.Model_selection(posteriorFile="posterior_samples/posterior_samples_narrow_spin_prior.dat")
+    
+    for eos in GWX_list:
+
+        print(eos)
+
+        filename = "plots/kde_plots/kde_{}.png".format(eos)
+
+        if eos in pap_list:
+            
+            p_p1,p_g1,p_g2,p_g3 = p_eos_val[eos]
+            m_p1,m_g1,m_g2,m_g3 = m_eos_val[eos]
+            modsel.plot_func([eos,[m_p1,m_g1,m_g2,m_g3],[p_p1,p_g1,p_g2,p_g3]],filename=filename)
+
+        else:
+
+            m_p1,m_g1,m_g2,m_g3 = m_eos_val[eos]
+            modsel.plot_func([eos,[m_p1,m_g1,m_g2,m_g3]],filename=filename)

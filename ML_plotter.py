@@ -171,4 +171,4 @@ def plotter(eosname,N):
     pl.legend()
     pl.xlabel("Masses")
     pl.ylabel("$\\Lambda$")
-    pl.savefig("plots/mass_lambda_plots/{}_comparison.png".format(eosname))
+    pl.savefig("mass_lambda_plots/{}_comparison.png".format(eosname))

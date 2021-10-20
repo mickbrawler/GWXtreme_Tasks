@@ -9,6 +9,7 @@ GWX_list = ["BHF_BBB2","KDE0V","KDE0V1","SKOP","HQC18","SLY2","SLY230A",
             "MPA1","MS1B","MS1","SLY"]
 
 def plotter(filename,eos,eos_file_name):
+    # plots distributions of parameters found through MCMC
     #file names must include directory and type.
 
     with open(filename,"r") as f:

@@ -12,16 +12,6 @@ GWX_list = ["BHF_BBB2","KDE0V","KDE0V1","SKOP","HQC18","SLY2","SLY230A",
             "SK272","SKI3","SKI5","MPA1","MS1B_PP","MS1_PP","BBB2","AP4",
             "MPA1","MS1B","MS1","SLY"]
 
-#GWX_list = ['ALF1','ALF2','ALF3','ALF4','AP1','AP2','AP3','AP4','APR4_EPP',
-#            'BBB2','BGN1H1','BPAL12','BSK19','BSK20','BSK21','ENG','FPS','GNH3',
-#            'GS1','GS2','H1','H2','H3','H4','H5','H6','H7','MPA1','MS1B',
-#            'MS1B_PP','MS1_PP','MS1','MS2','PAL6','PCL2','PS','QMC700','SLY4',
-#            'SLY','SQM1','SQM2','SQM3','WFF1','WFF2','WFF3','APR','BHF_BBB2',
-#            'KDE0V','KDE0V1','RS','SK255','SK272','SKA','SKB','SKI2','SKI3',
-#            'SKI4','SKI5','SKI6','SKMP','SKOP','SLY2','SLY230A','SLY9','HQC18']
-
-#GWX_list = ["APR4_EPP"]
-
 # list of eos paper found p0,g1,g2,g3 values for
 pap_list = ["PAL6","AP1","AP2","AP3","AP4","FPS","WFF1","WFF2","WFF3"
             ,"BBB2","BPAL12","ENG","MPA1","MS1","MS2","MS1b","PS","GS1a"
@@ -99,7 +89,7 @@ def get_eos_parameter_dist(transitions,N,filename,p0_incr=.4575,g1_incr=.927,
                            g2_incr=1.1595,g3_incr=.9285):
     """
     METHOD: Compares the trial_lambdas resulting from different combinations of
-    parameters with the target_lambdas for a certain eos. This is done for
+    parameters with the target_lambdas for a certain eos. This is done for each
     eos.
 
     PARAMETERS:
@@ -128,7 +118,7 @@ def get_eos_parameter_dist(transitions,N,filename,p0_incr=.4575,g1_incr=.927,
         else:
 
             #log_p0_SI,g1,g2,g3 = 33.000,2.500,2.500,2.500
-            log_p0_SI,g1,g2,g3 = 33.4305,3.143,2.6315,2.7315 # .4575 .927 1.1595 .9285
+            log_p0_SI,g1,g2,g3 = 33.4305,3.143,2.6315,2.7315 # OG paper increments are .4575 .927 1.1595 .9285
 
         eos_pointer = lalsim.SimNeutronStarEOSByName(eos)
         fam_pointer = lalsim.CreateSimNeutronStarFamily(eos_pointer)
@@ -206,6 +196,29 @@ def get_eos_parameter_dist(transitions,N,filename,p0_incr=.4575,g1_incr=.927,
         eos_post_r2.append(post_r2)
 
     data = {"p0" : eos_post_p0, "g1" : eos_post_g1, "g2" : eos_post_g2, "g3" : eos_post_g3, "r2" : eos_post_r2}
-    outputfile = filename
-    with open(outputfile, "w") as f:
+    with open(filename, "w") as f:
         json.dump(data, f, indent=2, sort_keys=True)
+
+def global_max_dictionary(datafile,outputfile):
+    # Meant to get a dictionary with the best fit parameters for each
+    # GWXtreme eos from the MCMC found distributions. Dictionary holds
+    # p1,g1,g2,g3, and r2 values in lists for each eos
+
+    with open(datafile, "r") as f:
+        data = json.load(f)
+
+    m_eos_val = {}
+    for eos in GWX_list:
+
+        eos_ind = GWX_list.index(eos)
+        max_ind = np.argmax(data["r2"][eos_ind])
+
+        max_p1 = data["p0"][eos_ind][max_ind]
+        max_g1 = data["g1"][eos_ind][max_ind]
+        max_g2 = data["g2"][eos_ind][max_ind]
+        max_g3 = data["g3"][eos_ind][max_ind]
+        max_r2 = data["r2"][eos_ind][max_ind]
+        m_eos_val.update({eos:[max_p1,max_g1,max_g2,max_g3,max_r2]})
+
+    with open(filename,"r") as f:
+        data = json.load(f)

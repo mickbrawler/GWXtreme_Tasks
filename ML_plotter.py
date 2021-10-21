@@ -11,34 +11,7 @@ GWX_list = ["BHF_BBB2","KDE0V","KDE0V1","SKOP","HQC18","SLY2","SLY230A",
             "SK272","SKI3","SKI5","MPA1","MS1B_PP","MS1_PP","BBB2","AP4",
             "MPA1","MS1B","MS1","SLY"]
 
-g_eos_val = {"BHF_BBB2":[33.309,3.033,3.237,2.904]
-            ,"KDE0V":[33.376,2.658,3.529,3.097]
-            ,"KDE0V1":[33.342,2.702,3.154,2.631]
-            ,"SKOP":[33.466,2.725,2.688,2.947]
-            ,"HQC18":[33.320,2.450,3.265,3.142]
-            ,"SLY2":[33.392,2.948,3.707,3.509]
-            ,"SLY230A":[33.394,3.107,3.018,2.334]
-            ,"SKMP":[33.535,2.910,2.699,2.809]
-            ,"RS":[33.639,2.978,3.706,3.441]
-            ,"SK255":[33.534,2.530,3.134,1.898]
-            ,"SLY9":[33.516,3.115,3.610,2.729]
-            ,"APR4_EPP":[33.247,2.559,3.732,3.430]
-            ,"SKI2":[33.705,2.960,3.557,2.598]
-            ,"SKI4":[33.527,3.106,3.214,3.539]
-            ,"SKI6":[33.544,3.223,3.536,3.432]
-            ,"SK272":[33.587,2.755,3.523,2.005]
-            ,"SKI3":[33.696,3.022,3.348,2.423]
-            ,"SKI5":[33.700,2.765,3.034,2.158]
-            ,"MPA1":[33.529,3.514,3.540,3.188]
-            ,"MS1B_PP":[33.846,3.382,2.860,2.445]
-            ,"MS1_PP":[33.855,3.224,2.886,2.084]
-            ,"BBB2":[33.362,3.152,2.600,2.438]
-            ,"AP4":[33.290,2.743,3.409,3.434]
-            ,"MPA1":[33.529,3.514,3.540,3.188]
-            ,"MS1B":[33.835,3.128,3.087,1.811]
-            ,"MS1":[33.918,3.252,3.332,1.209]
-            ,"SLY":[33.417,3.023,3.868,3.753]}
-
+# MCMC results
 with open("results/MCMC_results_dictionary.json","r") as f:
     m_eos_val = json.load(f)
 
@@ -173,25 +146,8 @@ def plotter_runner(N):
         plotter(eos,N)
         pl.clf()
 
-def global_max_dictionary():
-    # Meant to get a dictionary with the best fit parameters for each
-    # GWXtreme eos
-
-    m_eos_val = {}                                                              
-    for eos in GWX_list:
-
-        eos_ind = GWX_list.index(eos)
-        max_ind = np.argmax(data["r2"][eos_ind])
-        max_p1 = data["p0"][eos_ind][max_ind]                                       
-        max_g1 = data["g1"][eos_ind][max_ind]
-        max_g2 = data["g2"][eos_ind][max_ind]                                       
-        max_g3 = data["g3"][eos_ind][max_ind]
-        m_eos_val.update({eos:[max_p1,max_g1,max_g2,max_g3]})
-
-    with open("results/final_working_test.json","r") as f:                          
-        data = json.load(f)
-
-def eos_kde_plot():
+def eos_GWXtreme_kde_plot():
+    # Plots each eos' input options' kde plots using GWXtreme's plot_func
 
     modsel = ems.Model_selection(posteriorFile="posterior_samples/posterior_samples_narrow_spin_prior.dat")
     

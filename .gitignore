@@ -2,6 +2,6 @@ __pycache__/
 mass_lambda_files/
 mass_radius_files/
 package/
-plots/
+Plots/
 posterior_samples/
 results/

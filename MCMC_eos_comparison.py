@@ -76,7 +76,6 @@ def likelihood(p0,g1,g2,g3,min_mass,max_mass,N,target_lambdas):
     OUTPUT: Returns the value of the r-squared.
     """
 
-    print([p0,g1,g2,g3])
     s, min_mass, max_mass = modsel.getEoSInterpFrom_piecewise(p0,g1,g2,g3)
     trial_masses = np.linspace(min_mass,max_mass,N)
     trial_Lambdas = s(trial_masses)
@@ -85,8 +84,9 @@ def likelihood(p0,g1,g2,g3,min_mass,max_mass,N,target_lambdas):
            
     return(r_val)
 
-def get_eos_parameter_dist(transitions,N,filename,p0_incr=.4575,g1_incr=.927,
-                           g2_incr=1.1595,g3_incr=.9285):
+def get_eos_parameter_dist(transitions,N,filename,p0=None,g1=None,g2=None,
+                           g3=None,p0_incr=.4575,g1_incr=.927,g2_incr=1.1595,
+                           g3_incr=.9285,eos=None):
     """
     METHOD: Compares the trial_lambdas resulting from different combinations of
     parameters with the target_lambdas for a certain eos. This is done for each
@@ -97,28 +97,40 @@ def get_eos_parameter_dist(transitions,N,filename,p0_incr=.4575,g1_incr=.927,
     transitions : The number of "states" changed. Each state is a parameter combination.
     N : The array size of the mass arrays.
     filename : The name of the json file holding data dictionary
+    eos : If eos is given a string name for an eos, just that eos' distribution will be found.
 
     OUTPUT: Creates a json holding the the parameter distributions for each eos.
     """
+
+    if eos == str: eos_list = [eos]
+    else: eos_list = GWX_list
 
     eos_post_p0 = []
     eos_post_g1 = []
     eos_post_g2 = []
     eos_post_g3 = []
     eos_post_r2 = []
-
-    for eos in GWX_list: # we want to find the p0,g1,g2,g3 values to each GWXtreme eos
+    
+    for eos in eos_list: # we want to find the p0,g1,g2,g3 values to each GWXtreme eos
 
         print(eos)
+        
+        if p0 == None: # user hasn't supplied their own p1,g1,g2,g3 values
 
-        if eos in pap_list: # if we have the "old" parameters for an eos, use them, otherwise use presets
+            if eos in pap_list: # if we have the "old" parameters for an eos, use them, otherwise use presets
 
-            log_p0_SI,g1,g2,g3 = p_eos_val[eos]
+                log_p0_SI,g1,g2,g3 = p_eos_val[eos]
 
-        else:
+            else:
 
-            #log_p0_SI,g1,g2,g3 = 33.000,2.500,2.500,2.500
-            log_p0_SI,g1,g2,g3 = 33.4305,3.143,2.6315,2.7315 # OG paper increments are .4575 .927 1.1595 .9285
+                log_p0_SI,g1,g2,g3 = 33.4305,3.143,2.6315,2.7315 # defaults
+
+            log_p0_SI = ((log_p0_SI - p0_incr) + ((2 * p0_incr) * np.random.random()))
+            g1 = ((g1 - g1_incr) + ((2 * g1_incr) * np.random.random()))
+            g2 = ((g2 - g2_incr) + ((2 * g2_incr) * np.random.random()))
+            g3 = ((g3 - g3_incr) + ((2 * g3_incr) * np.random.random()))
+
+        print([log_p0_SI,g1,g2,g3])
 
         eos_pointer = lalsim.SimNeutronStarEOSByName(eos)
         fam_pointer = lalsim.CreateSimNeutronStarFamily(eos_pointer)

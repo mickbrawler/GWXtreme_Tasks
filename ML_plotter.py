@@ -11,10 +11,6 @@ GWX_list = ["BHF_BBB2","KDE0V","KDE0V1","SKOP","HQC18","SLY2","SLY230A",
             "SK272","SKI3","SKI5","MPA1","MS1B_PP","MS1_PP","BBB2","AP4",
             "MPA1","MS1B","MS1","SLY"]
 
-# MCMC results
-with open("results/MCMC_results_dictionary.json","r") as f:
-    m_eos_val = json.load(f)
-
 # list of eos paper found p0,g1,g2,g3 values for
 pap_list = ["PAL6","AP1","AP2","AP3","AP4","FPS","WFF1","WFF2","WFF3"
             ,"BBB2","BPAL12","ENG","MPA1","MS1","MS2","MS1b","PS","GS1a"
@@ -146,24 +142,26 @@ def plotter_runner(N):
         plotter(eos,N)
         pl.clf()
 
-def eos_GWXtreme_kde_plot():
+def eos_GWXtreme_kde_plot(filename):
     # Plots each eos' input options' kde plots using GWXtreme's plot_func
 
     modsel = ems.Model_selection(posteriorFile="posterior_samples/posterior_samples_narrow_spin_prior.dat")
-    
-    for eos in GWX_list:
+        
+    # MCMC results
+    with open(filename,"r") as f:
+        m_eos_val = json.load(f)
 
-        print(eos)
+    for eos in m_eos_val:
 
-        filename = "plots/kde_plots/kde_{}.png".format(eos)
+        outputfile = "Plots/kde_plots/kde_{}.png".format(eos)
 
         if eos in pap_list:
             
             p_p1,p_g1,p_g2,p_g3 = p_eos_val[eos]
-            m_p1,m_g1,m_g2,m_g3 = m_eos_val[eos]
-            modsel.plot_func([eos,[m_p1,m_g1,m_g2,m_g3],[p_p1,p_g1,p_g2,p_g3]],filename=filename)
+            m_p1,m_g1,m_g2,m_g3,_ = m_eos_val[eos]
+            modsel.plot_func([eos,[m_p1,m_g1,m_g2,m_g3],[p_p1,p_g1,p_g2,p_g3]],filename=outputfile)
 
         else:
 
-            m_p1,m_g1,m_g2,m_g3 = m_eos_val[eos]
-            modsel.plot_func([eos,[m_p1,m_g1,m_g2,m_g3]],filename=filename)
+            m_p1,m_g1,m_g2,m_g3,_ = m_eos_val[eos]
+            modsel.plot_func([eos,[m_p1,m_g1,m_g2,m_g3]],filename=outputfile)

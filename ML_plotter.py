@@ -112,7 +112,7 @@ def plot_from_lal(eosname,N):
 #    s = interp1d(gravMass, Lambdas)
     return(masses,Lambdas)
 
-def plotter(eosname,N):
+def plotter(m_eos_val, eosname, N):
 
     print(eosname)
 
@@ -125,21 +125,24 @@ def plotter(eosname,N):
     lal_masses, lal_Lambdas = plot_from_lal(eosname,N)
     pl.plot(lal_masses,lal_Lambdas,label="lal")
 
-    p1,g1,g2,g3 = m_eos_val[eosname]
+    p1,g1,g2,g3,_ = m_eos_val[eosname]
     pw_masses, pw_Lambdas = plot_from_piecewise(p1,g1,g2,g3,N)
     pl.plot(pw_masses,pw_Lambdas,label="MCMC_piecewise")
 
     pl.legend()
     pl.xlabel("Masses")
     pl.ylabel("$\\Lambda$")
-    pl.savefig("plots/mass_lambda_plots/{}_comparison.png".format(eosname))
+    pl.savefig("Plots/mass_lambda_plots/Refined_{}_comparison.png".format(eosname))
 
-def plotter_runner(N):
+def plotter_runner(MCMC_file, eos_list, N):
     # Meant to get ML plots for every GWXtreme eos
 
-    for eos in GWX_list:
+    with open(MCMC_file,"r") as f:
+        data = json.load(f)
 
-        plotter(eos,N)
+    for eos in eos_list:
+
+        plotter(data,eos,N)
         pl.clf()
 
 def eos_GWXtreme_kde_plot(filename):
@@ -153,7 +156,7 @@ def eos_GWXtreme_kde_plot(filename):
 
     for eos in m_eos_val:
 
-        outputfile = "Plots/kde_plots/kde_{}.png".format(eos)
+        outputfile = "Plots/kde_plots/Refined_kde_{}.png".format(eos)
 
         if eos in pap_list:
             

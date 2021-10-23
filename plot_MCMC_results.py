@@ -15,30 +15,31 @@ def plotter(filename,eos,eos_file_name):
     with open(filename,"r") as f:
         data = json.load(f)
 
-    eos_ind = GWX_list.index(eos)
-    r_val_max = np.argmax(data["r2"][eos_ind])
+    r_val_max = np.argmax(data[eos]["r2"])
 
-    p0_val_max = data["p0"][eos_ind][r_val_max]
-    g1_val_max = data["g1"][eos_ind][r_val_max]
-    g2_val_max = data["g2"][eos_ind][r_val_max]
-    g3_val_max = data["g3"][eos_ind][r_val_max]
+    p1_val_max = data[eos]["p1"][r_val_max]
+    g1_val_max = data[eos]["g1"][r_val_max]
+    g2_val_max = data[eos]["g2"][r_val_max]
+    g3_val_max = data[eos]["g3"][r_val_max]
 
     sns.set()
     fig, axes = pl.subplots(2,2,figsize=(7,7))
-    fig.suptitle("{}: [{},{},{},{}]".format(eos,p0_val_max,g1_val_max,g2_val_max,g3_val_max),fontsize=11)
+    fig.suptitle("{}: [{},{},{},{}]".format(eos,p1_val_max,g1_val_max,g2_val_max,g3_val_max),fontsize=11)
     
-    sns.kdeplot(data["p0"][eos_ind],ax=axes[0,0]).set_title("Pressure: {}".format(p0_val_max))
-    axes[0,0].axvline(data["p0"][eos_ind][r_val_max])
-    sns.kdeplot(data["g1"][eos_ind],ax=axes[0,1]).set_title("Gamma 1: {}".format(g1_val_max))
-    axes[0,1].axvline(data["g1"][eos_ind][r_val_max])
-    sns.kdeplot(data["g2"][eos_ind],ax=axes[1,0]).set_title("Gamma 2: {}".format(g2_val_max))
-    axes[1,0].axvline(data["g2"][eos_ind][r_val_max])
-    sns.kdeplot(data["g3"][eos_ind],ax=axes[1,1]).set_title("Gamma 3: {}".format(g3_val_max))
-    axes[1,1].axvline(data["g3"][eos_ind][r_val_max])
+    sns.kdeplot(data[eos]["p1"],ax=axes[0,0]).set_title("Pressure: {}".format(p1_val_max))
+    axes[0,0].axvline(data[eos]["p1"][r_val_max])
+    sns.kdeplot(data[eos]["g1"],ax=axes[0,1]).set_title("Gamma 1: {}".format(g1_val_max))
+    axes[0,1].axvline(data[eos]["g1"][r_val_max])
+    sns.kdeplot(data[eos]["g2"],ax=axes[1,0]).set_title("Gamma 2: {}".format(g2_val_max))
+    axes[1,0].axvline(data[eos]["g2"][r_val_max])
+    sns.kdeplot(data[eos]["g3"],ax=axes[1,1]).set_title("Gamma 3: {}".format(g3_val_max))
+    axes[1,1].axvline(data[eos]["g3"][r_val_max])
 
     pl.tight_layout()
     pl.savefig(eos_file_name)
 
-for eos in GWX_list:
-    print(eos)
-    plotter("results/final_working_test.json",eos,"plots/MCMC_plots/{}_parameter_density.png".format(eos))
+def plotter_runner(eos_list, filename):
+
+    for eos in eos_list:
+
+        plotter(filename,eos,"Plots/MCMC_plots/{}_Refined_parameter_density.png".format(eos))

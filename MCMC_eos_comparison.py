@@ -35,6 +35,17 @@ class param_distro:
         self.N = N
         self.transitions = transitions
 
+    def eos_to_run(self, eos_list, runs):
+
+        for eos in eos_list:
+            
+            run_count = 0
+            for run in range(runs):
+
+                run_count += 1
+                outputfile = "results/MCMC_Runs/{}_{}.json".format(eos,run_count)
+                self.run_MCMC(eos,outputfile)
+
     def run_MCMC(self, eos, outputfile, p1_incr=.4575, g1_incr=.927, 
                  g2_incr=1.1595, g3_incr=.9285):
         # For an eos, gets distribution of "best fit" parameters
@@ -145,11 +156,11 @@ def json_joiner(eos_list, directory, outputfile):
             with open(MCMC_run, "r") as f:
                 data = json.load(f)
 
-            p1_dist.append(data["p1"])
-            g1_dist.append(data["g1"])
-            g2_dist.append(data["g2"])
-            g3_dist.append(data["g3"])
-            r2_dist.append(data["r2"])
+            p1_dist += data["p1"]
+            g1_dist += data["g1"]
+            g2_dist += data["g2"]
+            g3_dist += data["g3"]
+            r2_dist += data["r2"]
 
         eos_param_distro.update({eos: {"p1" : p1_dist, "g1" : g1_dist, "g2" : g2_dist, "g3" : g3_dist, "r2" : r2_dist}})
 
@@ -166,14 +177,13 @@ def global_max_dictionary(eos_list, filename, outputfile):
     m_eos_val = {}
     for eos in eos_list:
             
-        eos_ind = eos_list.index(eos)
-        max_ind = np.argmax(data[eos]["r2"][eos_ind])
+        max_ind = np.argmax(data[eos]["r2"])
 
-        max_p1 = data[eos]["p1"][eos_ind][max_ind]
-        max_g1 = data[eos]["g1"][eos_ind][max_ind]
-        max_g2 = data[eos]["g2"][eos_ind][max_ind]
-        max_g3 = data[eos]["g3"][eos_ind][max_ind]
-        max_r2 = data[eos]["r2"][eos_ind][max_ind]
+        max_p1 = data[eos]["p1"][max_ind]
+        max_g1 = data[eos]["g1"][max_ind]
+        max_g2 = data[eos]["g2"][max_ind]
+        max_g3 = data[eos]["g3"][max_ind]
+        max_r2 = data[eos]["r2"][max_ind]
         m_eos_val.update({eos:[max_p1,max_g1,max_g2,max_g3,max_r2]})
 
     with open(outputfile,"w") as f:

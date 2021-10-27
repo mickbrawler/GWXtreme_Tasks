@@ -1,6 +1,6 @@
 __pycache__/
-mass_lambda_files/
-mass_radius_files/
 package/
 posterior_samples/
 results/
+OG_SLY_results_comparison/independent_MCMC/
+Analysis/

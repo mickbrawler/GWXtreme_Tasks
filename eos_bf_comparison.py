@@ -51,10 +51,16 @@ p_eos_val = {"PAL6":[33.380,2.227,2.189,2.159]
              ,"ALF4":[33.314,3.009,3.438,1.803]
              ,"SLY":[33.384,3.005,2.988,2.851]}
 
-def get_eos_BF(MCMC_file, eos_list, outputfile):
+def get_eos_BF(MCMC_file, eos_list, outputfile, narrow=True):
     # Gets bayes factor for each type of input
     
-    modsel = ems.Model_selection(posteriorFile="posterior_samples/posterior_samples_narrow_spin_prior.dat")
+    if narrow == True:
+        
+        modsel = ems.Model_selection(posteriorFile="posterior_samples/posterior_samples_narrow_spin_prior.dat")
+
+    else:
+
+        modsel = ems.Model_selection(posteriorFile="posterior_samples/posterior_samples_broad_spin_prior.dat")
 
     with open(MCMC_file, "r") as f:
         m_eos_val = json.load(f)

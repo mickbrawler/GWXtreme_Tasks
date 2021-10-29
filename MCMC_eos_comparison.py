@@ -35,15 +35,16 @@ class param_distro:
         self.N = N
         self.transitions = transitions
 
-    def eos_to_run(self, eos_list, runs):
+    def eos_to_run(self, eos_list, runs, directory):
 
         for eos in eos_list:
             
             run_count = 0
             for run in range(runs):
 
+                print(eos)
                 run_count += 1
-                outputfile = "results/MCMC_Runs/{}_{}.json".format(eos,run_count)
+                outputfile = "{}{}_{}.json".format(directory,eos,run_count)
                 self.run_MCMC(eos,outputfile)
 
     def run_MCMC(self, eos, outputfile, p1_incr=.4575, g1_incr=.927, 

@@ -112,7 +112,7 @@ def plot_from_lal(eosname,N):
 #    s = interp1d(gravMass, Lambdas)
     return(masses,Lambdas)
 
-def plotter(m_eos_val, eosname, N):
+def plotter(m_eos_val, eosname, N, directory):
 
     print(eosname)
 
@@ -132,9 +132,10 @@ def plotter(m_eos_val, eosname, N):
     pl.legend()
     pl.xlabel("Masses")
     pl.ylabel("$\\Lambda$")
-    pl.savefig("Plots/mass_lambda_plots/Refined_{}_comparison.png".format(eosname))
+    # ADD Refined when inputting directory PLEASE
+    pl.savefig("{}{}_comparison.png".format(directory,eosname))
 
-def plotter_runner(MCMC_file, eos_list, N):
+def plotter_runner(MCMC_file, eos_list, N, directory):
     # Meant to get ML plots for every GWXtreme eos
 
     with open(MCMC_file,"r") as f:
@@ -142,10 +143,10 @@ def plotter_runner(MCMC_file, eos_list, N):
 
     for eos in eos_list:
 
-        plotter(data,eos,N)
+        plotter(data,eos,N,directory)
         pl.clf()
 
-def eos_GWXtreme_kde_plot(filename):
+def eos_GWXtreme_kde_plot(filename,directory):
     # Plots each eos' input options' kde plots using GWXtreme's plot_func
 
     modsel = ems.Model_selection(posteriorFile="posterior_samples/posterior_samples_narrow_spin_prior.dat")
@@ -156,7 +157,7 @@ def eos_GWXtreme_kde_plot(filename):
 
     for eos in m_eos_val:
 
-        outputfile = "Plots/kde_plots/Refined_kde_{}.png".format(eos)
+        outputfile = "{}{}.png".format(directory,eos)
 
         if eos in pap_list:
             

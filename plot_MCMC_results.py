@@ -8,7 +8,7 @@ GWX_list = ["BHF_BBB2","KDE0V","KDE0V1","SKOP","HQC18","SLY2","SLY230A",
             "SK272","SKI3","SKI5","MPA1","MS1B_PP","MS1_PP","BBB2","AP4",
             "MPA1","MS1B","MS1","SLY"]
 
-def plotter(filename,eos,eos_file_name):
+def plotter(filename, eos, eos_file_name):
     # plots distributions of parameters found through MCMC
     #file names must include directory and type.
 
@@ -38,8 +38,8 @@ def plotter(filename,eos,eos_file_name):
     pl.tight_layout()
     pl.savefig(eos_file_name)
 
-def plotter_runner(eos_list, filename):
+def plotter_runner(eos_list, directory, filename):
 
     for eos in eos_list:
 
-        plotter(filename,eos,"Plots/MCMC_plots/{}_Refined_parameter_density.png".format(eos))
+        plotter(filename,eos,"{}{}_Refined_parameter_density.png".format(directory,eos))

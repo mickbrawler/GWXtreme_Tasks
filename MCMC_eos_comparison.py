@@ -35,12 +35,12 @@ class param_distro:
         self.N = N
         self.transitions = transitions
 
-    def eos_to_run(self, eos_list, runs, directory):
+    def eos_to_run(self, eos_list, runs, directory, run0=0):
 
         for eos in eos_list:
             
             run_count = 0
-            for run in range(runs):
+            for run in range(run0,runs+run0):
 
                 print(eos)
                 run_count += 1
@@ -150,7 +150,7 @@ def json_joiner(eos_list, directory, outputfile):
     for eos in eos_list: # For each eos
 
         p1_dist,g1_dist,g2_dist,g3_dist,r2_dist = [],[],[],[],[]
-        eos_files = glob.glob(directory+"{}*".format(eos)) # For each MCMC run of a eos
+        eos_files = glob.glob(directory+"{}_*".format(eos)) # For each MCMC run of a eos
 
         for MCMC_run in eos_files:
 

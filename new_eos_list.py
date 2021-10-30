@@ -1,0 +1,28 @@
+GWX_list = ['BHF_BBB2',
+            'KDE0V',
+            'KDE0V1',
+            'HQC18',
+            'SLY2',
+            'SKMP',
+            'RS',
+            'SK255',
+            'SKI2',
+            'SKI4',
+            'SK272',
+            'SKI3',
+            'SKI5',
+            'MS1_PP',
+            'BBB2',
+            'MPA1',
+            'MS1B',
+            'MS1']
+
+
+Survived = ['BHF_BBB2',
+            'KDE0V',
+            'KDE0V1',
+            'HQC18',
+            'SLY2',
+            'SKMP',
+            'RS',
+            'SK255']

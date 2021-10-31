@@ -41,3 +41,14 @@ leftova2 = ['BHF_BBB2',
             'SKI5',
             'BBB2',
             'MS1']
+
+# For run 6 we kept the above list the same cause we wanted to see a better MS1...
+# leftover eos after ones found in the morning on 10/31/2021 (used in run 7)
+leftova3 = ['KDE0V',
+            'SKMP',
+            'RS',
+            'SK255',
+            'SKI2',
+            'SKI3',
+            'SKI5',
+            'BBB2']

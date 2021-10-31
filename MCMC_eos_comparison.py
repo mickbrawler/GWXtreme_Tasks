@@ -32,7 +32,7 @@ class param_distro:
 
         # These are parameters from current (10/30/21) best MCMC runs that best the paper's values
         self.p1_eos_val = {"BBB2":[33.38009664428772,3.350816606537494,2.9128885375511855,2.957866596134232]
-                          ,"MS1":[33.8751081247826,3.273537952674393,3.1843799138073696,1.8673056320336074]}
+                          ,"MS1":[33.92440849651022,3.2385770596974908,3.3780650684604847,2.096509814792764]}
 
         self.modsel = ems.Model_selection(posteriorFile="posterior_samples/posterior_samples_narrow_spin_prior.dat")
 

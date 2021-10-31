@@ -30,6 +30,10 @@ class param_distro:
                          ,"MS1":[33.858,3.224,3.033,1.325]
                          ,"SLY":[33.384,3.005,2.988,2.851]}
 
+        # These are parameters from current (10/30/21) best MCMC runs that best the paper's values
+        self.p1_eos_val = {"BBB2":[33.38009664428772,3.350816606537494,2.9128885375511855,2.957866596134232]
+                          ,"MS1":[33.8751081247826,3.273537952674393,3.1843799138073696,1.8673056320336074]}
+
         self.modsel = ems.Model_selection(posteriorFile="posterior_samples/posterior_samples_narrow_spin_prior.dat")
 
         self.N = N
@@ -52,7 +56,7 @@ class param_distro:
         # For an eos, gets distribution of "best fit" parameters
         
         # If we have the "old" parameters for an eos, use them
-        if eos in self.pap_list: log_p1_SI,g1,g2,g3 = self.p_eos_val[eos]
+        if eos in self.pap_list: log_p1_SI,g1,g2,g3 = self.p1_eos_val[eos]
 
         else: log_p1_SI,g1,g2,g3 = 33.4305,3.143,2.6315,2.7315 # defaults
 

@@ -35,5 +35,5 @@ for Dir in Dir_list:
 
             eos_param_distro.update({eos: {"p1" : p1_dist, "g1" : g1_dist, "g2" : g2_dist, "g3" : g3_dist, "r2" : r2_dist}})
 
-with open("results/Processed_MCMC_Runs/Refined_2_MCMC_Runs.json","w") as f:
+with open("results/Processed_MCMC_Runs/Refined_9_MCMC_Runs.json","w") as f:
     json.dump(eos_param_distro, f, indent=2, sort_keys=True)

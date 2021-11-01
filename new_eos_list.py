@@ -52,3 +52,18 @@ leftova3 = ['KDE0V',
             'SKI3',
             'SKI5',
             'BBB2']
+
+# leftover eos after ones found in the afternoon on 10/31/2021 (used in run 8)
+leftova4 = ['KDE0V',
+            'SKMP',
+            'RS',
+            'SKI2',
+            'SKI3',
+            'SKI5',
+            'BBB2']
+
+# surviving eos runs from the use of new parameter increments (used in Run 8)
+Survived2= ['KDE0V',
+            'SKMP',
+            'RS',
+            'SKI2']

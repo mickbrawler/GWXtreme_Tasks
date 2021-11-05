@@ -41,7 +41,7 @@ def get_data(mkn, trials=1000):
 def plotter(mkn):
     # Makes bar plot
 
-    data = np.loadtxt("Plots/Casabona_plots/data/bar_plot_data_mk{}.txt".format(mkn))
+    data = np.loadtxt("Plots/Casabona_plots/data/bar_plot_data_mk1.txt")
     
     lal_bfs,lal_sds,pp_bfs,pp_sds = data.T
 
@@ -55,8 +55,8 @@ def plotter(mkn):
 
     pl.rcParams.update({"font.size":18})
     pl.figure(figsize=(20,10))
-    pl.bar(x_axis-.1,lal_bfs,.2,yerr=lal_sds,label="LAL Simulation Method")
-    pl.bar(x_axis-.1,pp_bfs,.2,yerr=pp_sds,label="Piecewise Polytrope Method")
+    pl.bar(x_axis-.15,lal_bfs,.3,yerr=lal_sds,label="LAL Simulation Method")
+    pl.bar(x_axis+.15,pp_bfs,.3,yerr=pp_sds,label="Piecewise Polytrope Method")
 
     pl.xticks(x_axis,eos_list)
     pl.ylabel("Bayes-factor w.r.t SLY")

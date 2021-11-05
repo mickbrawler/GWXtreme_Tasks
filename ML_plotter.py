@@ -146,10 +146,12 @@ def plotter_runner(MCMC_file, eos_list, N, directory):
         plotter(data,eos,N,directory)
         pl.clf()
 
-def eos_GWXtreme_kde_plot(filename,directory):
+def eos_GWXtreme_kde_plot(filename, directory, narrow=True):
     # Plots each eos' input options' kde plots using GWXtreme's plot_func
 
-    modsel = ems.Model_selection(posteriorFile="posterior_samples/posterior_samples_narrow_spin_prior.dat")
+    if narrow == True: modsel = ems.Model_selection(posteriorFile="posterior_samples/posterior_samples_narrow_spin_prior.dat")
+
+    else: modsel = ems.Model_selection(posteriorFile="posterior_samples/posterior_samples_broad_spin_prior.dat")
         
     # MCMC results
     with open(filename,"r") as f:

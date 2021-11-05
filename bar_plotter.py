@@ -10,10 +10,13 @@ p_eos_val = {"AP4":[33.269,2.830,3.445,3.348],
              "MPA1":[33.495,3.446,3.572,2.887],
              "MS1":[33.858,3.224,3.033,1.325]}
 
-def get_data(mkn, trials=1000):
+def get_data(mkn, trials=1000, narrow=True):
     # Gets all the data we need in an easy to reuse fashion
     # Each eos' : name, lal bayes factor, lal deviation, piecewise polytrope, and
     # piecewise deviation are stored in their own lists
+
+    if narrow == True: typeis = "Narrow"
+    else: typeis = "Broad"
 
     with open("Analysis/Refined_bestof_1_8_eos_global_values.json","r") as f:
         data = json.load(f)
@@ -26,8 +29,10 @@ def get_data(mkn, trials=1000):
 
     og_pp_bfs = [] # Need bayes factors from paper
     og_pp_sds = []
+    
+    if narrow == True: modsel = ems.Model_selection(posteriorFile="posterior_samples/posterior_samples_narrow_spin_prior.dat")
 
-    modsel = ems.Model_selection(posteriorFile="posterior_samples/posterior_samples_narrow_spin_prior.dat")
+    else: modsel = ems.Model_selection(posteriorFile="posterior_samples/posterior_samples_broad_spin_prior.dat")
 
     for eos in data:
 
@@ -55,12 +60,15 @@ def get_data(mkn, trials=1000):
         pp_sds.append(np.std(pp_trials) * 2)
 
     output = np.vstack((og_pp_bfs,og_pp_sds,lal_bfs,lal_sds,pp_bfs,pp_sds)).T
-    np.savetxt("Plots/Casabona_plots/data/bar_plot_data_mk{}.txt".format(mkn),output,fmt="%f\t%f\t%f\t%f\t%f\t%f")
+    np.savetxt("Plots/Casabona_plots/data/bar_plot_data_{}_mk{}.txt".format(typeis,mkn),output,fmt="%f\t%f\t%f\t%f\t%f\t%f")
 
-def plotter(mkn):
+def plotter(mkn, p_mkn, narrow=True):
     # Makes bar plot
 
-    data = np.loadtxt("Plots/Casabona_plots/data/bar_plot_data_mk2.txt")
+    if narrow == True: typeis = "Narrow"
+    else: typeis = "Broad"
+
+    data = np.loadtxt("Plots/Casabona_plots/data/bar_plot_data_{}_mk{}.txt".format(typeis,mkn))
     
     og_pp_bfs,og_pp_sds,lal_bfs,lal_sds,pp_bfs,pp_sds = data.T
 
@@ -74,12 +82,16 @@ def plotter(mkn):
 
     pl.rcParams.update({"font.size":18})
     pl.figure(figsize=(20,10))
+
+    ax = pl.gca()
+    ax.set_yscale("log")
+
     pl.bar(x_axis-.30,lal_bfs,.3,yerr=lal_sds,label="LAL Simulation Method")
-    pl.bar(x_axis+.00,pp_bfs,.3,yerr=pp_sds,label="Piecewise Polytrope Method")
-    pl.bar(x_axis+.30,og_pp_bfs,.3,yerr=og_pp_sds,label="Original Piecewise Polytrope Method")
+    pl.bar(x_axis+.00,pp_bfs,.3,yerr=pp_sds,label="Piecewise polytrope values (this study)")
+    pl.bar(x_axis+.30,og_pp_bfs,.3,yerr=og_pp_sds,label="Piecewise polytrope value from arXiv:0812.2163")
 
     pl.xticks(x_axis,eos_list,rotation=45,ha="right")
     pl.ylabel("Bayes-factor w.r.t SLY")
     pl.title("Likelihood Comparison")
     pl.legend()
-    pl.savefig("Plots/Casabona_plots/bar_plot_mk{}.png".format(mkn))
+    pl.savefig("Plots/Casabona_plots/bar_plot_{}_mk{}.png".format(typeis,p_mkn))

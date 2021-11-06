@@ -116,18 +116,18 @@ def plotter(m_eos_val, eosname, N, directory):
 
     print(eosname)
 
+    lal_masses, lal_Lambdas = plot_from_lal(eosname,N)
+    pl.plot(lal_masses,lal_Lambdas,label="lal",color="blue")
+
+    p1,g1,g2,g3,_ = m_eos_val[eosname]
+    pw_masses, pw_Lambdas = plot_from_piecewise(p1,g1,g2,g3,N)
+    pl.plot(pw_masses,pw_Lambdas,label="MCMC_piecewise",color="orange")
+
     if eosname in pap_list:
 
         p1,g1,g2,g3 = p_eos_val[eosname]
         pap_masses, pap_Lambdas = plot_from_piecewise(p1,g1,g2,g3,N)
-        pl.plot(pap_masses,pap_Lambdas,label="Paper_piecewise")
-
-    lal_masses, lal_Lambdas = plot_from_lal(eosname,N)
-    pl.plot(lal_masses,lal_Lambdas,label="lal")
-
-    p1,g1,g2,g3,_ = m_eos_val[eosname]
-    pw_masses, pw_Lambdas = plot_from_piecewise(p1,g1,g2,g3,N)
-    pl.plot(pw_masses,pw_Lambdas,label="MCMC_piecewise")
+        pl.plot(pap_masses,pap_Lambdas,label="Paper_piecewise",color="green")
 
     pl.legend()
     pl.xlabel("Masses")

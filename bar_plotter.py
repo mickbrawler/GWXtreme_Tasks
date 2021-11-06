@@ -60,15 +60,15 @@ def get_data(mkn, trials=1000, narrow=True):
         pp_sds.append(np.std(pp_trials) * 2)
 
     output = np.vstack((og_pp_bfs,og_pp_sds,lal_bfs,lal_sds,pp_bfs,pp_sds)).T
-    np.savetxt("Plots/Casabona_plots/data/bar_plot_data_{}_mk{}.txt".format(typeis,mkn),output,fmt="%f\t%f\t%f\t%f\t%f\t%f")
+    np.savetxt("Plots/bar_plots/data/bar_plot_data_{}_mk{}.txt".format(typeis,mkn),output,fmt="%f\t%f\t%f\t%f\t%f\t%f")
 
-def plotter(mkn, p_mkn, narrow=True):
+def plotter(mkn, p_mkn, narrow=True, log=True):
     # Makes bar plot
 
     if narrow == True: typeis = "Narrow"
     else: typeis = "Broad"
 
-    data = np.loadtxt("Plots/Casabona_plots/data/bar_plot_data_{}_mk{}.txt".format(typeis,mkn))
+    data = np.loadtxt("Plots/bar_plots/data/bar_plot_data_{}_mk{}.txt".format(typeis,mkn))
     
     og_pp_bfs,og_pp_sds,lal_bfs,lal_sds,pp_bfs,pp_sds = data.T
 
@@ -82,16 +82,21 @@ def plotter(mkn, p_mkn, narrow=True):
 
     pl.rcParams.update({"font.size":18})
     pl.figure(figsize=(20,10))
+    
+    if log:
 
-    ax = pl.gca()
-    ax.set_yscale("log")
+        ax = pl.gca()
+        ax.set_yscale("log")
 
-    pl.bar(x_axis-.30,lal_bfs,.3,yerr=lal_sds,label="LAL Simulation Method")
-    pl.bar(x_axis+.00,pp_bfs,.3,yerr=pp_sds,label="Piecewise polytrope values (this study)")
-    pl.bar(x_axis+.30,og_pp_bfs,.3,yerr=og_pp_sds,label="Piecewise polytrope value from arXiv:0812.2163")
+    pl.bar(x_axis-.30,lal_bfs,.3,yerr=lal_sds,label="LAL Simulation Method",color="blue")
+    pl.bar(x_axis+.00,pp_bfs,.3,yerr=pp_sds,label="Best fit piecewise polytropes (this study)",color="orange")
+    pl.bar(x_axis+.30,og_pp_bfs,.3,yerr=og_pp_sds,label="Best fit piecewise polytropes from arXiv:0812.2163",color="green")
 
     pl.xticks(x_axis,eos_list,rotation=45,ha="right")
     pl.ylabel("Bayes-factor w.r.t SLY")
     pl.title("Likelihood Comparison")
+
+    if log: pl.ylim([1e-4,10]) 
+
     pl.legend()
-    pl.savefig("Plots/Casabona_plots/bar_plot_{}_mk{}.png".format(typeis,p_mkn))
+    pl.savefig("Plots/bar_plots/bar_plot_{}_mk{}.png".format(typeis,p_mkn))

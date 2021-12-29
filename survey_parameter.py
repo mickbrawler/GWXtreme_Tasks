@@ -130,7 +130,7 @@ def evidence_interpolation(filename, N, parameter_choice, label):
     parameters = data[:,0]
     evidences = data[:,1]
 
-    f = interpolate.interp1d(parameters, evidences)
+    f = interpolate.interp1d(parameters, evidences, bounds_error=False)
     if parameter_choice=="p1": parameter_range = np.linspace(32.8805,33.9805,N)
     elif parameter_choice=="g1": parameter_range = np.linspace(1.8430,4.4430,N)
     elif parameter_choice=="g2": parameter_range = np.linspace(1.3315,3.9315,N)

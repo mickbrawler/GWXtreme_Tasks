@@ -8,7 +8,7 @@ from scipy import interpolate
 #g2 [1.3315-3.9315]     middle=2.6315
 #g3 [1.4315-4.0315]     middle=2.7315
 
-def survey(parameter_choice, label, N=1000, fixed_p1=33.4305, fixed_g1=3.143,
+def survey(parameter_choice, label, N, fixed_p1=33.4305, fixed_g1=3.143,
            fixed_g2=2.6315, fixed_g3=2.7315):
     
     # Survey piecewise polytropic parameters. Fix three parameters. Loop over one 
@@ -199,7 +199,7 @@ def survey(parameter_choice, label, N=1000, fixed_p1=33.4305, fixed_g1=3.143,
         outputfile = "parameter_test_data/{}_{}.txt".format(parameter_choice,label)
         np.savetxt(outputfile, output, fmt="%f\t%f")
 
-    elif len(parameter_choice) == 4:
+    elif len(parameter_choice) == 5:
 
         output = np.vstack((parameters_tested1,parameters_tested2,evidences)).T
         outputfile = "parameter_test_data/{}_{}.txt".format(parameter_choice,label)
@@ -239,6 +239,7 @@ def evidence_interpolation(filename, N, parameter_choice, label):
     # filename: (string) name of txt file holding evidences for a set of varying parameters
     # N : Length of parameter space within feasible boundaries.
     # parameter_choice : parameter that is being varied.
+    # label : (string) label for files.
 
     data = np.loadtxt(filename)
 
@@ -290,6 +291,57 @@ def plot_interp_actual_evidences(actual_filename, interp_filename, parameter,
 
     pl.savefig("parameter_test_plots/comparison_{}_{}.png".format(parameter,label))
 
+# 2d interpolation is seemingly impossible given the nature of doing piecewise 
+# polytropic runs. The runtime and value errors are the culprits. They make us
+# undable to produce an equalateral 2d list of evidences for the 2d parameter space 
+
+def evidence_interpolation_2d(filename, N, parameter_choice, label):
+
+    # Calculate the evidences through interpolation using already calculated evidences.
+
+    # filename: (string) name of txt file holding evidences for a set of varying parameters
+    # N : Length of parameter space within feasible boundaries.
+    # parameter_choice : parameter that is being varied.
+    # label : (string) label for files.
+
+    data = np.loadtxt(filename)
+
+    parameters1 = data[:,0]
+    parameters2 = data[:,1]
+    evidences = data[:,2]
+
+    f = interpolate.interp2d(parameters1, parameters2, evidences)
+
+    if parameter_choice=="p1_g1":
+        parameter_range1 = np.linspace(32.8805,33.9805,N)
+        parameter_range2 = np.linspace(1.8430,4.4430,N)
+
+    if parameter_choice=="p1_g2": 
+        parameter_range1 = np.linspace(32.8805,33.9805,N)
+        parameter_range2 = np.linspace(1.3315,3.9315,N)
+
+    if parameter_choice=="p1_g3": 
+        parameter_range1 = np.linspace(32.8805,33.9805,N)
+        parameter_range2 = np.linspace(1.4315,4.0315,N)
+
+    elif parameter_choice=="g1_g2":
+        parameter_range1 = np.linspace(1.8430,4.4430,N)
+        parameter_range2 = np.linspace(1.3315,3.9315,N)
+
+    elif parameter_choice=="g1_g3":
+        parameter_range1 = np.linspace(1.8430,4.4430,N)
+        parameter_range2 = np.linspace(1.4315,4.0315,N)
+
+    elif parameter_choice=="g2_g3": 
+        parameter_range1 = np.linspace(1.3315,3.9315,N)
+        parameter_range2 = np.linspace(1.4315,4.0315,N)
+
+    interp_evidences = f(parameter_range1,parameter_range2)   # use interpolation function returned by `interp1d`
+
+    output = np.vstack((parameter_range1,parameter_range2,interp_evidences)).T
+    outputfile = "parameter_test_data/interp_{}_{}.txt".format(parameter_choice,label)
+    np.savetxt(outputfile, output, fmt="%f\t%f\t%f")
+
 def plot_interp_actual_evidences_2d(actual_filename, interp_filename, parameter,
                                     label, fixed_p1=33.4305, fixed_g1=3.143,
                                     fixed_g2=2.6315, fixed_g3=2.7315):
@@ -315,7 +367,7 @@ def plot_interp_actual_evidences_2d(actual_filename, interp_filename, parameter,
     A1, A2 = np.meshgrid(actual_parameters1,actual_parameters2)
     I1, I2 = np.meshgrid(interp_parameters1,interp_parameters2)
 
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12,6))
+    fig, (ax1, ax2) = pl.subplots(1, 2, figsize=(12,6))
 
     ax1.set_aspect('equal')
     ax1.set_title("Actual Evidence", fontsize=8)

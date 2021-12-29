@@ -1,4 +1,5 @@
 import numpy as np
+import glob
 
 # Find fractional error in actual evidence and interpolated evidence
 
@@ -8,10 +9,9 @@ import numpy as np
 
 # needs to add up all the evidence files first, then calculate the error
 
-def connect_txt_files(outputfile):
+def connect_txt_files(txts_path,outputfile):
 
-    #filenames = ["parameter_test_data/p1_N_100.txt","parameter_test_data/g1_N_100.txt","parameter_test_data/g2_N_100.txt","parameter_test_data/g3_N_100.txt"]
-    filenames = ["parameter_test_data/interp_p1_N_50_to_100.txt","parameter_test_data/interp_g1_N_50_to_100.txt","parameter_test_data/interp_g2_N_50_to_100.txt","parameter_test_data/interp_g3_N_50_to_100.txt"]
+    filenames = glob.glob("{}*.txt".format(txts_path)
 
     with open(outputfile,"w") as f:
         for filename in filenames:

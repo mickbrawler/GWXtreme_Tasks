@@ -11,7 +11,7 @@ import glob
 
 def connect_txt_files(txts_path,outputfile):
 
-    filenames = glob.glob("{}*.txt".format(txts_path)
+    filenames = glob.glob("{}*.txt".format(txts_path))
 
     with open(outputfile,"w") as f:
         for filename in filenames:
@@ -19,7 +19,7 @@ def connect_txt_files(txts_path,outputfile):
                 contents = f2.read()
                 f.write(contents)
 
-def calculate_it(actual_filename, interp_filename, parameter, label):
+def calculate_it(actual_filename, interp_filename, parameter):
 
     actual_data = np.loadtxt(actual_filename)
     actual_parameters = actual_data[:,0]
@@ -30,21 +30,26 @@ def calculate_it(actual_filename, interp_filename, parameter, label):
     interp_evidences = interp_data[:,1]
 
     indice = 0
-    matching_interp_parameters = []
+    matching_actual_evidences = []
     matching_interp_evidences = []
-    for parameter in interp_parameters:
+
+    while indice < len(actual_evidences):
         
-        if actual_parameters[indice] == parameter:
-            matching_interp_parameters.append(interp_parameters[indice])
-            matching_interp_evidences.append(interp_evidences[indice])
+        if actual_parameters[indice] in interp_parameters:
 
-        elif actual_parameters[indice] != parameter: 
-            continue
+            if np.isnan(interp_evidences[np.where(interp_parameters == actual_parameters[indice])]): 
 
-        indice += 1
+                indice += 1
+
+            else:
+
+                matching_actual_evidences.append(actual_evidences[indice])
+                matching_interp_evidences.append(interp_evidences[np.where(interp_parameters == actual_parameters[indice])])
+                indice += 1
+        
+        else: indice +=1
     
-    # add by .01 to avoid division by 0 error
-    error = np.sum(abs(matching_interp_evidences - (actual_evidences+.01)) / (actual_evidences+.01))
+    error = np.absolute(np.array(matching_interp_evidences) - (np.array(matching_actual_evidences) + 1.0)) / (np.array(matching_actual_evidences) + 1.0)
 
-    return(error)
+    print(error)
 

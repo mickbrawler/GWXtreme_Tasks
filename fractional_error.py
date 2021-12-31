@@ -19,7 +19,7 @@ def connect_txt_files(txts_path,outputfile):
                 contents = f2.read()
                 f.write(contents)
 
-def calculate_it(actual_filename, interp_filename, parameter):
+def calculate_it(actual_filename, interp_filename, label):
 
     actual_data = np.loadtxt(actual_filename)
     actual_parameters = actual_data[:,0]
@@ -44,12 +44,14 @@ def calculate_it(actual_filename, interp_filename, parameter):
             else:
 
                 matching_actual_evidences.append(actual_evidences[indice])
-                matching_interp_evidences.append(interp_evidences[np.where(interp_parameters == actual_parameters[indice])])
+                matching_interp_evidences.append(interp_evidences[np.where(interp_parameters == actual_parameters[indice])][0])
                 indice += 1
         
         else: indice +=1
     
-    error = np.absolute(np.array(matching_interp_evidences) - (np.array(matching_actual_evidences) + 1.0)) / (np.array(matching_actual_evidences) + 1.0)
+    error = np.absolute((np.array(matching_interp_evidences) + 1.0) - (np.array(matching_actual_evidences) + 1.0)) / (np.array(matching_actual_evidences) + 1.0)
 
-    print(error)
+    output =  output = np.vstack((matching_actual_evidences,matching_interp_evidences,error)).T
+    outputfile = "parameter_files/parameter_data/error_analysis/error_{}.txt".format(label)
+    np.savetxt(outputfile, output, fmt="%f\t%f\t%f")
 

@@ -86,7 +86,7 @@ def survey(parameter_choice, label, N, fixed_p1=33.4305, fixed_g1=3.143,
     # method of saving file
     
     output = np.vstack((parameters_tested1,evidences)).T
-    outputfile = "parameter_files/parameter_data/{}_{}.txt".format(parameter_choice,label)
+    outputfile = "parameter_files/parameter_data/1d_runs/{}_{}.txt".format(parameter_choice,label)
     np.savetxt(outputfile, output, fmt="%f\t%f")
 
 def plot_evidence(filename, parameter, label, fixed_p1=33.4305, fixed_g1=3.143,
@@ -139,7 +139,7 @@ def evidence_interpolation(filename, N, parameter_choice, label):
     evidences = f(parameter_range)   # use interpolation function returned by `interp1d`
 
     output = np.vstack((parameter_range,evidences)).T
-    outputfile = "parameter_files/parameter_data/interp_{}_{}.txt".format(parameter_choice,label)
+    outputfile = "parameter_files/parameter_data/1d_runs/interp_{}_{}.txt".format(parameter_choice,label)
     np.savetxt(outputfile, output, fmt="%f\t%f")
 
 def plot_interp_actual_evidences(actual_filename, interp_filename, parameter,

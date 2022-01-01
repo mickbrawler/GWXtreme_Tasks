@@ -32,6 +32,7 @@ def calculate_it(actual_filename, interp_filename, label):
     indice = 0
     matching_actual_evidences = []
     matching_interp_evidences = []
+    matching_parameters = []
 
     while indice < len(actual_evidences):
         
@@ -43,15 +44,26 @@ def calculate_it(actual_filename, interp_filename, label):
 
             else:
 
+                matching_parameters.append(actual_parameters[indice])
                 matching_actual_evidences.append(actual_evidences[indice])
                 matching_interp_evidences.append(interp_evidences[np.where(interp_parameters == actual_parameters[indice])][0])
                 indice += 1
         
-        else: indice +=1
-    
-    error = np.absolute((np.array(matching_interp_evidences) + 1.0) - (np.array(matching_actual_evidences) + 1.0)) / (np.array(matching_actual_evidences) + 1.0)
+        else: indice += 1
 
-    output =  output = np.vstack((matching_actual_evidences,matching_interp_evidences,error)).T
-    outputfile = "parameter_files/parameter_data/error_analysis/error_{}.txt".format(label)
-    np.savetxt(outputfile, output, fmt="%f\t%f\t%f")
+    matching_parameters = np.array(matching_parameters)
+    matching_actual_evidences = np.array(matching_actual_evidences)
+    matching_interp_evidences = np.array(matching_interp_evidences)
+    
+    # If there are 0s present in the evidences, get them out of there!
+    mask = matching_actual_evidences != 0.0
+    matching_parameters = matching_parameters[mask]
+    matching_actual_evidences = matching_actual_evidences[mask]
+    matching_interp_evidences = matching_interp_evidences[mask]
+
+    error = np.absolute(matching_interp_evidences - matching_actual_evidences) / matching_actual_evidences
+
+    output =  output = np.vstack((matching_parameters,matching_actual_evidences,matching_interp_evidences,error)).T
+    outputfile = "parameter_files/parameter_data/error_analysis/N_25/error_{}.txt".format(label)
+    np.savetxt(outputfile, output, fmt="%f\t%f\t%f\t%f")
 

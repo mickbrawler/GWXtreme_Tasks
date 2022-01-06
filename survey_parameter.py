@@ -247,14 +247,15 @@ def plot_varying_fixed_parameter(fixed_p0,fixed_pf):
         parameters = data[:,0]
         evidences = data[:,1]
         pf_value = filename[index_0:index_f]
+        print(pf_value)
         
-        pl.rcParams.update({'font.size':18})
-        pl.figure(figsize=(20,15))
-        pl.plot(parameters,evidences, label="{}={}".format(fixed_pf,pf_value))
+        #pl.rcParams.update({'font.size':18})
+        #pl.figure(figsize=(20,15))
+        pl.plot(parameters,evidences,label="{}={}".format(fixed_pf,pf_value))
 
     pl.xlabel(fixed_p0)
     pl.ylabel("Evidences")
     pl.title("{}_variance_{}".format(fixed_p0,fixed_pf))
     pl.legend()
-    pl.savefig("{}_variance_{}.png".format(fixed_p0,fixed_pf))
+    pl.savefig("parameter_files/plots/varying_fixed_parameters/{}_variance_{}.png".format(fixed_p0,fixed_pf))
 

@@ -258,4 +258,5 @@ def plot_varying_fixed_parameter(fixed_p0,fixed_pf):
     pl.title("{}_variance_{}".format(fixed_p0,fixed_pf))
     pl.legend()
     pl.savefig("parameter_files/plots/varying_fixed_parameters/{}_variance_{}.png".format(fixed_p0,fixed_pf))
+    pl.clf()
 

@@ -2,13 +2,69 @@ from GWXtreme import eos_model_selection as ems
 import numpy as np
 import pylab as pl
 from scipy import interpolate
+import glob
 
 #p1 [32.8805-33.9805]   middle=33.4305
 #g1 [1.8430-4.4430]     middle=3.143
 #g2 [1.3315-3.9315]     middle=2.6315
 #g3 [1.4315-4.0315]     middle=2.7315
 
-def survey(parameter_choice, label, N, fixed_p1=33.4305, fixed_g1=3.143,
+def vary_fixed_parameters(parameter_choice, task, fix_N, N):
+    # parameter_choice  : Choice of piecewise polytropic parameters (p1,g1,g2,g3).
+    # task              : Sub-directory name. Either 1d_runs or varying_fixed_parameters.
+    # fix_N             : Number of fixed parameter we'll use.
+    # N                 : Length of parameter space within feasible boundaries.
+
+    fixed_p1_values = np.round(np.linspace(32.8805,33.9805,fix_N),decimals=4)
+    fixed_g1_values = np.round(np.linspace(1.8430,4.4430,fix_N),decimals=4)
+    fixed_g2_values = np.round(np.linspace(1.3315,3.9315,fix_N),decimals=4)
+    fixed_g3_values = np.round(np.linspace(1.4315,4.0315,fix_N),decimals=4)
+
+    if parameter_choice == "p1":
+        for g1 in fixed_g1_values: 
+            label = "variance_g1_{}".format(g1)
+            survey(task,parameter_choice,label,N,fixed_p1=33.4305,fixed_g1=g1,fixed_g2=2.6315,fixed_g3=2.7315)
+        for g2 in fixed_g2_values: 
+            label = "variance_g2_{}".format(g2)
+            survey(task,parameter_choice,label,N,fixed_p1=33.4305,fixed_g1=3.143,fixed_g2=g2,fixed_g3=2.7315)
+        for g3 in fixed_g3_values: 
+            label = "variance_g3_{}".format(g3)
+            survey(task,parameter_choice,label,N,fixed_p1=33.4305,fixed_g1=3.143,fixed_g2=2.6315,fixed_g3=g3)
+
+    if parameter_choice == "g1":
+        for p1 in fixed_p1_values: 
+            label = "variance_p1_{}".format(p1)
+            survey(task,parameter_choice,label,N,fixed_p1=p1,fixed_g1=3.143,fixed_g2=2.6315,fixed_g3=2.7315)
+        for g2 in fixed_g2_values: 
+            label = "variance_g2_{}".format(g2)
+            survey(task,parameter_choice,label,N,fixed_p1=33.4305,fixed_g1=3.143,fixed_g2=g2,fixed_g3=2.7315)
+        for g3 in fixed_g3_values: 
+            label = "variance_g3_{}".format(g3)
+            survey(task,parameter_choice,label,N,fixed_p1=33.4305,fixed_g1=3.143,fixed_g2=2.6315,fixed_g3=g3)
+
+    if parameter_choice == "g2":
+        for p1 in fixed_p1_values: 
+            label = "variance_p1_{}".format(p1)
+            survey(task,parameter_choice,label,N,fixed_p1=p1,fixed_g1=3.143,fixed_g2=2.6315,fixed_g3=2.7315)
+        for g1 in fixed_g1_values: 
+            label = "variance_g1_{}".format(g1)
+            survey(task,parameter_choice,label,N,fixed_p1=33.4305,fixed_g1=g1,fixed_g2=2.6315,fixed_g3=2.7315)
+        for g3 in fixed_g3_values: 
+            label = "variance_g3_{}".format(g3)
+            survey(task,parameter_choice,label,N,fixed_p1=33.4305,fixed_g1=3.143,fixed_g2=2.6315,fixed_g3=g3)
+
+    if parameter_choice == "g3":
+        for p1 in fixed_p1_values: 
+            label = "variance_p1_{}".format(p1)
+            survey(task,parameter_choice,label,N,fixed_p1=p1,fixed_g1=3.143,fixed_g2=2.6315,fixed_g3=2.7315)
+        for g1 in fixed_g1_values: 
+            label = "variance_g1_{}".format(g1)
+            survey(task,parameter_choice,label,N,fixed_p1=33.4305,fixed_g1=g1,fixed_g2=2.6315,fixed_g3=2.7315)
+        for g2 in fixed_g2_values: 
+            label = "variance_g2_{}".format(g2)
+            survey(task,parameter_choice,label,N,fixed_p1=33.4305,fixed_g1=3.143,fixed_g2=g2,fixed_g3=2.7315)
+
+def survey(task, parameter_choice, label, N, fixed_p1=33.4305, fixed_g1=3.143,
            fixed_g2=2.6315, fixed_g3=2.7315):
     
     # Survey piecewise polytropic parameters. Fix three parameters. Loop over one 
@@ -16,9 +72,10 @@ def survey(parameter_choice, label, N, fixed_p1=33.4305, fixed_g1=3.143,
     # called Profiling. This way we get a good idea of what are resolution should 
     # be for each parameter.
 
-    # parameter_choice : What parameter to loop over.
-    # label : Label for files.
-    # N : Length of parameter space within feasible boundaries.
+    # task              : Sub-directory name. Either 1d_runs or varying_fixed_parameters.
+    # parameter_choice  : What parameter to loop over.
+    # label             : Label for files.
+    # N                 : Length of parameter space within feasible boundaries.
 
     modsel = ems.Model_selection(posteriorFile="posterior_samples/posterior_samples_narrow_spin_prior.dat", spectral=False)
 
@@ -86,7 +143,7 @@ def survey(parameter_choice, label, N, fixed_p1=33.4305, fixed_g1=3.143,
     # method of saving file
     
     output = np.vstack((parameters_tested1,evidences)).T
-    outputfile = "parameter_files/data/1d_runs/{}_{}.txt".format(parameter_choice,label)
+    outputfile = "parameter_files/data/{}/{}_{}.txt".format(task,parameter_choice,label)
     np.savetxt(outputfile, output, fmt="%f\t%f")
 
 def plot_evidence(filename, parameter, label, fixed_p1=33.4305, fixed_g1=3.143,
@@ -174,4 +231,30 @@ def plot_interp_actual_evidences(actual_filename, interp_filename, N_start,
     elif parameter == "g3": pl.title("p1:{},g1:{},g2:{}".format(fixed_p1,fixed_g1,fixed_g2))
 
     pl.savefig("parameter_files/plots/{}/comparison_{}_{}.png".format(N_start,parameter,label))
+
+def plot_varying_fixed_parameter(fixed_p0,fixed_pf):
+    # fixed_p0  : Iterated parameter. 
+    # fixed_pf  : Varying fixed parameter.
+
+    filenames = glob.glob("parameter_files/data/varying_fixed_parameters/{}_variance_{}*".format(fixed_p0,fixed_pf))
+    
+    if fixed_pf == "p1": index_0 = 60
+    else: index_0 = 61
+    index_f = -4
+
+    for filename in filenames:
+        data = np.loadtxt(filename)
+        parameters = data[:,0]
+        evidences = data[:,1]
+        pf_value = filename[index_0:index_f]
+        
+        pl.rcParams.update({'font.size':18})
+        pl.figure(figsize=(20,15))
+        pl.plot(parameters,evidences, label="{}={}".format(fixed_pf,pf_value))
+
+    pl.xlabel(fixed_p0)
+    pl.ylabel("Evidences")
+    pl.title("{}_variance_{}".format(fixed_p0,fixed_pf))
+    pl.legend()
+    pl.savefig("{}_variance_{}.png".format(fixed_p0,fixed_pf))
 

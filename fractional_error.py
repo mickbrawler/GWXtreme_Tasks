@@ -9,7 +9,9 @@ import glob
 
 # needs to add up all the evidence files first, then calculate the error
 
-def connect_txt_files(txts_path,outputfile):
+def connect_txt_files(txts_path, outputfile):
+    # txts_path     : Directory for txt files.
+    # outputfile    : Filename holding combined data of multiple txt files.
 
     filenames = glob.glob("{}*.txt".format(txts_path))
 
@@ -19,7 +21,11 @@ def connect_txt_files(txts_path,outputfile):
                 contents = f2.read()
                 f.write(contents)
 
-def calculate_it(actual_filename, interp_filename, label):
+def calculate_it(actual_filename, interp_filename, N_type, label):
+    # actual_filename   : Actual evidences file.
+    # interp_filename   : Interpolated evidences file.
+    # N_type            : N used for interpolent is a necessary sub-directory.
+    # label             : Naming for file.
 
     actual_data = np.loadtxt(actual_filename)
     actual_parameters = actual_data[:,0]
@@ -64,6 +70,6 @@ def calculate_it(actual_filename, interp_filename, label):
     error = np.absolute(matching_interp_evidences - matching_actual_evidences) / matching_actual_evidences
 
     output =  output = np.vstack((matching_parameters,matching_actual_evidences,matching_interp_evidences,error)).T
-    outputfile = "parameter_files/parameter_data/error_analysis/N_25/error_{}.txt".format(label)
+    outputfile = "parameter_files/data/error_analysis/{}/error_{}.txt".format(N_type,label)
     np.savetxt(outputfile, output, fmt="%f\t%f\t%f\t%f")
 

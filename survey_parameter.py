@@ -16,8 +16,8 @@ def survey(parameter_choice, label, N, fixed_p1=33.4305, fixed_g1=3.143,
     # called Profiling. This way we get a good idea of what are resolution should 
     # be for each parameter.
 
-    # parameter_choice : what parameter to loop over.
-    # label : label for files.
+    # parameter_choice : What parameter to loop over.
+    # label : Label for files.
     # N : Length of parameter space within feasible boundaries.
 
     modsel = ems.Model_selection(posteriorFile="posterior_samples/posterior_samples_narrow_spin_prior.dat", spectral=False)
@@ -86,7 +86,7 @@ def survey(parameter_choice, label, N, fixed_p1=33.4305, fixed_g1=3.143,
     # method of saving file
     
     output = np.vstack((parameters_tested1,evidences)).T
-    outputfile = "parameter_files/parameter_data/1d_runs/{}_{}.txt".format(parameter_choice,label)
+    outputfile = "parameter_files/data/1d_runs/{}_{}.txt".format(parameter_choice,label)
     np.savetxt(outputfile, output, fmt="%f\t%f")
 
 def plot_evidence(filename, parameter, label, fixed_p1=33.4305, fixed_g1=3.143,
@@ -94,9 +94,9 @@ def plot_evidence(filename, parameter, label, fixed_p1=33.4305, fixed_g1=3.143,
 
     # Plot evidences of the given parameter space to see how it changes with small changes in the parameter.
 
-    # filename: (string) name of txt file holding evidences for a set of varying parameters
-    # parameter: (string) name of the parameter that is being varied
-    # label : (string) label for files.
+    # filename: (string) Name of txt file holding evidences for a set of varying parameters
+    # parameter: (string) Name of the parameter that is being varied
+    # label : (string) Label for files.
 
     data = np.loadtxt(filename)
 
@@ -114,16 +114,16 @@ def plot_evidence(filename, parameter, label, fixed_p1=33.4305, fixed_g1=3.143,
     elif parameter == "g2": pl.title("p1:{},g1:{},g3:{}".format(fixed_p1,fixed_g1,fixed_g3))
     elif parameter == "g3": pl.title("p1:{},g1:{},g2:{}".format(fixed_p1,fixed_g1,fixed_g2))
 
-    pl.savefig("parameter_files/parameter_plots/{}_{}.png".format(parameter,label))
+    pl.savefig("parameter_files/plots/{}_{}.png".format(parameter,label))
 
 def evidence_interpolation(filename, N, parameter_choice, label):
 
     # Calculate the evidences through interpolation using already calculated evidences.
 
-    # filename: (string) name of txt file holding evidences for a set of varying parameters
+    # filename: (string) Name of txt file holding evidences for a set of varying parameters
     # N : Length of parameter space within feasible boundaries.
-    # parameter_choice : parameter that is being varied.
-    # label : (string) label for files.
+    # parameter_choice : Parameter that is being varied.
+    # label : (string) Label for files.
 
     data = np.loadtxt(filename)
 
@@ -139,18 +139,18 @@ def evidence_interpolation(filename, N, parameter_choice, label):
     evidences = f(parameter_range)   # use interpolation function returned by `interp1d`
 
     output = np.vstack((parameter_range,evidences)).T
-    outputfile = "parameter_files/parameter_data/1d_runs/interp_{}_{}.txt".format(parameter_choice,label)
+    outputfile = "parameter_files/data/1d_runs/interp_{}_{}.txt".format(parameter_choice,label)
     np.savetxt(outputfile, output, fmt="%f\t%f")
 
-def plot_interp_actual_evidences(actual_filename, interp_filename, parameter,
-                                 label, fixed_p1=33.4305, fixed_g1=3.143,
-                                 fixed_g2=2.6315, fixed_g3=2.7315):
+def plot_interp_actual_evidences(actual_filename, interp_filename, N_start,
+                                 parameter, label, fixed_p1=33.4305, 
+                                 fixed_g1=3.143, fixed_g2=2.6315, fixed_g3=2.7315):
 
     # Plot the actual evidences and the interpolated ones to show the tool's accuracy.
 
-    # filename: (string) name of txt file holding evidences for a set of varying parameters
-    # parameter: (string) name of the parameter that is being varied
-    # label : (string) label for files.
+    # filename: (string) Name of txt file holding evidences for a set of varying parameters
+    # parameter: (string) Name of the parameter that is being varied
+    # label : (string) Label for files.
 
     actual_data = np.loadtxt(actual_filename)
     actual_parameters = actual_data[:,0]
@@ -173,5 +173,5 @@ def plot_interp_actual_evidences(actual_filename, interp_filename, parameter,
     elif parameter == "g2": pl.title("p1:{},g1:{},g3:{}".format(fixed_p1,fixed_g1,fixed_g3))
     elif parameter == "g3": pl.title("p1:{},g1:{},g2:{}".format(fixed_p1,fixed_g1,fixed_g2))
 
-    pl.savefig("parameter_files/parameter_plots/comparison_{}_{}.png".format(parameter,label))
+    pl.savefig("parameter_files/plots/{}/comparison_{}_{}.png".format(N_start,parameter,label))
 

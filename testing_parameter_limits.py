@@ -25,7 +25,9 @@ import json
 class param_distro:
 
     def __init__(self, N, transitions):
-        # Hold attributes that used to be global variables
+        # Hold attributes that used to be global variables.
+        # N             : Parameter size.
+        # transitions   : Number of parameter combinations tested.
 
         # List of some of the eos GWXtreme can work with off the cuff
         self.GWX_list = ["BHF_BBB2","KDE0V","KDE0V1","SKOP","HQC18","SLY2",
@@ -42,11 +44,12 @@ class param_distro:
         self.N = N
         self.transitions = transitions
 
-    def eos_to_run(self, eos_list, runs, directory, run0, p1_incr, g1_incr, 
-                   g2_incr, g3_incr):
-
-        # p1_incr=.4575, g1_incr=.927, g2_incr=1.1595, g3_incr=.9285):
-        # log_p1_SI,g1,g2,g3 = 33.4305,3.143,2.6315,2.7315 # defaults
+    def eos_to_run(self, eos_list, runs, directory, run0, p1_incr=.4575, 
+                   g1_incr=.927, g2_incr=1.1595, g3_incr=.9285):
+        # eos_list  : List of named equations of state.
+        # runs      : Number of different starting chains.
+        # directory : Directory for distributions.
+        # runs0     : Label for repeat runs to prevent overwriting.
 
         for eos in eos_list:
             
@@ -139,6 +142,10 @@ class param_distro:
         
     def likelihood(self, log_p1_SI, g1, g2, g3):
         # Produces r2 value between lal and piecewise lambdas
+        # log_p1_SI : Pressure.
+        # g1        : Adiabatic Index 1.
+        # g2        : Adiabatic Index 2.
+        # g3        : Adiabatic Index 3.
 
         s, min_mass, max_mass = self.modsel.getEoSInterp_parametrized([log_p1_SI,g1,g2,g3])
         trial_masses = np.linspace(min_mass,max_mass,self.N)

@@ -3,5 +3,5 @@ package/
 posterior_samples/
 lambda_curve_fitting/results/
 lambda_curve_fitting/Analysis/OG_SLY_results_comparison/
-parameter_test_files/parameter_test_data/
-parameter_files/parameter_data/1d_runs/
+parameter_test_files/test_data/
+parameter_files/data/1d_runs/

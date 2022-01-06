@@ -236,6 +236,8 @@ def plot_varying_fixed_parameter(fixed_p0,fixed_pf):
     # fixed_p0  : Iterated parameter. 
     # fixed_pf  : Varying fixed parameter.
 
+    pl.clf()
+
     filenames = glob.glob("parameter_files/data/varying_fixed_parameters/{}_variance_{}*".format(fixed_p0,fixed_pf))
     
     if fixed_pf == "p1": index_0 = 60
@@ -249,8 +251,6 @@ def plot_varying_fixed_parameter(fixed_p0,fixed_pf):
         pf_value = filename[index_0:index_f]
         print(pf_value)
         
-        #pl.rcParams.update({'font.size':18})
-        #pl.figure(figsize=(20,15))
         pl.plot(parameters,evidences,label="{}={}".format(fixed_pf,pf_value))
 
     pl.xlabel(fixed_p0)

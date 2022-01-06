@@ -240,13 +240,15 @@ def plot_varying_fixed_parameter(fixed_p0,fixed_pf):
 
     filenames = glob.glob("parameter_files/data/varying_fixed_parameters/{}_variance_{}*".format(fixed_p0,fixed_pf))
     
-    if fixed_pf == "p1": index_0 = 60
-    else: index_0 = 61
+#    if fixed_pf == "p1": index_0 = 60
+#    else: index_0 = 61
+    index_0 = 61
     index_f = -4
 
     for filename in filenames:
         data = np.loadtxt(filename)
-        parameters = data[:,0]
+        try: parameters = data[:,0]
+        except IndexError: continue
         evidences = data[:,1]
         pf_value = filename[index_0:index_f]
         print(pf_value)

@@ -1,8 +1,10 @@
 __pycache__/
 package/
+Anarya_package/
 posterior_samples/
-lambda_curve_fitting/results/
-lambda_curve_fitting/Analysis/OG_SLY_results_comparison/
-parameter_test_files/test_data/
-parameter_files/data/1d_runs/
-parameter_files/data/varying_fixed_parameters/
+scripts/lambda_curve_fitting/results/
+scripts/lambda_curve_fitting/Analysis/OG_SLY_results_comparison/
+old_files/parameter_test_files/test_data/
+old_files/parameter_files/data/1d_runs/
+old_files/parameter_files/data/varying_fixed_parameters/
+

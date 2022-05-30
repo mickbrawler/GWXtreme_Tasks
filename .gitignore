@@ -5,7 +5,8 @@ year2/compare_GWXtreme/__pycache__/
 year1/scripts/lambda_curve_fitting/results/
 year1/scripts/lambda_curve_fitting/H4_bestfit/
 year1/scripts/lambda_curve_fitting/Analysis/OG_SLY_results_comparison/
+year1/scripts/lambda_curve_fitting/posterior_samples/
+year1/old_files/fake_posteriors/
 year1/old_files/parameter_test_files/test_data/
-year1/old_files/parameter_files/data/1d_runs/
-year1/old_files/parameter_files/data/varying_fixed_parameters/
-
+year1/old_files/parameter_files/data/
+.gitignore

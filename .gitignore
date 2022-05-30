@@ -9,4 +9,4 @@ year1/scripts/lambda_curve_fitting/posterior_samples/
 year1/old_files/fake_posteriors/
 year1/old_files/parameter_test_files/test_data/
 year1/old_files/parameter_files/data/
-.gitignore
+./.gitignore

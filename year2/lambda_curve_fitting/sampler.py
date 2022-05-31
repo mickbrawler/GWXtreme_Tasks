@@ -11,14 +11,11 @@ import json
 # Class designed for single tabulated EoS.
 
 class mcmc_sampler():
-    def __init__(self, outfile, N=1000, nwalkers=10, nsamples=5000, 
-                 spectral=True):
+    def __init__(self, N=1000, nwalkers=10, nsamples=5000, spectral=True):
         '''
         Samples in the mass-lambda parameter space
         using the specified parametrized EoS in search
         of the best fit to a proposed EoS.
-
-        outfile ::  .json filename containing multiple EoS' chains
 
         N   ::  Number of points making up each sample's mass-lambda curve
 
@@ -29,13 +26,14 @@ class mcmc_sampler():
         spectral    ::  Choice of spectral or piecewise parametrization
         '''
         
-        self.outfile = outfile
         self.N = N
         self.nwalkers = nwalkers
         self.nsamples = nsamples
         self.spectral = spectral
         self.ndim = 4
         self.pool = 64
+        #self.EoS_names = lalsim.SimNeutronStarEOSNames # Array of tabulated eos' names
+        self.EoS_names = ["APR4_EPP", "SLY"]
         if spectral:
             self.priorbounds = {'gamma1':{'params':{"min":0.2,"max":2.00}},
                                  'gamma2':{'params':{"min":-1.6,"max":1.7}},
@@ -125,47 +123,56 @@ class mcmc_sampler():
 
         self.flat_samples = sampler.get_chain(discard=100, thin=15, flat=True)
 
-    def over_all_EoS(self):
+    def over_all_EoS(self, outfile):
         '''
         Get chain for each EoS.
+
+        outfile ::  .json filename containing multiple EoS' chains
         '''
         
-        EoS_chains = {}
-        #self.EoS_names = lalsim.SimNeutronStarEOSNames # Array of tabulated eos' names
-        self.EoS_names = ["APR4_EPP", "SLY"]
+        self.EoS_chains = {}
         for EoS_name in self.EoS_names:
             self.EoS = EoS_name
             self.run_sampler()
-            EoS_chains.update({EoS_name:self.flat_samples})
+            self.EoS_chains.update({EoS_name:self.flat_samples.tolist()})
 
-        with open(self.outfile, "w") as f:
-            json.dump(EoS_chains, f, indent=2, sort_keys=True)
+        with open(outfile, "w") as f:
+            json.dump(self.EoS_chains, f, indent=2, sort_keys=True)
 
-    def max_likelihood(self, outfile):
+    def max_likelihood(self, outfile, EoS_chains_file=None):
         '''
         Get max likelihood sample for each EoS
 
         outfile ::  .json file name for bestfit EoS results
         '''
         
+        if EoS_chains_file != None:
+            with open(EoS_chains_file, "r") as f:
+                self.EoS_chains = json.load(f)
+
         self.bestfit_EoS = {}
         for EoS_name in self.EoS_names:
+            self.target_eos_values(EoS_name)
             samples = self.EoS_chains[EoS_name]
             likelihoods = []
             for sample in samples:
-                likelihoods.append(self.likelihood(sample))
+                likelihoods.append(self.log_likelihood(sample))
             self.bestfit_EoS.update({EoS_name:samples[np.argmax(likelihoods)]})
 
         with open(outfile, "w") as f:
             json.dump(self.bestfit_EoS, f, indent=2, sort_keys=True)
 
-    def plot_kde_EoS(self, Dir):
+    def plot_kde_EoS(self, Dir, bestfit_EoS_file=None):
         '''
         Plot the target EoS and its best fit parameters.
         
         Dir ::  Directory name for plot files (include /)
         '''
         
+        if bestfit_EoS_file != None:
+            with open(bestfit_EoS_file, "r") as f:
+                self.bestfit_EoS = json.load(f)
+
         for EoS_name in self.EoS_names:
             outfile = Dir + EoS_name + ".png"
             self.modsel.plot_func([EoS_name, self.bestfit_EoS[EoS_name]],filename=outfile)

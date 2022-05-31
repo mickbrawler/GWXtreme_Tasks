@@ -1,4 +1,7 @@
 package/
+year2/lambda_curve_fitting/posterior_samples/
+year2/lambda_curve_fitting/__pycache__/
+year2/lambda_curve_fitting/files/runs/
 year2/posterior_samples/
 year2/compare_GWXtreme/posterior_samples/
 year2/compare_GWXtreme/__pycache__/

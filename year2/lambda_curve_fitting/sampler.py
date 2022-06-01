@@ -33,11 +33,12 @@ class mcmc_sampler():
         self.ndim = 4
         self.pool = 64
         #self.EoS_names = lalsim.SimNeutronStarEOSNames # Array of tabulated eos' names
-        self.EoS_names = ['APR4_EPP', 'BHF_BBB2', 'H4', 'HQC18',
-                          'KDE0V', 'KDE0V1', 'MPA1', 'MS1B_PP',
-                          'MS1_PP', 'RS', 'SK255', 'SK272',
-                          'SKI2', 'SKI3', 'SKI4', 'SKI5', 'SKI6',
-                          'SKMP', 'SKOP', 'SLY9', 'WFF1']
+        #self.EoS_names = ['APR4_EPP', 'BHF_BBB2', 'H4', 'HQC18',
+        #                  'KDE0V', 'KDE0V1', 'MPA1', 'MS1B_PP',
+        #                  'MS1_PP', 'RS', 'SK255', 'SK272',
+        #                  'SKI2', 'SKI3', 'SKI4', 'SKI5', 'SKI6',
+        #                  'SKMP', 'SKOP', 'SLY9', 'WFF1']
+        self.EoS_names = ['APR4_EPP', 'SLY']
         if spectral:
             self.priorbounds = {'gamma1':{'params':{"min":0.2,"max":2.00}},
                                  'gamma2':{'params':{"min":-1.6,"max":1.7}},
@@ -127,43 +128,41 @@ class mcmc_sampler():
 
         self.flat_samples = sampler.get_chain(discard=100, thin=15, flat=True)
 
-    def over_all_EoS(self, outfile):
+    def over_all_EoS(self, Dir):
         '''
         Get chain for each EoS.
 
-        outfile ::  .json filename containing multiple EoS' chains
+        Dir ::  Directory name for each EoS samples file (include /)
         '''
+
+        self.Dir = Dir
         
-        self.EoS_chains = {}
         for EoS_name in self.EoS_names:
             self.EoS = EoS_name
             self.run_sampler()
-            self.EoS_chains.update({EoS_name:self.flat_samples.tolist()})
+            outfile = Dir + EoS_name + ".txt"
+            np.savetxt(outfile,self.flat_samples)
 
-        with open(outfile, "w") as f:
-            json.dump(self.EoS_chains, f, indent=2, sort_keys=True)
-
-    def max_likelihood(self, outfile, EoS_chains_file=None):
+    def max_likelihood(self, outfile, EoS_chains_Dir=None):
         '''
         Get max likelihood sample for each EoS
 
         outfile ::  .json file name for bestfit EoS results
 
-        EoS_chains_file ::  Chain filename in case sampler hasn't been run
+        EoS_chains_Dir ::  EoS chains directory in case sampler hasn't been run
         '''
         
-        if EoS_chains_file != None:
-            with open(EoS_chains_file, "r") as f:
-                self.EoS_chains = json.load(f)
+        if EoS_chains_Dir != None:
+            self.Dir = EoS_chains_Dir
 
         self.bestfit_EoS = {}
         for EoS_name in self.EoS_names:
             self.target_eos_values(EoS_name)
-            samples = self.EoS_chains[EoS_name]
+            samples = np.loadtxt(self.Dir + EoS_name + ".txt")
             likelihoods = []
             for sample in samples:
                 likelihoods.append(self.log_likelihood(sample))
-            self.bestfit_EoS.update({EoS_name:samples[np.argmax(likelihoods)]})
+            self.bestfit_EoS.update({EoS_name:list(samples[np.argmax(likelihoods)])})
 
         with open(outfile, "w") as f:
             json.dump(self.bestfit_EoS, f, indent=2, sort_keys=True)

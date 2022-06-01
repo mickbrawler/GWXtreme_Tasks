@@ -33,7 +33,11 @@ class mcmc_sampler():
         self.ndim = 4
         self.pool = 64
         #self.EoS_names = lalsim.SimNeutronStarEOSNames # Array of tabulated eos' names
-        self.EoS_names = ["APR4_EPP", "SLY"]
+        self.EoS_names = ['APR4_EPP', 'BHF_BBB2', 'H4', 'HQC18',
+                          'KDE0V', 'KDE0V1', 'MPA1', 'MS1B_PP',
+                          'MS1_PP', 'RS', 'SK255', 'SK272',
+                          'SKI2', 'SKI3', 'SKI4', 'SKI5', 'SKI6',
+                          'SKMP', 'SKOP', 'SLY9', 'WFF1']
         if spectral:
             self.priorbounds = {'gamma1':{'params':{"min":0.2,"max":2.00}},
                                  'gamma2':{'params':{"min":-1.6,"max":1.7}},
@@ -144,6 +148,8 @@ class mcmc_sampler():
         Get max likelihood sample for each EoS
 
         outfile ::  .json file name for bestfit EoS results
+
+        EoS_chains_file ::  Chain filename in case sampler hasn't been run
         '''
         
         if EoS_chains_file != None:
@@ -167,6 +173,8 @@ class mcmc_sampler():
         Plot the target EoS and its best fit parameters.
         
         Dir ::  Directory name for plot files (include /)
+
+        bestfit_EoS_file    ::  bestfit filename in case sampler hasn't been run
         '''
         
         if bestfit_EoS_file != None:
@@ -176,3 +184,4 @@ class mcmc_sampler():
         for EoS_name in self.EoS_names:
             outfile = Dir + EoS_name + ".png"
             self.modsel.plot_func([EoS_name, self.bestfit_EoS[EoS_name]],filename=outfile)
+            

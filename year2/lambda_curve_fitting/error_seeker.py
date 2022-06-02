@@ -8,14 +8,16 @@ import numpy as np
 import pylab as pl
 import json
 
-# Class designed for single tabulated EoS.
+# Class designed for to save error prone samples
 
 class mcmc_sampler():
     def __init__(self, N=1000, nwalkers=10, nsamples=5000, spectral=True):
         '''
         Samples in the mass-lambda parameter space
         using the specified parametrized EoS in search
-        of the best fit to a proposed EoS.
+        of the best fit to a proposed EoS. This variant
+        class will also save the error prone samples for
+        future testing of the is_valid_eos function.
 
         N   ::  Number of points making up each sample's mass-lambda curve
 
@@ -32,11 +34,8 @@ class mcmc_sampler():
         self.spectral = spectral
         self.ndim = 4
         self.pool = 64
-        self.EoS_names = ['APR4_EPP', 'BHF_BBB2', 'H4', 'HQC18',
-                          'KDE0V', 'KDE0V1', 'MPA1', 'MS1B_PP',
-                          'MS1_PP', 'RS', 'SK255', 'SK272',
-                          'SKI2', 'SKI3', 'SKI4', 'SKI5', 'SKI6',
-                          'SKMP', 'SKOP', 'SLY9', 'WFF1']
+        self.EoS = "APR4_EPP"
+
         if spectral:
             self.priorbounds = {'gamma1':{'params':{"min":0.2,"max":2.00}},
                                  'gamma2':{'params':{"min":-1.6,"max":1.7}},
@@ -115,7 +114,10 @@ class mcmc_sampler():
 
         self.p0=p0
 
-    def run_sampler(self):
+    def run_sampler(self, outfile):
+        '''
+        outfile ::  .txt file name for the EoS chain
+        '''
 
         self.target_eos_values(self.EoS)
         self.initialize_walkers()
@@ -125,60 +127,5 @@ class mcmc_sampler():
             sampler.run_mcmc(self.p0,self.nsamples,progress=True)
 
         self.flat_samples = sampler.get_chain(discard=100, thin=15, flat=True)
+        np.savetxt(outfile,self.flat_samples)
 
-    def over_all_EoS(self, Dir):
-        '''
-        Get chain for each EoS.
-
-        Dir ::  Directory name for each EoS samples file (include /)
-        '''
-
-        self.Dir = Dir
-        
-        for EoS_name in self.EoS_names:
-            self.EoS = EoS_name
-            self.run_sampler()
-            outfile = Dir + EoS_name + ".txt"
-            np.savetxt(outfile,self.flat_samples)
-
-    def max_likelihood(self, outfile, EoS_chains_Dir=None):
-        '''
-        Get max likelihood sample for each EoS
-
-        outfile ::  .json file name for bestfit EoS results
-
-        EoS_chains_Dir ::  EoS chains directory in case sampler hasn't been run
-        '''
-        
-        if EoS_chains_Dir != None:
-            self.Dir = EoS_chains_Dir
-
-        self.bestfit_EoS = {}
-        for EoS_name in self.EoS_names:
-            self.target_eos_values(EoS_name)
-            samples = np.loadtxt(self.Dir + EoS_name + ".txt")
-            likelihoods = []
-            for sample in samples:
-                likelihoods.append(self.log_likelihood(sample))
-            self.bestfit_EoS.update({EoS_name:list(samples[np.argmax(likelihoods)])})
-
-        with open(outfile, "w") as f:
-            json.dump(self.bestfit_EoS, f, indent=2, sort_keys=True)
-
-    def plot_kde_EoS(self, Dir, bestfit_EoS_file=None):
-        '''
-        Plot the target EoS and its best fit parameters.
-        
-        Dir ::  Directory name for plot files (include /)
-
-        bestfit_EoS_file    ::  bestfit filename in case sampler hasn't been run
-        '''
-        
-        if bestfit_EoS_file != None:
-            with open(bestfit_EoS_file, "r") as f:
-                self.bestfit_EoS = json.load(f)
-
-        for EoS_name in self.EoS_names:
-            outfile = Dir + EoS_name + ".png"
-            self.modsel.plot_func([EoS_name, self.bestfit_EoS[EoS_name]],filename=outfile)
-            

@@ -5,6 +5,7 @@ import numpy as np
 import pylab as pl
 import glob
 import json
+import argparse
 
 # Sampler meant to save problematic samples.
 class sample_quest:
@@ -87,7 +88,6 @@ class sample_quest:
             
             try: 
 
-                print(seg_fault_samples)
                 seg_fault_samples[-1] = [g1_p1_choice1,g2_1_choice1,g3_2_choice1,g4_3_choice1]
                 with open(self.seg_fault_samples_file, "w") as f: json.dump(seg_fault_samples, f, indent=2)
                 L1 = self.likelihood(g1_p1_choice1,g2_1_choice1,g3_2_choice1,g4_3_choice1)
@@ -154,3 +154,12 @@ class sample_quest:
         seg_fault_samples.pop() # Need to clip seg_fault_samples list in case none were found.
         with open(self.seg_fault_samples_file, "w") as f: json.dump(seg_fault_samples, f, indent=2)
 
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument("N", help="Number of points", type=int)
+    parser.add_argument("samples", help="Number of samples", type=int)
+    parser.add_argument("spectral", help="True-(spectral model), False-(piecewise model)", type=bool)
+    args = parser.parse_args()
+
+    sampler = sample_quest(args.N,args.samples,spectral=args.spectral)
+    sampler.run_MCMC()

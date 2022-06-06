@@ -7,8 +7,9 @@ import lal
 import numpy as np
 import pylab as pl
 import json
+import math
 
-# Class designed for single tabulated EoS.
+# Class designed to find bestfit parameters for multiple EoS
 
 class mcmc_sampler():
     def __init__(self, N=1000, nwalkers=10, nsamples=5000, spectral=True):
@@ -32,11 +33,13 @@ class mcmc_sampler():
         self.spectral = spectral
         self.ndim = 4
         self.pool = 64
-        self.EoS_names = ['APR4_EPP', 'BHF_BBB2', 'H4', 'HQC18',
-                          'KDE0V', 'KDE0V1', 'MPA1', 'MS1B_PP',
-                          'MS1_PP', 'RS', 'SK255', 'SK272',
-                          'SKI2', 'SKI3', 'SKI4', 'SKI5', 'SKI6',
-                          'SKMP', 'SKOP', 'SLY9', 'WFF1']
+#        self.EoS_names = ['APR4_EPP', 'BHF_BBB2', 'H4', 'HQC18',
+#                          'KDE0V', 'KDE0V1', 'MPA1', 'MS1B_PP',
+#                          'MS1_PP', 'RS', 'SK255', 'SK272',
+#                          'SKI2', 'SKI3', 'SKI4', 'SKI5', 'SKI6',
+#                          'SKMP', 'SKOP', 'SLY9', 'WFF1']
+
+        self.EoS_names = ['APR4_EPP']
         if spectral:
             self.priorbounds = {'gamma1':{'params':{"min":0.2,"max":2.00}},
                                  'gamma2':{'params':{"min":-1.6,"max":1.7}},
@@ -78,7 +81,7 @@ class mcmc_sampler():
         trial_masses = np.linspace(min_mass,max_mass,self.N)
         trial_Lambdas = s(trial_masses)
         trial_lambdas = (trial_Lambdas / lal.G_SI) * ((trial_masses * lal.MRSUN_SI) ** 5)
-        r_val = 1 / np.log(np.sum((self.target_lambdas - trial_lambdas) ** 2))
+        r_val = - math.log(np.sum((self.target_lambdas - trial_lambdas) ** 2))
         return r_val
             
     def log_posterior(self, parameters):
@@ -159,7 +162,9 @@ class mcmc_sampler():
             samples = np.loadtxt(self.Dir + EoS_name + ".txt")
             likelihoods = []
             for sample in samples:
-                likelihoods.append(self.log_likelihood(sample))
+                likelihood = self.log_likelihood(sample)
+                print(likelihood)
+                likelihoods.append(likelihood)
             self.bestfit_EoS.update({EoS_name:list(samples[np.argmax(likelihoods)])})
 
         with open(outfile, "w") as f:

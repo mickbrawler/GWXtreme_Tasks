@@ -148,21 +148,9 @@ class sample_quest:
                 g3_2_choice1 = g3_2_choice2
                 g4_3_choice1 = g4_3_choice2
 
-
-                #post_r2.append(L2) # if choice2s are better, append their likelihood
-                
-            #else:
-
-                #post_r2.append(L1) # otherwise choice1s are better, so their likelihood is appended instead
             increment += 1
-            # current eos' p1,g1,g2,g3 combination is stored (can then see what parameter combinations lasts the "longest")
-            #post_g1_p1.append(g1_p1_choice1)
-            #post_g2_1.append(g2_1_choice1)
-            #post_g3_2.append(g3_2_choice1)
-            #post_g4_3.append(g4_3_choice1)
-
-            # Saving script for samples and their likelihoods was deleted. Not needed
 
         #If it makes it past this while loop, it means no seg_faults happened
         seg_fault_samples.pop() # Need to clip seg_fault_samples list in case none were found.
+        with open(self.seg_fault_samples_file, "w") as f: json.dump(seg_fault_samples, f, indent=2)
 

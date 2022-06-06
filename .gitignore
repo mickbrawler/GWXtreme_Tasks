@@ -1,8 +1,8 @@
 package/
-year2/lambda_curve_fitting/posterior_samples/
-year2/lambda_curve_fitting/__pycache__/
-year2/lambda_curve_fitting/files/runs/
-year2/posterior_samples/
+year2/parametric_tests/posterior_samples/
+year2/parametric_tests/__pycache__/
+year2/parametric_tests/files/runs/
+year2/parametric_tests/contain_error_samples/
 year2/compare_GWXtreme/posterior_samples/
 year2/compare_GWXtreme/__pycache__/
 year1/scripts/lambda_curve_fitting/results/

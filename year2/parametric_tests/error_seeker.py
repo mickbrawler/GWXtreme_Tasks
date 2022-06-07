@@ -36,9 +36,8 @@ class sample_quest:
 
         # First two files have to be made using np.savetxt(filename,[emptylist])
         # Last file is made with a dictionary in form {"seg_fault":[emptylist]} saved to a json
-        self.value_error_samples_file = Dir + "value_error_samples.txt"
-        self.runtime_error_samples_file = Dir + "runtime_error_samples.txt"
-        self.type_error_samples_file = Dir + "type_error_samples.txt"
+        self.value_error_samples_file = Dir + "value_error_samples.json"
+        self.runtime_error_samples_file = Dir + "runtime_error_samples.json"
         self.seg_fault_samples_file = Dir + "seg_fault_samples.json"
 
     def likelihood(self, log_p1_SI, g1, g2, g3):
@@ -71,8 +70,8 @@ class sample_quest:
         target_Lambdas = s(target_masses)
         self.target_lambdas = (target_Lambdas / lal.G_SI) * ((target_masses * lal.MRSUN_SI) ** 5)
         
-        value_error_samples = list(np.loadtxt(self.value_error_samples_file))
-        runtime_error_samples = list(np.loadtxt(self.runtime_error_samples_file))
+        with open(self.value_error_samples_file, "r") as f: value_error_samples = json.load(f)
+        with open(self.runtime_error_samples_file, "r") as f: runtime_error_samples = json.load(f)
         with open(self.seg_fault_samples_file, "r") as f: seg_fault_samples = json.load(f)
         seg_fault_samples.append([0.0,0.0,0.0,0.0]) # placeholder for seg fault sample (needs to be in try: or this indice's value gets weird)
 
@@ -97,15 +96,11 @@ class sample_quest:
             # APPENDS ERROR-PRONE SAMPLES AND SAVES THEM
             except ValueError: 
                 value_error_samples.append([g1_p1_choice1,g2_1_choice1,g3_2_choice1,g4_3_choice1])
-                np.savetxt(self.value_error_samples_file, value_error_samples)
+                with open(self.value_error_samples_file, "w") as f: json.dump(value_error_samples, f, indent=2)
                 continue 
             except RuntimeError: 
                 runtime_error_samples.append([g1_p1_choice1,g2_1_choice1,g3_2_choice1,g4_3_choice1])
-                np.savetxt(self.runtime_error_samples_file, runtime_error_samples)
-                continue
-            except TypeError: # Error specific to spectral method
-                type_error_samples.append([g1_p1_choice1,g2_1_choice1,g3_2_choice1,g4_3_choice1])
-                np.savetxt(self.type_error_samples_file, type_error_samples)
+                with open(self.runtime_error_samples_file, "w") as f: json.dump(runtime_error_samples, f, indent=2)
                 continue
 
         post_p1 = []
@@ -126,7 +121,6 @@ class sample_quest:
 
             try: 
 
-                print(seg_fault_samples)
                 seg_fault_samples[-1] = [g1_p1_choice2,g2_1_choice2,g3_2_choice2,g4_3_choice2]
                 with open(self.seg_fault_samples_file, "w") as f: json.dump(seg_fault_samples, f, indent=2)
                 L2 = self.likelihood(g1_p1_choice2,g2_1_choice2,g3_2_choice2,g4_3_choice2) # if L2 gives an error it'll keep trying
@@ -134,11 +128,11 @@ class sample_quest:
             # APPENDS ERROR-PRONE SAMPLES AND SAVES THEM
             except ValueError: 
                 value_error_samples.append([g1_p1_choice2,g2_1_choice2,g3_2_choice2,g4_3_choice2])
-                np.savetxt(self.value_error_samples_file, value_error_samples)
+                with open(self.value_error_samples_file, "w") as f: json.dump(value_error_samples, f, indent=2)
                 continue
             except RuntimeError: 
                 runtime_error_samples.append([g1_p1_choice2,g2_1_choice2,g3_2_choice2,g4_3_choice2])
-                np.savetxt(self.runtime_error_samples_file, runtime_error_samples)
+                with open(self.runtime_error_samples_file, "w") as f: json.dump(runtime_error_samples, f, indent=2)
                 continue
 
             if L2/L1 >= np.random.random():

@@ -3,11 +3,17 @@ import numpy as np
 import testing_samples
 import os
 
+def make_files():
+    np.savetxt("files/seg_faults.txt", []) 
+    np.savetxt("files/no_errors.txt", []) 
+    np.savetxt("files/errors.txt", [])
+
 def runner():
     logP1, gamma1, gamma2, gamma3 = np.loadtxt("files/samples.txt").T
-    no_errors = []
-    errors = []
-    seg_faults = []
+    seg_faults = list(np.loadtxt("files/seg_faults.txt"))
+    no_errors = list(np.loadtxt("files/no_errors.txt"))
+    errors = list(np.loadtxt("files/errors.txt"))
+
     for g1_p1, g2_g1, g3_g2, g4_g3 in zip(logP1, gamma1, gamma2, gamma3):
         os.system("python testing_samples.py {} {} {} {}".format(g1_p1, g2_g1, g3_g2, g4_g3))
         x = int(np.loadtxt("files/placeholder.txt"))
@@ -19,7 +25,7 @@ def runner():
         if x==2:
             errors.append([g1_p1, g2_g1, g3_g2, g4_g3])
 
-        np.savetxt("files/seg_faults.txt", np.array(seg_faults)) 
-        np.savetxt("files/no_errors.txt", np.array(no_errors)) 
-        np.savetxt("files/errors.txt", np.array(errors))
+        np.savetxt("files/seg_faults.txt", seg_faults) 
+        np.savetxt("files/no_errors.txt", no_errors) 
+        np.savetxt("files/errors.txt", errors)
 

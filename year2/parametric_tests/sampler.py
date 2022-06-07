@@ -33,18 +33,22 @@ class mcmc_sampler():
         self.spectral = spectral
         self.ndim = 4
         self.pool = 64
-        self.EoS_names = ['APR4_EPP', 'BHF_BBB2', 'H4', 'HQC18',
-                          'KDE0V', 'KDE0V1', 'MPA1', 'MS1B_PP',
-                          'MS1_PP', 'RS', 'SK255', 'SK272',
-                          'SKI2', 'SKI3', 'SKI4', 'SKI5', 'SKI6',
-                          'SKMP', 'SKOP', 'SLY9', 'WFF1']
+#        self.EoS_names = ['APR4_EPP', 'BHF_BBB2', 'H4', 'HQC18',
+#                          'KDE0V', 'KDE0V1', 'MPA1', 'MS1B_PP',
+#                          'MS1_PP', 'RS', 'SK255', 'SK272',
+#                          'SKI2', 'SKI3', 'SKI4', 'SKI5', 'SKI6',
+#                          'SKMP', 'SKOP', 'SLY9', 'WFF1']
 
-#        self.EoS_names = ['APR4_EPP']
-        if spectral:
-            self.priorbounds = {'gamma1':{'params':{"min":0.2,"max":2.00}},
-                                 'gamma2':{'params':{"min":-1.6,"max":1.7}},
-                                 'gamma3':{'params':{"min":-0.6,"max":0.6}},
-                                'gamma4':{'params':{"min":-0.02,"max":0.02}}}
+        self.EoS_names = ['APR4_EPP']
+        if spectral: # Using altered bounds to see if it effect bestfit results
+#            self.priorbounds = {'gamma1':{'params':{"min":0.2,"max":2.00}},
+#                                 'gamma2':{'params':{"min":-1.6,"max":1.7}},
+#                                 'gamma3':{'params':{"min":-0.6,"max":0.6}},
+#                                'gamma4':{'params':{"min":-0.02,"max":0.02}}}
+            self.priorbounds = {'gamma1':{'params':{"min":0.0,"max":2.5}},
+                                 'gamma2':{'params':{"min":-2.0,"max":2.0}},
+                                 'gamma3':{'params':{"min":-0.1,"max":0.1}},
+                                'gamma4':{'params':{"min":-0.1,"max":0.1}}}
             self.keys = ["gamma1", "gamma2", "gamma3", "gamma4"]
         else:
             self.priorbounds = {'logP':{'params':{"min":33.6,"max":34.5}},

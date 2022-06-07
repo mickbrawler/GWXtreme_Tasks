@@ -45,10 +45,10 @@ class mcmc_sampler():
 #                                 'gamma2':{'params':{"min":-1.6,"max":1.7}},
 #                                 'gamma3':{'params':{"min":-0.6,"max":0.6}},
 #                                'gamma4':{'params':{"min":-0.02,"max":0.02}}}
-            self.priorbounds = {'gamma1':{'params':{"min":0.0,"max":2.5}},
-                                 'gamma2':{'params':{"min":-2.0,"max":2.0}},
-                                 'gamma3':{'params':{"min":-0.1,"max":0.1}},
-                                'gamma4':{'params':{"min":-0.1,"max":0.1}}}
+            self.priorbounds = {'gamma1':{'params':{"min":0.0,"max":3.0}},
+                                 'gamma2':{'params':{"min":-2.5,"max":2.5}},
+                                 'gamma3':{'params':{"min":-0.25,"max":0.25}},
+                                'gamma4':{'params':{"min":-0.25,"max":0.25}}}
             self.keys = ["gamma1", "gamma2", "gamma3", "gamma4"]
         else:
             self.priorbounds = {'logP':{'params':{"min":33.6,"max":34.5}},

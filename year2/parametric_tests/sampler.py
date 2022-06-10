@@ -45,10 +45,10 @@ class mcmc_sampler():
 #                                 'gamma2':{'params':{"min":-1.6,"max":1.7}},
 #                                 'gamma3':{'params':{"min":-0.6,"max":0.6}},
 #                                'gamma4':{'params':{"min":-0.02,"max":0.02}}}
-            self.priorbounds = {'gamma1':{'params':{"min":0.0,"max":3.0}},
-                                 'gamma2':{'params':{"min":-2.5,"max":2.5}},
-                                 'gamma3':{'params':{"min":-0.25,"max":0.25}},
-                                'gamma4':{'params':{"min":-0.25,"max":0.25}}}
+            self.priorbounds = {'gamma1':{'params':{"min":0.0,"max":2.75}},
+                                 'gamma2':{'params':{"min":-2.25,"max":2.25}},
+                                 'gamma3':{'params':{"min":-1.25,"max":1.25}}, # Made clerical mistake, contrained gamma3 instead of expanding it. I need to rerun this bestfit code for spectral and see if expanding the prior bounds did actually work.
+                                'gamma4':{'params':{"min":-0.1,"max":0.1}}}
             self.keys = ["gamma1", "gamma2", "gamma3", "gamma4"]
         else:
             self.priorbounds = {'logP':{'params':{"min":33.6,"max":34.5}},
@@ -57,6 +57,7 @@ class mcmc_sampler():
                                 'gamma3':{'params':{"min":1.1,"max":4.5}}}
             self.keys = ["logP", "gamma1", "gamma2", "gamma3"]
         self.modsel = ems.Model_selection("posterior_samples/posterior_samples_narrow_spin_prior.dat", spectral=self.spectral)
+        print("end of init")
     
     def target_eos_values(self, eos):
         '''
@@ -117,6 +118,7 @@ class mcmc_sampler():
             if(ep.is_valid_eos(params,self.priorbounds,spectral=self.spectral)):
                 p0.append(g)
                 n+=1
+                print(n)
             if(n>=self.nwalkers):
                 break
 
@@ -125,7 +127,9 @@ class mcmc_sampler():
     def run_sampler(self):
 
         self.target_eos_values(self.EoS)
+        print("Grabbed target eos vals")
         self.initialize_walkers()
+        print("Initialized_walkers")
 
         with Pool(self.pool) as pool:
             sampler=mc.EnsembleSampler(self.nwalkers,self.ndim,self.log_posterior,pool=pool)
@@ -143,9 +147,13 @@ class mcmc_sampler():
         self.Dir = Dir
         
         for EoS_name in self.EoS_names:
+            print(EoS_name)
             self.EoS = EoS_name
+            print("starting sampler")
             self.run_sampler()
+            print("past sampler")
             outfile = Dir + EoS_name + ".txt"
+            print("saving as txt")
             np.savetxt(outfile,self.flat_samples)
 
     def max_likelihood(self, outfile, EoS_chains_Dir=None):

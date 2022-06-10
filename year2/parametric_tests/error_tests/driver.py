@@ -17,7 +17,7 @@ class error_search:
 
         self.gamma1 = np.random.uniform(low=0.0,high=2.5,size=self.samples)
         self.gamma2 = np.random.uniform(low=-2.0,high=2.0,size=self.samples)
-        self.gamma3 = np.random.uniform(low=-0.1,high=0.1,size=self.samples)
+        self.gamma3 = np.random.uniform(low=-1.0,high=1.0,size=self.samples)
         self.gamma4 = np.random.uniform(low=-0.1,high=0.1,size=self.samples)
 
     def runner(self):
@@ -27,7 +27,6 @@ class error_search:
         errors = []
 
         for g1_p1, g2_g1, g3_g2, g4_g3 in zip(self.gamma1, self.gamma2, self.gamma3, self.gamma4):
-            # This is where things get hectic. os.system being used this way seems to cause multiple cores to run. idk why
             os.system("python3 error_test.py {} {} {} {} {}".format(g1_p1, g2_g1, g3_g2, g4_g3, self.core))
             x = int(np.loadtxt("files/runs/{}placeholder.txt".format(self.Dir)))
 

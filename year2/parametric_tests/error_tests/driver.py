@@ -2,26 +2,18 @@ import lalsimulation as lalsim
 import numpy as np
 import os
 import argparse
-import subprocess
 
 # Driver designed to test SPECTRAL samples for errors
 
 class error_search:
 
     def __init__(self, samples, core):
-        self.samples = int(samples)
-        self.core = int(core)
-        self.Dir = "core{}/".format(int(core))
-
-    def make_files(self):
-        os.system("rm -rf files/runs/*")
-        os.system("mkdir files/runs/" + self.Dir) # -p if directory exist .. #os.path.join
-        np.savetxt("files/runs/{}seg_faults.txt".format(self.Dir), []) 
-        np.savetxt("files/runs/{}no_errors.txt".format(self.Dir), []) 
-        np.savetxt("files/runs/{}errors.txt".format(self.Dir), [])
+        self.samples = samples
+        self.core = core
+        self.Dir = "core{}/".format(core)
 
     def get_random_samples(self):
-        # Creates N number of samples with predetermined bounds
+        # Creates samples with predetermined bounds
 
         self.gamma1 = np.random.uniform(low=0.0,high=2.5,size=self.samples)
         self.gamma2 = np.random.uniform(low=-2.0,high=2.0,size=self.samples)
@@ -29,18 +21,20 @@ class error_search:
         self.gamma4 = np.random.uniform(low=-0.1,high=0.1,size=self.samples)
 
     def runner(self):
-        seg_faults = list(np.loadtxt("files/runs/{}seg_faults.txt".format(self.Dir)))
-        no_errors = list(np.loadtxt("files/runs/{}no_errors.txt".format(self.Dir)))
-        errors = list(np.loadtxt("files/runs/{}errors.txt".format(self.Dir)))
+        # Runs the error_test on each sample
+        seg_faults = []
+        no_errors = []
+        errors = []
 
         for g1_p1, g2_g1, g3_g2, g4_g3 in zip(self.gamma1, self.gamma2, self.gamma3, self.gamma4):
             # This is where things get hectic. os.system being used this way seems to cause multiple cores to run. idk why
             os.system("python3 error_test.py {} {} {} {} {}".format(g1_p1, g2_g1, g3_g2, g4_g3, self.core))
             x = int(np.loadtxt("files/runs/{}placeholder.txt".format(self.Dir)))
 
-            if x==0: seg_faults.append([g1_p1, g2_g1, g3_g2, g4_g3])
-            if x==1: no_errors.append([g1_p1, g2_g1, g3_g2, g4_g3])
-            if x==2: errors.append([g1_p1, g2_g1, g3_g2, g4_g3])
+            sample = [g1_p1, g2_g1, g3_g2, g4_g3]
+            if x==0: seg_faults.append(sample)
+            if x==1: no_errors.append(sample)
+            if x==2: errors.append(sample)
 
         np.savetxt("files/runs/{}seg_faults.txt".format(self.Dir), seg_faults) 
         np.savetxt("files/runs/{}no_errors.txt".format(self.Dir), no_errors) 
@@ -48,11 +42,10 @@ class error_search:
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("samples", help="Number of samples", type=float)
-    parser.add_argument("core", help="Core number", type=float)
+    parser.add_argument("samples", help="Number of samples", type=int)
+    parser.add_argument("core", help="Core number", type=int)
     args = parser.parse_args()
 
     tester = error_search(args.samples,args.core)
-    tester.make_files()
     tester.get_random_samples()
     tester.runner()

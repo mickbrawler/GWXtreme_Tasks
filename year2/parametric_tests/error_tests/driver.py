@@ -24,7 +24,8 @@ class error_search:
         # Runs the error_test on each sample
         seg_faults = []
         no_errors = []
-        errors = []
+        runtime_errors = []
+        value_errors = []
 
         for g1_p1, g2_g1, g3_g2, g4_g3 in zip(self.gamma1, self.gamma2, self.gamma3, self.gamma4):
             os.system("python3 error_test.py {} {} {} {} {}".format(g1_p1, g2_g1, g3_g2, g4_g3, self.core))
@@ -33,11 +34,13 @@ class error_search:
             sample = [g1_p1, g2_g1, g3_g2, g4_g3]
             if x==0: seg_faults.append(sample)
             if x==1: no_errors.append(sample)
-            if x==2: errors.append(sample)
+            if x==2: runtime_errors.append(sample)
+            if x==3: value_errors.append(sample)
 
         np.savetxt("files/runs/{}seg_faults.txt".format(self.Dir), seg_faults) 
         np.savetxt("files/runs/{}no_errors.txt".format(self.Dir), no_errors) 
-        np.savetxt("files/runs/{}errors.txt".format(self.Dir), errors)
+        np.savetxt("files/runs/{}runtime_errors.txt".format(self.Dir), runtime_errors)
+        np.savetxt("files/runs/{}value_errors.txt".format(self.Dir), value_errors)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()

@@ -1,6 +1,6 @@
 #!/bin/bash
-cores=64
-samples=100000
+cores=32
+samples=50000
 
 rm -rf files/runs/*
 

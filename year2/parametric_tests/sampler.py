@@ -33,22 +33,13 @@ class mcmc_sampler():
         self.spectral = spectral
         self.ndim = 4
         self.pool = 64
-#        self.EoS_names = ['APR4_EPP', 'BHF_BBB2', 'H4', 'HQC18',
-#                          'KDE0V', 'KDE0V1', 'MPA1', 'MS1B_PP',
-#                          'MS1_PP', 'RS', 'SK255', 'SK272',
-#                          'SKI2', 'SKI3', 'SKI4', 'SKI5', 'SKI6',
-#                          'SKMP', 'SKOP', 'SLY9', 'WFF1']
-
-        self.EoS_names = ['APR4_EPP']
+        self.min_mass = 1.0
+        self.EoS_names = ["APR4_EPP","H4","MS1"]
         if spectral: # Using altered bounds to see if it effect bestfit results
-#            self.priorbounds = {'gamma1':{'params':{"min":0.2,"max":2.00}},
-#                                 'gamma2':{'params':{"min":-1.6,"max":1.7}},
-#                                 'gamma3':{'params':{"min":-0.6,"max":0.6}},
-#                                'gamma4':{'params':{"min":-0.02,"max":0.02}}}
-            self.priorbounds = {'gamma1':{'params':{"min":0.0,"max":2.75}},
-                                 'gamma2':{'params':{"min":-2.25,"max":2.25}},
-                                 'gamma3':{'params':{"min":-1.25,"max":1.25}}, # Made clerical mistake, contrained gamma3 instead of expanding it. I need to rerun this bestfit code for spectral and see if expanding the prior bounds did actually work.
-                                'gamma4':{'params':{"min":-0.1,"max":0.1}}}
+            self.priorbounds = {'gamma1':{'params':{"min":0.2,"max":2.00}},
+                                 'gamma2':{'params':{"min":-1.6,"max":1.7}},
+                                 'gamma3':{'params':{"min":-0.6,"max":0.6}},
+                                'gamma4':{'params':{"min":-0.02,"max":0.02}}}
             self.keys = ["gamma1", "gamma2", "gamma3", "gamma4"]
         else:
             self.priorbounds = {'logP':{'params':{"min":33.6,"max":34.5}},
@@ -57,7 +48,6 @@ class mcmc_sampler():
                                 'gamma3':{'params':{"min":1.1,"max":4.5}}}
             self.keys = ["logP", "gamma1", "gamma2", "gamma3"]
         self.modsel = ems.Model_selection("posterior_samples/posterior_samples_narrow_spin_prior.dat", spectral=self.spectral)
-        print("end of init")
     
     def target_eos_values(self, eos):
         '''
@@ -67,10 +57,8 @@ class mcmc_sampler():
         '''
 
         eos_pointer = lalsim.SimNeutronStarEOSByName(eos)
-        fam_pointer = lalsim.CreateSimNeutronStarFamily(eos_pointer)
-        #min_mass = lalsim.SimNeutronStarFamMinimumMass(fam_pointer)/lal.MSUN_SI
-        s, _, _, max_mass = self.modsel.getEoSInterp(eosname=eos, m_min=1.0)
-        target_masses = np.linspace(1.0,max_mass,self.N)
+        s, _, _, max_mass = self.modsel.getEoSInterp(eosname=eos, m_min=self.min_mass)
+        target_masses = np.linspace(self.min_mass,max_mass,self.N)
         target_Lambdas = s(target_masses)
         self.target_lambdas = (target_Lambdas / lal.G_SI) * ((target_masses * lal.MRSUN_SI) ** 5)
 
@@ -81,13 +69,17 @@ class mcmc_sampler():
         parameters  ::  4 parameters of EoS
         '''
 
-        g1_p1, g2, g3, g4 = parameters
-        s, _, max_mass = self.modsel.getEoSInterp_parametrized([g1_p1,g2,g3,g4])
-        trial_masses = np.linspace(1.0,max_mass,self.N)
-        trial_Lambdas = s(trial_masses)
-        trial_lambdas = (trial_Lambdas / lal.G_SI) * ((trial_masses * lal.MRSUN_SI) ** 5)
-        r_val = - math.log(np.sum((self.target_lambdas - trial_lambdas) ** 2))
-        return r_val
+        try:
+            g1_p1, g2_g1, g3_g2, g4_g3 = parameters
+            s, _, max_mass = self.modsel.getEoSInterp_parametrized([g1_p1,g2_g1,g3_g2,g4_g3])
+            trial_masses = np.linspace(self.min_mass,max_mass,self.N)
+            trial_Lambdas = s(trial_masses)
+            trial_lambdas = (trial_Lambdas / lal.G_SI) * ((trial_masses * lal.MRSUN_SI) ** 5)
+            #r_val = - math.log(np.sum((self.target_lambdas - trial_lambdas) ** 2))
+            r_val = math.log(1 / math.log(np.sum((self.target_lambdas - trial_lambdas) ** 2)))
+            return r_val
+        except:
+            return -np.inf
             
     def log_posterior(self, parameters):
         '''
@@ -109,16 +101,15 @@ class mcmc_sampler():
         parameter space and that don't produce other errors.
         '''
 
-        n=0
         p0=[]
+        n = 0
         while True:
             g=np.array([np.random.uniform(self.priorbounds[k]["params"]["min"],self.priorbounds[k]["params"]["max"]) for k in self.keys])
             params={k:np.array([g[i]]) for i,k in enumerate(self.keys)}
 
             if(ep.is_valid_eos(params,self.priorbounds,spectral=self.spectral)):
                 p0.append(g)
-                n+=1
-                print(n)
+                n += 1
             if(n>=self.nwalkers):
                 break
 
@@ -127,9 +118,7 @@ class mcmc_sampler():
     def run_sampler(self):
 
         self.target_eos_values(self.EoS)
-        print("Grabbed target eos vals")
         self.initialize_walkers()
-        print("Initialized_walkers")
 
         with Pool(self.pool) as pool:
             sampler=mc.EnsembleSampler(self.nwalkers,self.ndim,self.log_posterior,pool=pool)
@@ -147,13 +136,9 @@ class mcmc_sampler():
         self.Dir = Dir
         
         for EoS_name in self.EoS_names:
-            print(EoS_name)
             self.EoS = EoS_name
-            print("starting sampler")
             self.run_sampler()
-            print("past sampler")
             outfile = Dir + EoS_name + ".txt"
-            print("saving as txt")
             np.savetxt(outfile,self.flat_samples)
 
     def max_likelihood(self, outfile, EoS_chains_Dir=None):
@@ -175,7 +160,6 @@ class mcmc_sampler():
             likelihoods = []
             for sample in samples:
                 likelihood = self.log_likelihood(sample)
-                print(likelihood)
                 likelihoods.append(likelihood)
             self.bestfit_EoS.update({EoS_name:list(samples[np.argmax(likelihoods)])})
 

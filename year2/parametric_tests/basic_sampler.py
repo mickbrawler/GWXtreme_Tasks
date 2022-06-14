@@ -93,4 +93,6 @@ class param_distro:
         bestfit = {eos_name:self.bestfit_samples}
         with open("testing_bestfit.json", "w") as f: json.dump(bestfit, f, indent=2, sort_keys=True)
         self.modsel.plot_func([eos_name, self.bestfit_samples],filename="testing_bestfit.png")
+        self.modsel.plot_func([eos_name],filename="testing_bestfit_separate1.png")
+        self.modsel.plot_func([self.bestfit_samples],filename="testing_bestfit_separate2.png")
 

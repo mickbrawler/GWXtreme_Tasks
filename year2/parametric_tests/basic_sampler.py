@@ -34,7 +34,6 @@ class param_distro:
             trial_Lambdas = s(trial_masses)
             trial_lambdas = (trial_Lambdas / lal.G_SI) * ((trial_masses * lal.MRSUN_SI) ** 5) 
             r_val = 1 / np.log(np.sum((self.target_lambdas - trial_lambdas) ** 2))
-            r_val = - np.sum((self.target_lambdas - trial_lambdas) ** 2)
             return r_val
         except:
             return -np.inf

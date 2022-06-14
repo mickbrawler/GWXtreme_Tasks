@@ -68,9 +68,9 @@ class mcmc_sampler():
 
         eos_pointer = lalsim.SimNeutronStarEOSByName(eos)
         fam_pointer = lalsim.CreateSimNeutronStarFamily(eos_pointer)
-        min_mass = lalsim.SimNeutronStarFamMinimumMass(fam_pointer)/lal.MSUN_SI
-        s, _, _, max_mass = self.modsel.getEoSInterp(eosname=eos, m_min=min_mass)
-        target_masses = np.linspace(min_mass,max_mass,self.N)
+        #min_mass = lalsim.SimNeutronStarFamMinimumMass(fam_pointer)/lal.MSUN_SI
+        s, _, _, max_mass = self.modsel.getEoSInterp(eosname=eos, m_min=1.0)
+        target_masses = np.linspace(1.0,max_mass,self.N)
         target_Lambdas = s(target_masses)
         self.target_lambdas = (target_Lambdas / lal.G_SI) * ((target_masses * lal.MRSUN_SI) ** 5)
 
@@ -82,8 +82,8 @@ class mcmc_sampler():
         '''
 
         g1_p1, g2, g3, g4 = parameters
-        s, min_mass, max_mass = self.modsel.getEoSInterp_parametrized([g1_p1,g2,g3,g4])
-        trial_masses = np.linspace(min_mass,max_mass,self.N)
+        s, _, max_mass = self.modsel.getEoSInterp_parametrized([g1_p1,g2,g3,g4])
+        trial_masses = np.linspace(1.0,max_mass,self.N)
         trial_Lambdas = s(trial_masses)
         trial_lambdas = (trial_Lambdas / lal.G_SI) * ((trial_masses * lal.MRSUN_SI) ** 5)
         r_val = - math.log(np.sum((self.target_lambdas - trial_lambdas) ** 2))

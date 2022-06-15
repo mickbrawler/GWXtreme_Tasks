@@ -88,13 +88,10 @@ class param_distro:
         post_r2 = []
         while len(post_1) < (self.samples):
 
-            if checkpoint:
-                p1_choice2, p2_choice2, p3_choice2, p4_choice2 = self.saves[eos_name]
-            else:
-                p1_choice2 = np.random.uniform(low=self.low_g1_p1,high=self.high_g1_p1)
-                p2_choice2 = np.random.uniform(low=self.low_g2_g1,high=self.high_g2_g1)
-                p3_choice2 = np.random.uniform(low=self.low_g3_g2,high=self.high_g3_g2)
-                p4_choice2 = np.random.uniform(low=self.low_g4_g3,high=self.high_g4_g3)
+            p1_choice2 = np.random.uniform(low=self.low_g1_p1,high=self.high_g1_p1)
+            p2_choice2 = np.random.uniform(low=self.low_g2_g1,high=self.high_g2_g1)
+            p3_choice2 = np.random.uniform(low=self.low_g3_g2,high=self.high_g3_g2)
+            p4_choice2 = np.random.uniform(low=self.low_g4_g3,high=self.high_g4_g3)
 
             L2 = self.likelihood(p1_choice2,p2_choice2,p3_choice2,p4_choice2)
 

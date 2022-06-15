@@ -90,8 +90,11 @@ class param_distro:
         post_3 = []
         post_4 = []
         post_r2 = []
-        while len(post_1) < (self.samples):
+        sample_count = 0
+        while sample_count < self.samples:
 
+            print(sample_count)
+            sample_count += 1
             p1_choice2 = np.random.uniform(low=self.low_g1_p1,high=self.high_g1_p1)
             p2_choice2 = np.random.uniform(low=self.low_g2_g1,high=self.high_g2_g1)
             p3_choice2 = np.random.uniform(low=self.low_g3_g2,high=self.high_g3_g2)

@@ -24,10 +24,14 @@ class param_distro:
             with open("files/basic_runs/1_spectral_EoS_bestfits.json", "r") as f:
                 self.saves = json.load(f)
         else:
-            self.priorbounds = {'logP':{'params':{"min":33.6,"max":34.5}},
-                                'gamma1':{'params':{"min":2.0,"max":4.5}},
-                                'gamma2':{'params':{"min":1.1,"max":4.5}},
-                                'gamma3':{'params':{"min":1.1,"max":4.5}}}
+#            self.priorbounds = {'logP':{'params':{"min":33.6,"max":34.5}},
+#                                'gamma1':{'params':{"min":2.0,"max":4.5}},
+#                                'gamma2':{'params':{"min":1.1,"max":4.5}},
+#                                'gamma3':{'params':{"min":1.1,"max":4.5}}}
+            self.priorbounds = {'logP':{'params':{"min":33.6,"max":34.25}},
+                                'gamma1':{'params':{"min":2.5,"max":4.25}},
+                                'gamma2':{'params':{"min":1.5,"max":4.0}},
+                                'gamma3':{'params':{"min":1.5,"max":4.0}}}
             self.keys = ["logP", "gamma1", "gamma2", "gamma3"]
             with open("files/basic_runs/1_piecewise_EoS_bestfits.json", "r") as f:
                 self.saves = json.load(f)

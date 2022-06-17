@@ -1,6 +1,6 @@
 #!/bin/bash
 cores=2
-samples=5000
+samples=50000
 spectral=0
 
 rm -rf files/runs/*

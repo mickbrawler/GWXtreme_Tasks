@@ -16,7 +16,8 @@ def get_EoS_error(og_file, piecewise_file, spectral_file, posterior_file):
         
     BF_dict = {}
     error_BF_dict = {}
-    EoS_names = ["APR4_EPP", "MS1", "H4"]
+    #EoS_names = ["APR4_EPP", "MS1", "H4"]
+    EoS_names = ["APR4_EPP"]
     for EoS_name in EoS_names:
         modsel = ems.Model_selection(posteriorFile=posterior_file, spectral=False)
         named_BF = modsel.computeEvidenceRatio(EoS1=EoS_name, EoS2='SLY')

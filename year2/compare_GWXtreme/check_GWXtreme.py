@@ -11,9 +11,10 @@ class checker:
 
         self.env = env
         self.ref_EoS = "SLY"
-        self.EoS_list = ["APR4_EPP", "H4", "MS1"]
-        self.posterior_files = ["posterior_files/posterior_samples_broad_spin_prior.dat",
-                                "posterior_files/posterior_samples_narrow_spin_prior.dat"]
+        self.EoS_list = ["H4"]
+        #self.EoS_list = ["APR4_EPP", "H4", "MS1"]
+        self.posterior_files = ["posterior_samples/posterior_samples_broad_spin_prior.dat",
+                                "posterior_samples/posterior_samples_narrow_spin_prior.dat"]
 
         # Parametrized bestfits
         with open("../parametric_tests/files/basic_runs/1_piecewise_EoS_bestfits.json", "r") as f:
@@ -21,7 +22,7 @@ class checker:
         with open("../parametric_tests/files/basic_runs/1_spectral_EoS_bestfits.json", "r") as f:
             self.spectral_EoS = json.load(f)
 
-    def makeFiles(self)
+    def makeFiles(self):
         # Makes MRK and ML files for each EoS
 
         m_min = 1.0
@@ -57,10 +58,10 @@ class checker:
             radii = np.array(radii)
             kappas = np.array(kappas)
 
-            MRK = np.array([gravMass,radii,kappas])
-            ML = np.array([gravMass,Lambdas])
-            np.savetxt("comparison_files/MRK/{}.txt".format(EoS))
-            np.savetxt("comparison_files/ML/{}.txt".format(EoS))
+            MRK = np.array([gravMass,radii,kappas]).T
+            ML = np.array([gravMass,Lambdas]).T
+            np.savetxt("comparison_files/MRK/{}.txt".format(EoS), MRK)
+            np.savetxt("comparison_files/ML/{}.txt".format(EoS), ML)
 
     def get_eos_BF(self):
         # Produces file of a dictionary of each EoS' Bayes factor.
@@ -69,7 +70,7 @@ class checker:
 
         increment = 0
         Type = ["narrow", "broad"]
-        for posterior_file in posterior_files:
+        for posterior_file in self.posterior_files:
 
             modsel = ems.Model_selection(posteriorFile=posterior_file, spectral=False)
             s_modsel = ems.Model_selection(posteriorFile=posterior_file, spectral=True)
@@ -148,8 +149,6 @@ class checker:
         # Each env has files for each type of input (named, MRK, ML) for modsel
         # and stacking.
 
-        # Function needs redesign to be capable of testing every type of file
-
         versions = ["named", "MRK", "ML", "piecewise", "spectral"]
         for version in versions:
 
@@ -175,4 +174,34 @@ class checker:
                 pl.xticks(rotation=45, ha='right', fontsize=5)
                 pl.tight_layout()
                 pl.savefig("comparison_files/{}/{}_comparison.png")
+
+    # Check for plotting script doesn't need to be advanced. Maybe not needed at all.
+    # It depends on modsel and stacking, which we already test.
+    def get_EoS_plot(self):
+
+        increment = 0
+        Type = ["narrow", "broad"]
+        for posterior_file in self.posterior_files:
+
+            modsel = ems.Model_selection(posteriorFile=posterior_file, spectral=False)
+            s_modsel = ems.Model_selection(posteriorFile=posterior_file, spectral=True)
+            
+            for EoS in self.EoS_list:
+
+                modsel.plot_func([EoS, self.ref_EoS],filename="comparison_files/named/{}_{}_{}.png".format(self.env,Type[increment],EoS))
+                modsel.plot_func(["comparison_files/MRK/{}.txt", self.ref_EoS],filename="comparison_files/MRK/{}_{}_{}.png".format(self.env,Type[increment],EoS))
+                modsel.plot_func(["comparison_files/ML/{}.txt", self.ref_EoS],filename="comparison_files/ML/{}_{}_{}.png".format(self.env,Type[increment],EoS))
+                modsel.plot_func([self.piecewise_EoS[EoS], self.ref_EoS],filename="comparison_files/piecewise/{}_{}_{}.png".format(self.env,Type[increment],EoS))
+                s_modsel.plot_func([self.spectral_EoS[EoS], self.ref_EoS],filename="comparison_files/spectral/{}_{}_{}.png".format(self.env,Type[increment],EoS))
+
+        stackobj = ems.Stacking(self.posterior_files, spectral=False)
+        s_stackobj = ems.Stacking(self.posterior_files, spectral=True)
+
+        for EoS in self.EoS_list:
+
+            stackobj.plot_func([EoS, self.ref_EoS],filename="comparison_files/named/stack_{}_{}.png".format(self.env,EoS))
+            stackobj.plot_func(["comparison_files/MRK/{}.txt", self.ref_EoS],filename="comparison_files/MRK/stack_{}_{}.png".format(self.env,EoS))
+            stackobj.plot_func(["comparison_files/ML/{}.txt", self.ref_EoS],filename="comparison_files/ML/stack_{}_{}.png".format(self.env,EoS))
+            stackobj.plot_func([self.piecewise_EoS[EoS], self.ref_EoS],filename="comparison_files/piecewise/stack_{}_{}.png".format(self.env,EoS))
+            s_stackobj.plot_func([self.spectral_EoS[EoS], self.ref_EoS],filename="comparison_files/spectral/stack_{}_{}.png".format(self.env,EoS))
 

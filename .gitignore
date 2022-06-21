@@ -7,6 +7,8 @@ year2/parametric_tests/error_tests/files/combined/
 year2/parametric_tests/error_tests/files/safekeeping/
 year2/parametric_tests/error_tests/__pycache__/
 year2/compare_GWXtreme/posterior_samples/
+year2/compare_GWXtreme/comparison_files/MRK/
+year2/compare_GWXtreme/comparison_files/ML/
 year2/compare_GWXtreme/__pycache__/
 year2/running_driver/
 year1/scripts/lambda_curve_fitting/results/

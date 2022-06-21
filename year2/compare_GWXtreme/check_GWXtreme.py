@@ -11,8 +11,7 @@ class checker:
 
         self.env = env
         self.ref_EoS = "SLY"
-        self.EoS_list = ["H4"]
-        #self.EoS_list = ["APR4_EPP", "H4", "MS1"]
+        self.EoS_list = ["APR4_EPP", "H4", "MS1"]
         self.posterior_files = ["posterior_samples/posterior_samples_broad_spin_prior.dat",
                                 "posterior_samples/posterior_samples_narrow_spin_prior.dat"]
 
@@ -25,7 +24,6 @@ class checker:
     def makeFiles(self):
         # Makes MRK and ML files for each EoS
 
-        m_min = 1.0
         N = 1000
         for EoS in self.EoS_list:
 
@@ -33,7 +31,8 @@ class checker:
             fam = lalsim.CreateSimNeutronStarFamily(eos)
             max_mass = lalsim.SimNeutronStarMaximumMass(fam)/lal.MSUN_SI
             max_mass = int(max_mass*1000)/1000
-            masses = np.linspace(m_min, max_mass, N)
+            min_mass = lalsim.SimNeutronStarFamMinimumMass(fam)/lal.MSUN_SI
+            masses = np.linspace(min_mass, max_mass, N)
             masses = masses[masses <= max_mass]
 
             Lambdas = []
@@ -178,6 +177,7 @@ class checker:
     # Check for plotting script doesn't need to be advanced. Maybe not needed at all.
     # It depends on modsel and stacking, which we already test.
     def get_EoS_plot(self):
+        # Simply runs plot_func for every type of file possible
 
         increment = 0
         Type = ["narrow", "broad"]

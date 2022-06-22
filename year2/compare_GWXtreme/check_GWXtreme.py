@@ -69,7 +69,7 @@ class checker:
         # piecewise, spectral)
 
         increment = 0
-        Type = ["narrow", "broad"]
+        tests = ["narrow"]
         for posterior_file in self.posterior_files:
 
             modsel = ems.Model_selection(posteriorFile=posterior_file, spectral=False)
@@ -93,15 +93,15 @@ class checker:
                 BF = s_modsel.computeEvidenceRatio(EoS1=self.spectral_EoS[EoS], EoS2=self.ref_EoS)
                 spectral_BFs.update({EoS:BF})
 
-            with open("comparison_files/named/{}_{}_BF.json".format(Type[increment],self.env), "w") as f:
+            with open("comparison_files/named/{}_{}_BF.json".format(tests[increment],self.env), "w") as f:
                 json.dump(named_BFs, f, indent=2, sort_keys=True)
-            with open("comparison_files/MRK/{}_{}_BF.json".format(Type[increment],self.env), "w") as f:
+            with open("comparison_files/MRK/{}_{}_BF.json".format(tests[increment],self.env), "w") as f:
                 json.dump(MRK_BFs, f, indent=2, sort_keys=True)
-            with open("comparison_files/ML/{}_{}_BF.json".format(Type[increment],self.env), "w") as f:
+            with open("comparison_files/ML/{}_{}_BF.json".format(tests[increment],self.env), "w") as f:
                 json.dump(ML_BFs, f, indent=2, sort_keys=True)
-            with open("comparison_files/piecewise/{}_{}_BF.json".format(Type[increment],self.env), "w") as f:
+            with open("comparison_files/piecewise/{}_{}_BF.json".format(tests[increment],self.env), "w") as f:
                 json.dump(piecewise_BFs, f, indent=2, sort_keys=True)
-            with open("comparison_files/spectral/{}_{}_BF.json".format(Type[increment],self.env), "w") as f:
+            with open("comparison_files/spectral/{}_{}_BF.json".format(tests[increment],self.env), "w") as f:
                 json.dump(spectral_BFs, f, indent=2, sort_keys=True)
 
             increment += 1
@@ -167,14 +167,12 @@ class checker:
                 perc_error = (np.abs(base_vals - anarya_vals) / base_vals) * 100
 
                 pl.clf()
-                pl.figure(figsize=(25, 10))
                 pl.bar(self.EoS_list, perc_error)
                 pl.title("Percent Error of Anarya's Build")
                 pl.xlabel("EoS Names")
                 pl.ylabel("Percent Error")
-                pl.xticks(rotation=45, ha='right', fontsize=5)
-                pl.tight_layout()
-                pl.savefig("comparison_files/{}/{}_comparison.png".format(version,test))
+                pl.xticks(rotation=45, ha='right')
+                pl.savefig("comparison_files/{}/error_plot/{}_comparison.png".format(version,test))
 
     # Check for plotting script doesn't need to be advanced. Maybe not needed at all.
     # It depends on modsel and stacking, which we already test.
@@ -190,20 +188,20 @@ class checker:
             
             for EoS in self.EoS_list:
 
-                modsel.plot_func([EoS],filename="comparison_files/named/{}_{}_{}.png".format(self.env,Type[increment],EoS))
-                modsel.plot_func(["comparison_files/MRK/{}.txt".format(EoS)],filename="comparison_files/MRK/{}_{}_{}.png".format(self.env,Type[increment],EoS))
-                modsel.plot_func(["comparison_files/ML/{}.txt".format(EoS)],filename="comparison_files/ML/{}_{}_{}.png".format(self.env,Type[increment],EoS))
-                modsel.plot_func([self.piecewise_EoS[EoS]],filename="comparison_files/piecewise/{}_{}_{}.png".format(self.env,Type[increment],EoS))
-                s_modsel.plot_func([self.spectral_EoS[EoS]],filename="comparison_files/spectral/{}_{}_{}.png".format(self.env,Type[increment],EoS))
+                modsel.plot_func([EoS],filename="comparison_files/named/EoS_plot/{}_{}_{}.png".format(self.env,Type[increment],EoS))
+                modsel.plot_func(["comparison_files/MRK/{}.txt".format(EoS)],filename="comparison_files/MRK/EoS_plot/{}_{}_{}.png".format(self.env,Type[increment],EoS))
+                modsel.plot_func(["comparison_files/ML/{}.txt".format(EoS)],filename="comparison_files/ML/EoS_plot/{}_{}_{}.png".format(self.env,Type[increment],EoS))
+                modsel.plot_func([self.piecewise_EoS[EoS]],filename="comparison_files/piecewise/EoS_plot/{}_{}_{}.png".format(self.env,Type[increment],EoS))
+                s_modsel.plot_func([self.spectral_EoS[EoS]],filename="comparison_files/spectral/EoS_plot/{}_{}_{}.png".format(self.env,Type[increment],EoS))
 
         stackobj = ems.Stacking(self.posterior_files, spectral=False)
         s_stackobj = ems.Stacking(self.posterior_files, spectral=True)
 
         for EoS in self.EoS_list:
 
-            stackobj.plot_stacked_bf(eos_list=[EoS],filename="comparison_files/named/stack_{}_{}.png".format(self.env,EoS))
-            stackobj.plot_stacked_bf(eos_list=["comparison_files/MRK/{}.txt".format(EoS)],filename="comparison_files/MRK/stack_{}_{}.png".format(self.env,EoS))
-            stackobj.plot_stacked_bf(eos_list=["comparison_files/ML/{}.txt".format(EoS)],filename="comparison_files/ML/stack_{}_{}.png".format(self.env,EoS))
-            stackobj.plot_stacked_bf(eos_list=[self.piecewise_EoS[EoS]],filename="comparison_files/piecewise/stack_{}_{}.png".format(self.env,EoS))
-            s_stackobj.plot_stacked_bf(eos_list=[self.spectral_EoS[EoS]],filename="comparison_files/spectral/stack_{}_{}.png".format(self.env,EoS))
+            stackobj.plot_stacked_bf(eos_list=[EoS],filename="comparison_files/named/EoS_plot/stack_{}_{}.png".format(self.env,EoS))
+            stackobj.plot_stacked_bf(eos_list=["comparison_files/MRK/{}.txt".format(EoS)],filename="comparison_files/MRK/EoS_plot/stack_{}_{}.png".format(self.env,EoS))
+            stackobj.plot_stacked_bf(eos_list=["comparison_files/ML/{}.txt".format(EoS)],filename="comparison_files/ML/EoS_plot/stack_{}_{}.png".format(self.env,EoS))
+            stackobj.plot_stacked_bf(eos_list=[self.piecewise_EoS[EoS]],filename="comparison_files/piecewise/EoS_plot/stack_{}_{}.png".format(self.env,EoS))
+            s_stackobj.plot_stacked_bf(eos_list=[self.spectral_EoS[EoS]],filename="comparison_files/spectral/EoS_plot/stack_{}_{}.png".format(self.env,EoS))
 

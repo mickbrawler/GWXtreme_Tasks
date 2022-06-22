@@ -63,7 +63,7 @@ class checker:
             np.savetxt("comparison_files/MRK/{}.txt".format(EoS), MRK)
             np.savetxt("comparison_files/ML/{}.txt".format(EoS), ML)
 
-    def get_eos_BF(self):
+    def get_EoS_BF(self):
         # Produces file of a dictionary of each EoS' Bayes factor.
         # Different Bayes factor for each version of an EoS (named, MRK, ML,
         # piecewise, spectral)
@@ -106,7 +106,7 @@ class checker:
 
             increment += 1
 
-    def get_eos_stack_BF(self):
+    def get_EoS_stack_BF(self):
         # Produces file of a dictionary of each EoS' stacked Bayes factor.
         # Different Bayes factor for each version of an EoS (named, MRK, ML,
         # piecewise, spectral)

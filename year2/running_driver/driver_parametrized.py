@@ -1,13 +1,12 @@
 from GWXtreme.parametrized_eos_sampler import mcmc_sampler
+import numpy as np
+import glob
 
 #Array Containing list of paths to the .dat files  containing the posterior samples for the events:
-fnames=["galpop/APR4_EPP/291_1.31_1.31/bns_example_samples.dat",
-        "galpop/APR4_EPP/157_1.32_1.26/bns_example_samples.dat"]
-#        "galpop/APR4_EPP/199_1.39_1.34/bns_example_samples.dat",
-#        "galpop/APR4_EPP/71_1.4_1.38/bns_example_samples.dat",
-#        "galpop/APR4_EPP/136_1.32_1.27/bns_example_samples.dat"]
 
-
+paths = np.array(glob.glob("galpop/APR4_EPP/*"))
+files = np.repeat("/bns_example_samples.dat", len(paths))
+fnames = list(np.char.add(paths,files))
 
 #Name of/ Path to file in which EoS parameter posterior samples will be saved:
 outname='Ap4_O3_injections'
@@ -17,7 +16,7 @@ outname='Ap4_O3_injections'
 
 """For SPectral"""
 
-sampler=mcmc_sampler(fnames, {'gamma1':{'params':{"min":0.2,"max":2.00}},'gamma2':{'params':{"min":-1.6,"max":1.7}},'gamma3':{'params':{"min":-0.6,"max":0.6}},'gamma4':{'params':{"min":-0.02,"max":0.02}}}, outname, nwalkers=100, Nsamples=1000, ndim=4, spectral=True, npool=100)
+sampler=mcmc_sampler(fnames, {'gamma1':{'params':{"min":0.2,"max":2.00}},'gamma2':{'params':{"min":-1.6,"max":1.7}},'gamma3':{'params':{"min":-0.6,"max":0.6}},'gamma4':{'params':{"min":-0.02,"max":0.02}}}, outname, nwalkers=100, Nsamples=7500, ndim=4, spectral=True, npool=100)
 
 
 """OR"""

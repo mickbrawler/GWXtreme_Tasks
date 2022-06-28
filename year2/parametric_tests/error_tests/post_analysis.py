@@ -92,6 +92,11 @@ def parameter_slice_plots(include_seg_faults=False, include_errors=False, s=0.01
         filenames = ["files/combined/{}seg_fault_samples.json".format(Dir), "files/combined/{}no_error_samples.json".format(Dir), "files/combined/{}seg_valid_samples.json".format(Dir)]
         sub_Dir = "seg/"
         colors = ["red", "blue", "black"]
+    # Added recently to make requested plot
+    elif (include_seg_faults == False) & (include_errors == True):
+        filenames = ["files/combined/{}no_error_samples.json".format(Dir), "files/combined/{}value_error_samples.json".format(Dir), "files/combined/{}runtime_error_samples.json".format(Dir)] 
+        sub_Dir = "error/"
+        colors = ["black", "blue", "red"]
     elif (include_seg_faults == False) & (include_errors == False):
         filenames = ["files/combined/{}no_error_samples.json".format(Dir), "files/combined/{}no_error_valid_samples.json".format(Dir)]
         sub_Dir = "no_error/"
@@ -99,6 +104,7 @@ def parameter_slice_plots(include_seg_faults=False, include_errors=False, s=0.01
 
     increment = 0
     for filename in filenames:
+        print(filename)
 
         with open(filename, "r") as f:
             samples = np.array(json.load(f))

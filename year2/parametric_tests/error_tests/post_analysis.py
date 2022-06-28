@@ -94,9 +94,9 @@ def parameter_slice_plots(include_seg_faults=False, include_errors=False, s=0.01
         colors = ["red", "blue", "black"]
     # Added recently to make requested plot
     elif (include_seg_faults == False) & (include_errors == True):
-        filenames = ["files/combined/{}no_error_samples.json".format(Dir), "files/combined/{}value_error_samples.json".format(Dir), "files/combined/{}runtime_error_samples.json".format(Dir)] 
+        filenames = ["files/combined/{}no_error_samples.json".format(Dir), "files/combined/{}runtime_error_samples.json".format(Dir)] 
         sub_Dir = "error/"
-        colors = ["black", "blue", "red"]
+        colors = ["black", "red"]
     elif (include_seg_faults == False) & (include_errors == False):
         filenames = ["files/combined/{}no_error_samples.json".format(Dir), "files/combined/{}no_error_valid_samples.json".format(Dir)]
         sub_Dir = "no_error/"

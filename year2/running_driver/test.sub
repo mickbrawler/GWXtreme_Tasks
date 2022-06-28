@@ -1,0 +1,15 @@
+
+universe = vanilla
+executable = ./DMTGen-LHO-condor2.sh
+arguments = "--start-gps=$(macrostart) --end-gps=$(macroend) --output-dir=$(macroout) --file-prefix=H-H1_O3ReplayMDC_INJ1_Burst1"
+request_cpus = 1
+request_disk = 10G
+get_env = true
+accounting_group = ligo.sim.o1.cbc.explore.test
+accounting_group_user = shaon.ghosh
+log = logs/H-$(macrostart)_$(macroend).log
+error = errors/H-$(macrostart)_$(macroend).err
+output = outputs/H-$(macrostart)_$(macroend).out
+notification = never
+queue 1
+

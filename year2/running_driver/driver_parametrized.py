@@ -22,11 +22,12 @@ outname='Ap4_O3_injections'
 
 """For Piece wise polytrope"""
 
-sampler=mcmc_sampler(fnames, {'logP':{'params':{"min":33.6,"max":34.5}},'gamma1':{'params':{"min":2.0,"max":4.5}},'gamma2':{'params':{"min":1.1,"max":4.5}},'gamma3':{'params':{"min":1.1,"max":4.5}}}, outname, nwalkers=100, Nsamples=100, ndim=4, spectral=False, npool=100)
+sampler=mcmc_sampler(fnames, {'logP':{'params':{"min":33.6,"max":34.5}},'gamma1':{'params':{"min":2.0,"max":4.5}},'gamma2':{'params':{"min":1.1,"max":4.5}},'gamma3':{'params':{"min":1.1,"max":4.5}}}, outname, nwalkers=100, Nsamples=500, ndim=4, spectral=False, npool=100)
 
 #Run, Save , Plot
 
-sampler.initialize_walkers()
+#sampler.initialize_walkers()
+sampler.p0=np.loadtxt('valid_art_pop_piecewise2.txt')
 sampler.run_sampler()
 sampler.save_data()
 

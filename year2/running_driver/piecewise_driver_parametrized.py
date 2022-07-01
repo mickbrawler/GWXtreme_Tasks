@@ -26,7 +26,7 @@ start = time.time()
 
 """For Piece wise polytrope"""
 
-sampler=mcmc_sampler(fnames, {'logP':{'params':{"min":33.6-1,"max":34.5-1}},'gamma1':{'params':{"min":2.0,"max":4.5}},'gamma2':{'params':{"min":1.1,"max":4.5}},'gamma3':{'params':{"min":1.1,"max":4.5}}}, outname, nwalkers=100, Nsamples=100, ndim=4, spectral=False, npool=100)
+sampler=mcmc_sampler(fnames, {'logP':{'params':{"min":33.6-1,"max":34.5-1}},'gamma1':{'params':{"min":2.0,"max":4.5}},'gamma2':{'params':{"min":1.1,"max":4.5}},'gamma3':{'params':{"min":1.1,"max":4.5}}}, outname, nwalkers=100, Nsamples=1000, ndim=4, spectral=False, npool=100)
 
 #Run, Save , Plot
 

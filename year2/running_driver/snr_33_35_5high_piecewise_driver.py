@@ -5,11 +5,11 @@ import time
 
 #Array Containing list of paths to the .dat files  containing the posterior samples for the events:
 
-paths = np.array(glob.glob("files/galpop/APR4_EPP/*"))
+paths = np.array(glob.glob("files/snrbin/APR4_EPP/33_to_35/5_high_m/*"))
 files = np.repeat("/bns_example_samples.dat", len(paths))
 fnames = list(np.char.add(paths,files))
 
-outputDir = "runs/official/piecewise_galpop_10000/"
+outputDir = "runs/official/piecewise_snr_33_35_5high_10000/"
 
 #Name of/ Path to file in which EoS parameter posterior samples will be saved:
 outname='{}Ap4_O3_injections'.format(outputDir)
@@ -19,7 +19,7 @@ start = time.time()
 
 """For Piece wise polytrope"""
 
-sampler=mcmc_sampler(fnames, {'logP':{'params':{"min":33.6-1,"max":34.5-1}},'gamma1':{'params':{"min":2.0,"max":4.5}},'gamma2':{'params':{"min":1.1,"max":4.5}},'gamma3':{'params':{"min":1.1,"max":4.5}}}, outname, nwalkers=100, Nsamples=10000, ndim=4, spectral=False, npool=100)
+sampler=mcmc_sampler(fnames, {'logP':{'params':{"min":33.6-1,"max":34.5-1}},'gamma1':{'params':{"min":2.0,"max":4.5}},'gamma2':{'params':{"min":1.1,"max":4.5}},'gamma3':{'params':{"min":1.1,"max":4.5}}}, outname, nwalkers=100, Nsamples=1000, ndim=4, spectral=False, npool=20)
 
 #Run, Save , Plot
 

@@ -16,13 +16,13 @@
 
 
 import numpy as np
-from .eos_model_selection import Stacking
+from GWXtreme.eos_model_selection import Stacking
 import h5py
 import corner
 from multiprocessing import cpu_count, Pool
 import time
 import emcee as mc
-from .eos_prior import is_valid_eos,eos_p_of_rho, spectral_eos,polytrope_eos
+from GWXtreme.eos_prior import is_valid_eos,eos_p_of_rho, spectral_eos,polytrope_eos
 import lalsimulation
 import matplotlib.pyplot as plt
         
@@ -46,15 +46,11 @@ def plot(infile,outputDir,cornerplot={'plot':True,'true vals':None},p_vs_rho={'p
                   (default is False)
     '''
 
-    if spectral:
-        eos=spectral_eos
-    else:
-        eos=polytrope_eos
-
+    eos=polytrope_eos
     fig={'corner':None,'p_vs_rho':None}
     data=h5py.File(infile,'r')
-    Samples = np.array(data.get('chain'))
-    Ns=samples.shape
+    Samples = np.array(data.get('chains'))
+    Ns=Samples.shape
     burn_in=int(Ns[0]/2.)
     samples=[]
     thinning=int(Ns[0]/50.)

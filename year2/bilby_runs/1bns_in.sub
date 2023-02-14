@@ -1,0 +1,14 @@
+universe = vanilla
+executable = /home/anarya.ray/anarya6/bin/python3.9
+arguments = /home/anarya.ray/gwxtreme-project/injection_run/roq/run_pe.py $(macroj) --observing-run=O4
+getenv = True
+accounting_group = ligo.prod.o3.cbc.pe.lalinference
+request_memory = 8000
+request_disk= 1048576
+notification = never
+should_transfer_files=YES
+request_cpus =8
+log = log/$(cluster).log
+error =log/$(cluster).err                                                                                          
+output =log/$(cluster).out
+queue macroj from index_snr_bin_equal_33_10low.txt

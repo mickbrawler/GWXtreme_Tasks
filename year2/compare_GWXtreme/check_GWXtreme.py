@@ -8,18 +8,19 @@ import pylab as pl
 class checker:
 
     def __init__(self, env):
+        # env : names used are "base" for default GWXtreme version and "anarya"
+        #       for Anarya's version. This is solely used to name resultant file
+        #       names.
 
         self.env = env
         self.ref_EoS = "SLY"
         self.EoS_list = ["APR4_EPP", "H4", "MS1"]
-        self.posterior_files = ["posterior_samples/posterior_samples_narrow_spin_prior.dat"]
-        #self.posterior_files = ["posterior_samples/posterior_samples_narrow_spin_prior.dat",
-        #                        "posterior_samples/posterior_samples_broad_spin_prior.dat"]
+        self.posterior_files = ["posterior_samples/posterior_samples_narrow_spin_prior.dat"] # Just one file for now
 
         # Parametrized bestfits
-        with open("../parametric_tests/files/basic_runs/1_piecewise_EoS_bestfits.json", "r") as f:
+        with open("1_piecewise_EoS_bestfits.json", "r") as f:
             self.piecewise_EoS = json.load(f)
-        with open("../parametric_tests/files/basic_runs/1_spectral_EoS_bestfits.json", "r") as f:
+        with open("1_spectral_EoS_bestfits.json", "r") as f:
             self.spectral_EoS = json.load(f)
 
     def makeFiles(self):
@@ -69,7 +70,7 @@ class checker:
         # piecewise, spectral)
 
         increment = 0
-        tests = ["narrow"]
+        tests = ["narrow"] # only this file for now. Incrementer is present incase we wanted to use broad as well.
         for posterior_file in self.posterior_files:
 
             modsel = ems.Model_selection(posteriorFile=posterior_file, spectral=False)
@@ -110,10 +111,14 @@ class checker:
         # Produces file of a dictionary of each EoS' stacked Bayes factor.
         # Different Bayes factor for each version of an EoS (named, MRK, ML,
         # piecewise, spectral)
-        
+ 
+        # Uncomment below lines if you want to fully use Stacking class "joint" multiplication processes
+        #self.posterior_files = ["posterior_samples/posterior_samples_narrow_spin_prior.dat",
+        #                        "posterior_samples/posterior_samples_broad_spin_prior.dat"]
+
         stackobj = ems.Stacking(self.posterior_files, spectral=False)
-        s_stackobj = ems.Stacking(self.posterior_files, spectral=True)
-        
+        s_stackobj = ems.Stacking(self.posterior_files, spectral=True) 
+       
         named_stack_BFs = {}
         MRK_stack_BFs = {}
         ML_stack_BFs = {}
@@ -142,6 +147,8 @@ class checker:
             json.dump(piecewise_stack_BFs, f, indent=2, sort_keys=True)
         with open("comparison_files/spectral/stack_{}_BF.json".format(self.env), "w") as f:
             json.dump(spectral_stack_BFs, f, indent=2, sort_keys=True)
+
+### Postprocessing ### Postprocessing ### Postprocessing ### Postprocessing ### Postprocessing
 
     def get_perc_error(self):
         # Produce dictionary of each eos' percect error (between GWXtreme & Anarya's build)
@@ -188,10 +195,15 @@ class checker:
             
             for EoS in self.EoS_list:
 
+                print("EoS Name")
                 modsel.plot_func([EoS],filename="comparison_files/named/EoS_plot/{}_{}_{}.png".format(self.env,Type[increment],EoS))
+                print("MRK")
                 modsel.plot_func(["comparison_files/MRK/{}.txt".format(EoS)],filename="comparison_files/MRK/EoS_plot/{}_{}_{}.png".format(self.env,Type[increment],EoS))
+                print("ML")
                 modsel.plot_func(["comparison_files/ML/{}.txt".format(EoS)],filename="comparison_files/ML/EoS_plot/{}_{}_{}.png".format(self.env,Type[increment],EoS))
+                print("piecewise")
                 modsel.plot_func([self.piecewise_EoS[EoS]],filename="comparison_files/piecewise/EoS_plot/{}_{}_{}.png".format(self.env,Type[increment],EoS))
+                print("spectral")
                 s_modsel.plot_func([self.spectral_EoS[EoS]],filename="comparison_files/spectral/EoS_plot/{}_{}_{}.png".format(self.env,Type[increment],EoS))
 
         stackobj = ems.Stacking(self.posterior_files, spectral=False)
@@ -199,9 +211,14 @@ class checker:
 
         for EoS in self.EoS_list:
 
+            print("EoS Name")
             stackobj.plot_stacked_bf(eos_list=[EoS],filename="comparison_files/named/EoS_plot/stack_{}_{}.png".format(self.env,EoS))
+            print("MRK")
             stackobj.plot_stacked_bf(eos_list=["comparison_files/MRK/{}.txt".format(EoS)],filename="comparison_files/MRK/EoS_plot/stack_{}_{}.png".format(self.env,EoS))
+            print("ML")
             stackobj.plot_stacked_bf(eos_list=["comparison_files/ML/{}.txt".format(EoS)],filename="comparison_files/ML/EoS_plot/stack_{}_{}.png".format(self.env,EoS))
+            print("piecewise")
             stackobj.plot_stacked_bf(eos_list=[self.piecewise_EoS[EoS]],filename="comparison_files/piecewise/EoS_plot/stack_{}_{}.png".format(self.env,EoS))
+            print("spectral")
             s_stackobj.plot_stacked_bf(eos_list=[self.spectral_EoS[EoS]],filename="comparison_files/spectral/EoS_plot/stack_{}_{}.png".format(self.env,EoS))
 

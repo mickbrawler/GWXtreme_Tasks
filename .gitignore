@@ -1,4 +1,7 @@
 package/
+year2/bilby_runs/.distance_marginalization_lookup.npz
+year2/bilby_runs/3dkde_studies/
+year2/bilby_runs/jason_driver_dir/share/
 year2/parametric_tests/posterior_samples/
 year2/parametric_tests/__pycache__/
 year2/parametric_tests/files/runs/
@@ -11,6 +14,7 @@ year2/compare_GWXtreme/comparison_files/MRK/
 year2/compare_GWXtreme/comparison_files/ML/
 year2/compare_GWXtreme/__pycache__/
 year2/running_driver/files/
+year2/running_driver/anarya_random_spectral/
 year2/running_driver/valid_art_pop_piecewise2.txt
 year1/scripts/lambda_curve_fitting/results/
 year1/scripts/lambda_curve_fitting/H4_bestfit/

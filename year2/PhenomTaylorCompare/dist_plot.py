@@ -96,7 +96,7 @@ def Dist_plot():
         plt.title("{}, {}".format(label1,label2))
         plt.savefig("plots/{}_{}.png".format(label1,label2))
 
-def BF_barplot(inverseWeight=False):
+def BF_barplot(uniformLTs=False):
     #Bayes Factor comparison Task:
     #Plot bars of BFS: 
     #Uniform (dL~, L~) produced (L~, dL~), Uniform (L1, L2) produced (dL~, L~)
@@ -104,7 +104,7 @@ def BF_barplot(inverseWeight=False):
     anaryaFile = "./anarya_bns_example_result.json"
     myFile = "./mine_bns_example_result.json"
     Amodsel = ems.Model_selection(anaryaFile,UpriorLTs=True,Ns=4000)
-    Mmodsel = ems.Model_selection(myFile,UpriorLTs=inverseWeight,Ns=4000)
+    Mmodsel = ems.Model_selection(myFile,UpriorLTs=uniformLTs,Ns=4000)
 
     labels = ["Uniform (dL~,L~) Prior", "Uniform (L1,L2) Prior"]
 
@@ -137,8 +137,7 @@ def BF_barplot(inverseWeight=False):
     plt.title("EoS Bayes Factors w.r.t. SLY")
     plt.xlabel("EoSs")
     plt.ylabel("Bayes Factor")
-    #plt.savefig("plots/barplot_inverseWeight_difPriors_BFs.png")
-    if inverseWeight == True: saveLabel = "_inverseWeight_"
+    if uniformLTs == False: saveLabel = "_inverseWeight_"
     else: saveLabel = "_"
     plt.savefig("plots/barplot{}difPriors_BFs.png".format(saveLabel))
 

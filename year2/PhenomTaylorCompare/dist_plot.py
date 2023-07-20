@@ -128,6 +128,7 @@ def BF_barplot(inverseWeight=False):
     x_axis = np.arange(len(eosList))
     #plt.bar(x_axis-.25,methods_BFs[0],.5,yerr=methods_uncerts[0],label=labels[0],color="red")
     #plt.bar(x_axis+.25,mehtods_BFs[1],.5,yerr=methods_uncerts[1],label=labels[1],color="blue")
+    plt.clf()
     plt.bar(x_axis-.25,methods_BFs[0],.4,label=labels[0],color="red")
     plt.bar(x_axis+.25,methods_BFs[1],.4,label=labels[1],color="blue")
 

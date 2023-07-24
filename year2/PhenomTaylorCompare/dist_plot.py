@@ -109,28 +109,28 @@ def BF_barplot(uniformLTs=False):
     labels = ["Uniform (dL~,L~) Prior", "Uniform (L1,L2) Prior"]
 
     methods = [Amodsel,Mmodsel]
-    eosList = ["BHF_BBB2","KDE0V","SKOP","H4","HQC18","SKMP","APR4_EPP","MPA1","MS1_PP","MS1B_PP"]
-    #eosList = ["BHF_BBB2","KDE0V","SKOP"]
+    #eosList = ["BHF_BBB2","KDE0V","SKOP","H4","HQC18","SKMP","APR4_EPP","MPA1","MS1_PP","MS1B_PP"]
+    eosList = ["BHF_BBB2","KDE0V","SKOP"]
     methods_BFs = []
-    #methods_uncerts = []
+    methods_uncerts = []
     for method in methods:
         BFs = []
-        #uncerts = []
+        uncerts = []
         for eos in eosList:
-            #bf, bf_trials = method.computeEvidenceRatio(EoS1=eos,EoS2="SLY",trials=10)
-            bf = method.computeEvidenceRatio(EoS1=eos,EoS2="SLY",trials=0)
-            #uncert = np.std(bf_trials) * 2
+            bf, bf_trials = method.computeEvidenceRatio(EoS1=eos,EoS2="SLY",trials=1000)
+            #bf = method.computeEvidenceRatio(EoS1=eos,EoS2="SLY",trials=0)
+            uncert = np.std(bf_trials) * 2
             BFs.append(bf)
-            #uncerts.append(uncert)
+            uncerts.append(uncert)
         methods_BFs.append(BFs)
-        #methods_uncerts.append(uncerts)
+        methods_uncerts.append(uncerts)
 
     x_axis = np.arange(len(eosList))
-    #plt.bar(x_axis-.25,methods_BFs[0],.5,yerr=methods_uncerts[0],label=labels[0],color="red")
-    #plt.bar(x_axis+.25,mehtods_BFs[1],.5,yerr=methods_uncerts[1],label=labels[1],color="blue")
     plt.clf()
-    plt.bar(x_axis-.25,methods_BFs[0],.4,label=labels[0],color="red")
-    plt.bar(x_axis+.25,methods_BFs[1],.4,label=labels[1],color="blue")
+    plt.bar(x_axis-.25,methods_BFs[0],.4,yerr=methods_uncerts[0],label=labels[0],color="red")
+    plt.bar(x_axis+.25,methods_BFs[1],.4,yerr=methods_uncerts[1],label=labels[1],color="blue")
+    #plt.bar(x_axis-.25,methods_BFs[0],.4,label=labels[0],color="red")
+    #plt.bar(x_axis+.25,methods_BFs[1],.4,label=labels[1],color="blue")
 
     plt.xticks(x_axis,eosList,rotation=45,ha="right")
     plt.legend()

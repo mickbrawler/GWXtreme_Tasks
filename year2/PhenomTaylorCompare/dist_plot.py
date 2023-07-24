@@ -109,8 +109,8 @@ def BF_barplot(uniformLTs=False):
     labels = ["Uniform (dL~,L~) Prior", "Uniform (L1,L2) Prior"]
 
     methods = [Amodsel,Mmodsel]
-    #eosList = ["BHF_BBB2","KDE0V","SKOP","H4","HQC18","SKMP","APR4_EPP","MPA1","MS1_PP","MS1B_PP"]
-    eosList = ["BHF_BBB2","KDE0V","SKOP"]
+    eosList = ["BHF_BBB2","KDE0V","SKOP","H4","HQC18","SKMP","APR4_EPP","MPA1","MS1_PP","MS1B_PP"]
+    #eosList = ["BHF_BBB2","KDE0V","SKOP"]
     methods_BFs = []
     methods_uncerts = []
     for method in methods:

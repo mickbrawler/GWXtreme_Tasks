@@ -132,6 +132,7 @@ def BF_barplot(uniformLTs=False):
     #plt.bar(x_axis-.25,methods_BFs[0],.4,label=labels[0],color="red")
     #plt.bar(x_axis+.25,methods_BFs[1],.4,label=labels[1],color="blue")
 
+    plt.ylim(top=2.0)
     plt.xticks(x_axis,eosList,rotation=45,ha="right")
     plt.legend()
     plt.title("EoS Bayes Factors w.r.t. SLY")

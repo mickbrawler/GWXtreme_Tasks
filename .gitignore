@@ -1,6 +1,5 @@
 package/
-year2/PhenomTaylorCompare/anarya_bns_example_result.json
-year2/PhenomTaylorCompare/mine_bns_example_result.json
+year2/PhenomTaylorCompare/prior_10000_1.77_1.19/
 year2/PhenomTaylorCompare/__pycache__
 year2/bilby_runs/.distance_marginalization_lookup.npz
 year2/bilby_runs/3dkde_studies/

@@ -87,10 +87,10 @@ def multipleEventBFs(priorFile, log=False):
     uLTs_Files = glob.glob("{}/*/*.json".format(uLTs_Dir))
     uLs_Files = glob.glob("{}/*/*.json".format(uLs_Dir))
 
-    uLTs_stack = ems.Stacking(uLTs_File,UpriorLTs=True,Ns=4000)
-    uLs_stack = ems.Stacking(uLs_File,UpriorLTs=True,Ns=4000)
-    uLs_reweightM_stack = ems.Stacking(uLs_File,UpriorLTs=False,Ns=4000)
-    uLs_reweightB_stack = ems.Stacking(uLs_File,UpriorLTs=priorFile,Ns=4000)
+    uLTs_stack = ems.Stacking(uLTs_Files,UpriorLTs=True,Ns=4000)
+    uLs_stack = ems.Stacking(uLs_Files,UpriorLTs=True,Ns=4000)
+    uLs_reweightM_stack = ems.Stacking(uLs_Files,UpriorLTs=False,Ns=4000)
+    uLs_reweightB_stack = ems.Stacking(uLs_Files,UpriorLTs=priorFile,Ns=4000)
 
     labels = ["UniformP (dL~,L~)", "UniformP (L1,L2)", "UniformP (L1,L2), MOCK reweight", "UniformP (L1,L2), BILBY reweight"]
     colors = ["#d7191c", "#fdae61", "#abdda4", "#2b83ba"]
@@ -132,6 +132,6 @@ def multipleEventBFs(priorFile, log=False):
     plt.savefig("plots/difPriors/allJoint_barplot_difPriors_BFs.png")
 
     Dictionary = {labels[Index]:{eosList[eIndex]:[stacks_BFs[Index][eIndex],stacks_uncerts[Index][eIndex]] for eIndex in range(len(eosList))} for Index in range(len(labels))}
-    with open("plots/difPriors/data/data/allJoint_difPriors_BFs.json","w") as f:
+    with open("plots/difPriors/data/allJoint_difPriors_BFs.json","w") as f:
         json.dump(Dictionary, f, indent=2, sort_keys=True)
 

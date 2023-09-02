@@ -9,12 +9,13 @@ import glob
 
 def singleEventBFs(log=False):
 
-    uLTs_Dir = "../bilby_runs/3dkde_studies/Anarya_uniformLTs/phenom-injections/TaylorF2"
-    uLs_Dir = "../bilby_runs/3dkde_studies/outdir/Phenom_Taylor/IMRPhenomPv2_NRTidal/APR4_EPP"
-    injections = ["282_1.58_1.37", "202_1.35_1.14", "179_1.35_1.23", "71_1.37_1.33", "122_1.77_1.19", 
-                  "241_1.31_1.28", "220_1.36_1.24", "282_1.35_1.32", "149_1.35_1.23", "237_1.36_1.26", 
-                  "138_1.5_1.21", "235_1.4_1.3", "219_1.3_1.28", "260_1.48_1.33", "164_1.34_1.19", 
-                  "55_1.38_1.33", "78_1.35_1.32"]
+    uLTs_Dir = "../bilby_runs/3dkde_studies/outdir/2nd_Phenom_Taylor/uniformP_LTs/IMRPhenomPv2_NRTidal/APR4_EPP"
+    uLs_Dir = "../bilby_runs/3dkde_studies/outdir/2nd_Phenom_Taylor/uniformP_Ls/IMRPhenomPv2_NRTidal/APR4_EPP"
+    #injections = ["282_1.58_1.37", "202_1.35_1.14", "179_1.35_1.23", "71_1.37_1.33", "122_1.77_1.19", 
+    #              "241_1.31_1.28", "220_1.36_1.24", "282_1.35_1.32", "149_1.35_1.23", "237_1.36_1.26", 
+    #              "138_1.5_1.21", "235_1.4_1.3", "219_1.3_1.28", "260_1.48_1.33", "164_1.34_1.19", 
+    #              "55_1.38_1.33", "78_1.35_1.32"]
+    injections = ["55_1.54_1.41", "65_1.36_1.17"]
     filenameEnd = "bns_example_result.json"
     for injection in injections:
         print(injection)
@@ -64,9 +65,9 @@ def singleEventBFs(log=False):
         label = uLTs_File.split('/')[-2]
         plt.savefig("plots/2D_3D/{}_barplot_2D_3D_BFs.png".format(label))
 
-        Dictionary = {labels[Index]:{eosList[eIndex]:[methods_BFs[Index][eIndex],methods_uncerts[Index][eIndex]] for eIndex in range(len(eosList))} for Index in range(len(labels))}
-        with open("plots/2D_3D/data/{}_2D_3D_BFs.json".format(label),"w") as f:
-            json.dump(Dictionary, f, indent=2, sort_keys=True)
+    Dictionary = {labels[Index]:{eosList[eIndex]:[methods_BFs[Index][eIndex],methods_uncerts[Index][eIndex]] for eIndex in range(len(eosList))} for Index in range(len(labels))}
+    with open("plots/2D_3D/data/{}_2D_3D_BFs.json".format(label),"w") as f:
+        json.dump(Dictionary, f, indent=2, sort_keys=True)
 
 
 def multipleEventBFs(log=False):

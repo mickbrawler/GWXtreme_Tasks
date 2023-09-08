@@ -49,8 +49,7 @@ def singleEventBFs(log=False):
         labels = ["2D Approximation", "3D Approximation","Actual"]
         colors = ["#1b9e77","#d95f02","#7570b3"]
         methods = [modsel_uLTs, modsel_uLs]
-        #eosList = ["BHF_BBB2","KDE0V","SKOP","H4","HQC18","SKMP","APR4_EPP","MPA1","MS1_PP","MS1B_PP"]
-        eosList = ["APR4_EPP","H4"]
+        eosList = ["BHF_BBB2","KDE0V","SKOP","H4","HQC18","SKMP","APR4_EPP","MPA1","MS1_PP","MS1B_PP"]
         
 
         with open("nested_sampling_results.json","r") as f:
@@ -69,7 +68,7 @@ def singleEventBFs(log=False):
             BFs = []
             uncerts = []
             for eos in eosList:
-                bf, bf_trials = method.computeEvidenceRatio(EoS1=eos,EoS2="SLY",trials=100)
+                bf, bf_trials = method.computeEvidenceRatio(EoS1=eos,EoS2="SLY",trials=1000)
                 #bf = method.computeEvidenceRatio(EoS1=eos,EoS2="SLY",trials=0)
                 uncert = np.std(bf_trials) * 2
                 BFs.append(bf)
@@ -145,7 +144,7 @@ def multipleEventBFs(log=False):
         stacks_uncerts.append(uncerts)
 
     x_axis = np.arange(len(eosList))
-    spacing = [-.1,0,.1]
+    spacing = [-.15,0,.15]
     plt.clf()
     plt.rcParams.update({'font.size': 18})
     plt.figure(figsize=(15, 10))

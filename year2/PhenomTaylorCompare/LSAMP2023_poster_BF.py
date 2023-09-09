@@ -113,6 +113,11 @@ def multipleEventBFs(log=False):
     stack_uLTs = ems.Stacking(uLTs_Files,kdedim=2)
     stack_uLs = ems.Stacking(uLs_Files,kdedim=3)
 
+    labels = ["2D Approximation", "3D Approximation","Actual"]
+    colors = ["#1b9e77","#d95f02","#7570b3"]
+    stacks = [stack_uLTs, stack_uLs]
+    eosList = ["BHF_BBB2","KDE0V","SKOP","H4","HQC18","SKMP","APR4_EPP","MPA1","MS1_PP","MS1B_PP"]
+
 
     with open("nested_sampling_results.json","r") as f:
         nestSamp = json.load(f)
@@ -123,10 +128,6 @@ def multipleEventBFs(log=False):
         nest_stds.append(nestSamp[eos][1])
 
 
-    labels = ["2D Approximation", "3D Approximation","Actual"]
-    colors = ["#1b9e77","#d95f02","#7570b3"]
-    stacks = [stack_uLTs, stack_uLs]
-    eosList = ["BHF_BBB2","KDE0V","SKOP","H4","HQC18","SKMP","APR4_EPP","MPA1","MS1_PP","MS1B_PP"]
     stacks_BFs = []
     stacks_uncerts = []
     for stack in stacks:
@@ -164,7 +165,7 @@ def multipleEventBFs(log=False):
     plt.title("EoS Joint Bayes Factors w.r.t. SLY")
     plt.savefig("plots/2D_3D/allJoint_barplot_2D_3D_BFs_wth_errorProne_rmvd.png")
 
-    Dictionary = {labels[Index]:{eosList[eIndex]:[stacks_BFs[Index][eIndex],stacks_uncerts[Index][eIndex]] for eIndex in range(len(eosList))} for Index in range(len(labels))}
+    Dictionary = {labels[Index]:{eosList[eIndex]:[stacks_BFs[Index][eIndex],stacks_uncerts[Index][eIndex]] for eIndex in range(len(eosList))} for Index in range(len(stacks))}
     with open("plots/2D_3D/data/allJoint_2D_3D_BFs_wth_errorProne_rmvd.json","w") as f:
         json.dump(Dictionary, f, indent=2, sort_keys=True)
 

@@ -2,7 +2,7 @@ package/
 year2/PhenomTaylorCompare/prior_10000_1.77_1.19/
 year2/PhenomTaylorCompare/__pycache__
 year2/bilby_runs/.distance_marginalization_lookup.npz
-year2/bilby_runs/3dkde_studies/
+year2/bilby_runs/simulations/
 year2/bilby_runs/jason_driver_dir/share/
 year2/parametric_tests/posterior_samples/
 year2/parametric_tests/__pycache__/

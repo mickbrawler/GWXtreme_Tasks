@@ -1,6 +1,3 @@
-# Make bar plot comparing bayes factors from uniformP (dLT,LT) (2D KDE)
-#                                        to uniformP (L1,L2) (3D KDE)
-
 from GWXtreme import eos_model_selection as ems
 import numpy as np
 import matplotlib.pyplot as plt
@@ -8,6 +5,8 @@ import json
 import glob
 
 def singleEventBFs(log=False):
+    # Makes barplot of BFs for a single simulation comparing that of uP(LTs) and
+    # uP(Ls) (with errorbars!).
 
     uLTs_Dir = "../bilby_runs/3dkde_studies/outdir/2nd_Phenom_Taylor/uniformP_LTs/IMRPhenomPv2_NRTidal/APR4_EPP"
     uLs_Dir = "../bilby_runs/3dkde_studies/outdir/2nd_Phenom_Taylor/uniformP_Ls/IMRPhenomPv2_NRTidal/APR4_EPP"
@@ -71,6 +70,8 @@ def singleEventBFs(log=False):
 
 
 def multipleEventBFs(log=False):
+    # Makes barplot of jointBFs using all simulations comparing that of uP(LTs) 
+    # and uP(Ls) (with errorbars!).
 
     uLTs_Dir = "../bilby_runs/3dkde_studies/Anarya_uniformLTs/phenom-injections/TaylorF2/"
     uLs_Dir = "../bilby_runs/3dkde_studies/outdir/Phenom_Taylor/IMRPhenomPv2_NRTidal/APR4_EPP/"

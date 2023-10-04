@@ -1,6 +1,3 @@
-# Make bar plot comparing bayes factors from uniformP (dLT,LT) (2D KDE)
-#                                        to uniformP (L1,L2) (3D KDE)
-
 from GWXtreme import eos_model_selection as ems
 import numpy as np
 import matplotlib.pyplot as plt
@@ -10,6 +7,12 @@ import h5py
 import convertlambdas
 
 def uniform_LTs_Ls_GW170817_data():
+    # Uses uP(LTs) produced GW170817 (L~,q) posterior, turns it into a (L1,L2,q) 
+    # posterior. That way we have the required posteriors to code around of, and
+    # make the 2D/3D kde code that will use the legit uP(LTs) and uP(Ls) posteriors.
+
+    # This is wrong to reiterate. We just did it to test our code's logic. 
+    # We NEED the real uP(Ls) GW170817 posterior to proceed!
 
     Dir = "../bilby_runs/3dkde_studies/outdir/real"
 
@@ -34,6 +37,8 @@ def uniform_LTs_Ls_GW170817_data():
         json.dump(Ls_dict,f,indent=2,sort_keys=True)
 
 def singleEventBFs(log=False):
+    # Plots barplot of BFs using GW170817's uP(LTs) posterior and
+    #                                       uP(Ls) posterior (with errorbars)!
 
     Dir = "../bilby_runs/3dkde_studies/outdir/real"
     injections = ["GW170817"]
@@ -104,6 +109,17 @@ def singleEventBFs(log=False):
 
 
 def multipleEventBFs(log=False):
+    # Plots barplot of BFs using simulations' uP(LTs) posterior and
+    #                                         uP(Ls) posterior (with errorbars)!
+
+    # There is a multipleEventBFs function that does the exact same thing in the 2D_3D script.
+    # For convenience sake it seems I tuned some things about it and account for the "troublesome"
+    # simulated events that cause extremely low BFs, and therefore contributed to 
+    # extremely extremely low joint BFs.
+
+    # HOWEVER, I INCLUDED THE NESTED SAMPLING RESULTS HERE WHICH MAKES NO SENSE!
+    # COMPARING GW170817'S NESTED SAMPLING RESULTS WITH THE JOINT BAYES FACTORS
+    # OF SIMULATED EVENTS? I WAS TIRED WHEN I WROTE THIS. Adress before using again.
 
     uLTs_Dir = "../bilby_runs/3dkde_studies/outdir/1st_Phenom_Taylor/uniformP_LTs/phenom-injections/TaylorF2"
     uLs_Dir = "../bilby_runs/3dkde_studies/outdir/1st_Phenom_Taylor/uniformP_Ls/IMRPhenomPv2_NRTidal/APR4_EPP"

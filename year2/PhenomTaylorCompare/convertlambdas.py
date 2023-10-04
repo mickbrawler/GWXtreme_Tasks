@@ -3,6 +3,9 @@ from scipy.optimize import fsolve
 import matplotlib.pyplot as plt
 
 class LambdasInversion:
+    # This script was "adopted" from our side task of converting L1,L2 <-> L~,dL~.
+    # We changed it to work for the LSAMP2023 script. Its used there to turn a 
+    # (L~,q) posterior to a (L1,L2,q) posterior!
 
     def __init__(self, mr, LambdaT, DLambdaT):
 

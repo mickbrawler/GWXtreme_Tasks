@@ -1,3 +1,8 @@
+# Reweighting prior task (using a uP(Ls) sourced (L~,q) posterior, can I get the
+# same BF as a uP(LTs) sourced (L~,q) posterior if I "account" for it in the 
+# computation of the Bayes Factor). This requires use of the my PriorInverseWeight
+# branch of my fork of GWXtreme.
+
 import json
 import numpy as np
 import seaborn as sns
@@ -5,7 +10,6 @@ import matplotlib.pyplot as plt
 import scipy.stats as st
 from scipy.optimize import fsolve
 from GWXtreme import eos_model_selection as ems
-import lambdaInversion
 import glob
 
 def singleEventBFs(priorFile,log=False):

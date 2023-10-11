@@ -8,13 +8,12 @@ def combine_events():
     EM_events = ["anaryaShare/Files/J0030_3spot_RM.txt","anaryaShare/Files/NICER+XMM_J0740_RM.txt"]
     modsels = ems.Stacking(GW_events,em_event_list=EM_events,spectral=True)
     #eosList = ["BHF_BBB2","KDE0V","SKOP","H4","HQC18","SKMP","APR4_EPP","MPA1","MS1_PP","MS1B_PP"]
-    #eosList = ["BHF_BBB2","KDE0V","SKOP","H4","HQC18","SKMP","APR4_EPP"]
-    eosList = ["BHF_BBB2","KDE0V"]
+    eosList = ["BHF_BBB2","KDE0V","SKOP","H4","HQC18","SKMP","APR4_EPP"]
 
     BFs = []
     uncerts = []
     for eos in eosList:
-        bf, bf_trials = modsels.stack_events(EoS1=eos,EoS2="SLY",trials=100)
+        bf, bf_trials = modsels.stack_events(EoS1=eos,EoS2="SLY",trials=1000)
         #bf = modsels.stack_events(eos,"SLY",trials=0)
         uncert = np.std(bf_trials) * 2
         BFs.append(bf)
@@ -44,8 +43,7 @@ def individual_events():
     methods = [modselGW170817, modselJ0030, modselJ0740]
     labels = ["GW170817","J0030","J0740"]
     #eosList = ["BHF_BBB2","KDE0V","SKOP","H4","HQC18","SKMP","APR4_EPP","MPA1","MS1_PP","MS1B_PP"]
-    #eosList = ["BHF_BBB2","KDE0V","SKOP","H4","HQC18","SKMP","APR4_EPP"]
-    eosList = ["BHF_BBB2","KDE0V"]
+    eosList = ["BHF_BBB2","KDE0V","SKOP","H4","HQC18","SKMP","APR4_EPP"]
 
     methods_BFs = []
     methods_uncerts = []
@@ -53,7 +51,7 @@ def individual_events():
         BFs = []
         uncerts = []
         for eos in eosList:
-            bf, bf_trials = method.computeEvidenceRatio(EoS1=eos,EoS2="SLY",trials=100)
+            bf, bf_trials = method.computeEvidenceRatio(EoS1=eos,EoS2="SLY",trials=1000)
             #bf = method.computeEvidenceRatio(EoS1=eos,EoS2="SLY",trials=0)
             uncert = np.std(bf_trials) * 2
             BFs.append(bf)

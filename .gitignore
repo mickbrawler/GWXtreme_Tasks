@@ -1,10 +1,20 @@
 package/
-year2/compare_EMGW_BFs/anaryaShare/
-year2/PhenomTaylorCompare/prior_10000_1.77_1.19/
-year2/PhenomTaylorCompare/__pycache__
+
+year3/compare_EMGW_BFs/anaryaShare/Files/
+year3/bilby_package/
+year3/dir.tar.gz
+year3/BF_dif_waveforms/Files/
+year3/GW170817_prior_L1L2/anarya.ray
+year3/GW170817_prior_L1L2/outdir
+year3/share2D3DBF.tar.gz
+year3/share2D3DBF/
+
+year3/PhenomTaylorCompare/prior_10000_1.77_1.19/
+year3/PhenomTaylorCompare/__pycache__
 year2/bilby_runs/.distance_marginalization_lookup.npz
 year2/bilby_runs/simulations/
 year2/bilby_runs/jason_driver_dir/share/
+year2/bilby_runs/testing_bilby/
 year2/parametric_tests/posterior_samples/
 year2/parametric_tests/__pycache__/
 year2/parametric_tests/files/runs/
@@ -19,6 +29,7 @@ year2/compare_GWXtreme/__pycache__/
 year2/running_driver/files/
 year2/running_driver/anarya_random_spectral/
 year2/running_driver/valid_art_pop_piecewise2.txt
+
 year1/scripts/lambda_curve_fitting/results/
 year1/scripts/lambda_curve_fitting/H4_bestfit/
 year1/scripts/lambda_curve_fitting/Analysis/OG_SLY_results_comparison/
@@ -26,4 +37,5 @@ year1/scripts/lambda_curve_fitting/posterior_samples/
 year1/old_files/fake_posteriors/
 year1/old_files/parameter_test_files/test_data/
 year1/old_files/parameter_files/data/
+
 ./.gitignore

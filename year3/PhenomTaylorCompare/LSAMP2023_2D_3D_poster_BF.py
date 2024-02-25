@@ -18,7 +18,7 @@ def uniform_LTs_Ls_GW170817_data():
     # This is wrong to reiterate. We just did it to test our code's logic. 
     # We NEED the real uP(Ls) GW170817 posterior to proceed!
 
-    Dir = "../bilby_runs/3dkde_studies/outdir/real"
+    Dir = "../GW170817_prior_L1L2/CIT_attempt_successful/outdir/"
 
     _data = np.recfromtxt("../compare_GWXtreme/posterior_samples/posterior_samples_narrow_spin_prior.dat",names=True)
     (q,mc,LambdaT)=(np.array(_data['q']),np.array(_data['mc_source']),
@@ -44,8 +44,8 @@ def singleEventBFs():
     # Plots barplot of BFs using GW170817's uP(LTs) posterior and
     #                                       uP(Ls) posterior (with errorbars)!
 
-    uLTs_File = "/home/michael/projects/eos/GWXtreme_Tasks/year2/bilby_runs/simulations/outdir/real/uniformP_LTs/GW170817/data.json" 
-    uLs_File = "/home/michael/projects/eos/GWXtreme_Tasks/year2/bilby_runs/simulations/GW170817_prior_L1L2/outdir/GW170817_result.json"
+    uLTs_File = "/home/michael/projects/eos/GWXtreme_Tasks/year2/bilby_runs/simulations/outdir/real/uniformP_LTs/GW170817/data_labelsAdjusted.json" 
+    uLs_File = "/home/michael/projects/eos/GWXtreme_Tasks/year3/GW170817_prior_L1L2/CIT_attempt_successful/outdir/GW170817_result_simplified.json"
 
     modsel_uLTs = ems.Model_selection(uLTs_File,Ns=4000,kdedim=2)
     modsel_uLs = ems.Model_selection(uLs_File,Ns=4000,kdedim=3)
@@ -97,7 +97,7 @@ def singleEventBFs():
     plt.title("EoS Bayes Factors w.r.t. SLY")
     plt.ylabel("Bayes Factor")
     plt.legend()
-    label = "GW170817"
+    label = "GW170817_CITrun"
     plt.savefig("plots/2D_3D/{}_barplot_2D_3D_BFs.png".format(label))
 
     Dictionary = {labels[Index]:{eosList[eIndex]:[methods_BFs[Index][eIndex],methods_uncerts[Index][eIndex]] for eIndex in range(len(eosList))} for Index in range(len(methods))}

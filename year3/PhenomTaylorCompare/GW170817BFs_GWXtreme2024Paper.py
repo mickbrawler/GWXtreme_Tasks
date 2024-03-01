@@ -56,7 +56,7 @@ def singleEventBFs():
         #plt.bar(x_axis+spacing[index],methods_BFs[index],.15,yerr=methods_uncerts[index],label=labels[index],color=colors[index])
         plt.bar(x_axis+spacing[index],methods_BFs[index],.15,label=labels[index],color=colors[index])
 
-        plt.errorbar(x_axis+spacing[index],methods_BFs[index],yerr=methods_uncerts[index],ls="none",ecolor="black",capsize=5)
+        plt.errorbar(x_axis+spacing[index],methods_BFs[index],yerr=methods_uncerts[index],ls="none",ecolor="black")
     
     plt.bar(x_axis+spacing[2],nest_BFs,.15,yerr=nest_stds,label=labels[2],color=colors[2])
 

@@ -22,7 +22,7 @@ def singleEventBFs():
     colors = ["#1f77b4", "#ffd7b6", "#bfe2bf"]
     methods = [modsel_uLTs, modsel_uLs]
     #eosList = ["BHF_BBB2","KDE0V","KDE0V1","SKOP","H4","HQC18","SLY2","SLY230A","SKMP","RS","SK255","SLY9","APR4_EPP","SKI2","SKI4","SKI6","SK272","SKI3","SKI5","MPA1","MS1_PP","MS1B_PP"]
-    eosList = ["BHF_BBB2"]
+    eosList = ["BHF_BBB2","KDE0V","KDE0V1","SKOP","H4","HQC18","SLY2"]
     
     with open("/home/michael/projects/eos/GWXtreme_Tasks/year2/bilby_runs/simulations/outdir/nested_sampling_results.json","r") as f:
         nestSamp = json.load(f)
@@ -40,7 +40,7 @@ def singleEventBFs():
         uncerts = []
         for eos in eosList:
             print(eos)
-            bf, bf_trials = method.computeEvidenceRatio(EoS1=eos,EoS2="SLY",trials=1000)
+            bf, bf_trials = method.computeEvidenceRatio(EoS1=eos,EoS2="SLY",trials=100)
             #bf = method.computeEvidenceRatio(EoS1=eos,EoS2="SLY",trials=0)
             uncert = np.std(bf_trials) * 2
             BFs.append(bf)

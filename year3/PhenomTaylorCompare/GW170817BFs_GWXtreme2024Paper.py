@@ -7,7 +7,7 @@ import json
 # #8fbbd9 #ff7f0f
 # #1f77b4 #ffd7b6 #bfe2bf
 
-def singleEventBFs():
+def singleEventBFs(fromResults=True):
     # Plots barplot of BFs using GW170817's uP(LTs) posterior and
     #                                       uP(Ls) posterior (with errorbars)!
 
@@ -56,7 +56,7 @@ def singleEventBFs():
         #plt.bar(x_axis+spacing[index],methods_BFs[index],.15,yerr=methods_uncerts[index],label=labels[index],color=colors[index])
         plt.bar(x_axis+spacing[index],methods_BFs[index],.15,label=labels[index],color=colors[index])
 
-        plt.errorbar(x_axis+spacing[index],methods_BFs[index],yerr=methods_uncerts[index],ls="none",ecolor="black",capsize=3.0)
+        plt.errorbar(x_axis+spacing[index],methods_BFs[index],yerr=methods_uncerts[index],ls="none",ecolor="black",capsize=5.0)
     
     plt.bar(x_axis+spacing[2],nest_BFs,.15,yerr=nest_stds,label=labels[2],color=colors[2])
 

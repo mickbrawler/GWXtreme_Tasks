@@ -21,8 +21,7 @@ def singleEventBFs():
     #colors = ["#1b9e77","#d95f02","#7570b3"] # Colors we initially used
     colors = ["#1f77b4", "#ffd7b6", "#bfe2bf"]
     methods = [modsel_uLTs, modsel_uLs]
-    #eosList = ["BHF_BBB2","KDE0V","KDE0V1","SKOP","H4","HQC18","SLY2","SLY230A","SKMP","RS","SK255","SLY9","APR4_EPP","SKI2","SKI4","SKI6","SK272","SKI3","SKI5","MPA1","MS1_PP","MS1B_PP"]
-    eosList = ["BHF_BBB2","KDE0V","KDE0V1","SKOP","H4","HQC18","SLY2"]
+    eosList = ["BHF_BBB2","KDE0V","KDE0V1","SKOP","H4","HQC18","SLY2","SLY230A","SKMP","RS","SK255","SLY9","APR4_EPP","SKI2","SKI4","SKI6","SK272","SKI3","SKI5","MPA1","MS1_PP","MS1B_PP"]
     
     with open("/home/michael/projects/eos/GWXtreme_Tasks/year2/bilby_runs/simulations/outdir/nested_sampling_results.json","r") as f:
         nestSamp = json.load(f)
@@ -57,7 +56,7 @@ def singleEventBFs():
         #plt.bar(x_axis+spacing[index],methods_BFs[index],.15,yerr=methods_uncerts[index],label=labels[index],color=colors[index])
         plt.bar(x_axis+spacing[index],methods_BFs[index],.15,label=labels[index],color=colors[index])
 
-        plt.errorbar(x_axis+spacing[index],methods_BFs[index],yerr=methods_uncerts[index],ls="none",ecolor="black",capsize=1.0)
+        plt.errorbar(x_axis+spacing[index],methods_BFs[index],yerr=methods_uncerts[index],ls="none",ecolor="black",capsize=3.0)
     
     plt.bar(x_axis+spacing[2],nest_BFs,.15,yerr=nest_stds,label=labels[2],color=colors[2])
 

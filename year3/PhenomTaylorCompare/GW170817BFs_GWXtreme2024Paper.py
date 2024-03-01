@@ -39,7 +39,7 @@ def singleEventBFs(fromResults=True):
         uncerts = []
         for eos in eosList:
             print(eos)
-            bf, bf_trials = method.computeEvidenceRatio(EoS1=eos,EoS2="SLY",trials=100)
+            bf, bf_trials = method.computeEvidenceRatio(EoS1=eos,EoS2="SLY",trials=1000)
             #bf = method.computeEvidenceRatio(EoS1=eos,EoS2="SLY",trials=0)
             uncert = np.std(bf_trials) * 2
             BFs.append(bf)
@@ -56,7 +56,7 @@ def singleEventBFs(fromResults=True):
         #plt.bar(x_axis+spacing[index],methods_BFs[index],.15,yerr=methods_uncerts[index],label=labels[index],color=colors[index])
         plt.bar(x_axis+spacing[index],methods_BFs[index],.15,label=labels[index],color=colors[index])
 
-        plt.errorbar(x_axis+spacing[index],methods_BFs[index],yerr=methods_uncerts[index],ls="none",ecolor="black",capsize=5.0)
+        plt.errorbar(x_axis+spacing[index],methods_BFs[index],yerr=methods_uncerts[index],ls="none",ecolor="black")
     
     plt.bar(x_axis+spacing[2],nest_BFs,.15,yerr=nest_stds,label=labels[2],color=colors[2])
 

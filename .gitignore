@@ -1,6 +1,6 @@
 package/
 
-year3/compare_EMGW_BFs/anaryaShare/Files/
+year3/LSAMP_Poster/anaryaShare/Files/
 year3/bilby_package/
 year3/dir.tar.gz
 year3/BF_dif_waveforms/Files/
@@ -9,9 +9,9 @@ year3/GW170817_prior_L1L2/alpha_attempt_unsucessful/outdir
 year3/GW170817_prior_L1L2/CIT_attempt_successful
 year3/share2D3DBF.tar.gz
 year3/share2D3DBF/
-
-year3/PhenomTaylorCompare/prior_10000_1.77_1.19/
+year3/PhenomTaylorCompare/reweightPriorWork/
 year3/PhenomTaylorCompare/__pycache__
+
 year2/bilby_runs/.distance_marginalization_lookup.npz
 year2/bilby_runs/simulations/
 year2/bilby_runs/jason_driver_dir/share/

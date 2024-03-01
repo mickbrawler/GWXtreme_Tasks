@@ -4,18 +4,17 @@ import matplotlib.pyplot as plt
 import json
 import glob
 
-def singleEventBFs(log=False):
+def singleEventBFs():
     # Makes barplot of BFs for a single simulation comparing that of uP(LTs) and
     # uP(Ls) (with errorbars!).
 
-    uLTs_Dir = "../../year2/bilby_runs/simulations/outdir/2nd_Phenom_Taylor/uniformP_LTs/IMRPhenomPv2_NRTidal/APR4_EPP"
-    uLs_Dir = "../../year2/bilby_runs/simulations/outdir/2nd_Phenom_Taylor/uniformP_Ls/IMRPhenomPv2_NRTidal/APR4_EPP"
+    uLTs_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Taylor/uniformP_LTs/IMRPhenomPv2_NRTidal/APR4_EPP"
+    uLs_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Taylor/uniformP_Ls/IMRPhenomPv2_NRTidal/APR4_EPP"
     #injections = ["282_1.58_1.37", "202_1.35_1.14", "179_1.35_1.23", "71_1.37_1.33", "122_1.77_1.19", 
     #              "241_1.31_1.28", "220_1.36_1.24", "282_1.35_1.32", "149_1.35_1.23", "237_1.36_1.26", 
     #              "138_1.5_1.21", "235_1.4_1.3", "219_1.3_1.28", "260_1.48_1.33", "164_1.34_1.19", 
     #              "55_1.38_1.33", "78_1.35_1.32"]
-    #injections = ["55_1.54_1.41", "65_1.36_1.17"]
-    injections = ["55_1.54_1.41"] # 01/30/24 wanted to test out Anarya's dev-3d-prod branch with my changes
+    injections = ["282_1.58_1.37"]
     filenameEnd = "bns_example_result.json"
     for injection in injections:
         print(injection)
@@ -25,11 +24,11 @@ def singleEventBFs(log=False):
         modsel_uLTs = ems.Model_selection(uLTs_File,Ns=4000,kdedim=2)
         modsel_uLs = ems.Model_selection(uLs_File,Ns=4000,kdedim=3)
 
-        labels = ["UniformP (dL~,L~)", "UniformP (L1,L2)"]
-        colors = ["#66c2a5","#fc8d62"]
+        labels = ["(dL~,L~) Uniform Prior", "(L1,L2) Uniform Prior"]
+        #colors = ["#66c2a5","#fc8d62"] # Colors we initially used
+        colors = ["#8fbbd9", "#ff7f0f"]
         methods = [modsel_uLTs, modsel_uLs]
-        #eosList = ["BHF_BBB2","KDE0V","SKOP","H4","HQC18","SKMP","APR4_EPP","MPA1","MS1_PP","MS1B_PP"]
-        eosList = ["BHF_BBB2","H4","APR4_EPP","MPA1","MS1_PP"]
+        eosList = ["BHF_BBB2","KDE0V","KDE0V1","SKOP","H4","HQC18","SLY2","SLY230A","SKMP","RS","SK255","SLY9","APR4_EPP","SKI2","SKI4","SKI6","SK272","SKI3","SKI5","MPA1","MS1_PP","MS1B_PP"]
         methods_BFs = []
         methods_uncerts = []
         for method in methods:
@@ -47,7 +46,7 @@ def singleEventBFs(log=False):
             methods_uncerts.append(uncerts)
 
         x_axis = np.arange(len(eosList))
-        spacing = [-.1,.1]
+        spacing = [-.075,.075]
         plt.clf()
         plt.rcParams.update({'font.size': 18})
         plt.figure(figsize=(15, 10))
@@ -55,21 +54,16 @@ def singleEventBFs(log=False):
             plt.bar(x_axis+spacing[index],methods_BFs[index],.15,yerr=methods_uncerts[index],label=labels[index],color=colors[index])
             #plt.bar(x_axis+spacing[index],methods_BFs[index],.15,label=labels[index],color=colors[index])
 
-        if log == False: plt.ylim(top=1.2)
+        plt.yscale("log")
         plt.xticks(x_axis,eosList,rotation=45,ha="right")
-        ax = plt.gca()
-        if log == True: ax.set_yscale("log")
+        plt.axhline(1.0,color="k",linestyle="--")
+        plt.ylabel("Bayes-factor w.r.t SLY")
         plt.legend()
-        plt.xlabel("EoSs")
-        plt.ylabel("Joint Bayes Factor")
-        plt.title("EoS Joint Bayes Factors w.r.t. SLY")
         label = uLTs_File.split('/')[-2]
-        #plt.savefig("plots/2D_3D/{}_barplot_2D_3D_BFs.png".format(label))
-        plt.savefig("./{}_barplot_2D_3D_BFs.png".format(label)) # 01/30/24 wanted to test out Anarya's dev-3d-prod branch with my changes
+        plt.savefig("plots/2D_3D/{}_barplot_2D_3D_BFs.png".format(label), bbox_inches="tight")
 
     Dictionary = {labels[Index]:{eosList[eIndex]:[methods_BFs[Index][eIndex],methods_uncerts[Index][eIndex]] for eIndex in range(len(eosList))} for Index in range(len(labels))}
-    #with open("plots/2D_3D/data/{}_2D_3D_BFs.json".format(label),"w") as f:
-    with open("./{}_2D_3D_BFs.json".format(label),"w") as f: # 01/30/24 wanted to test out Anarya's dev-3d-prod branch with my changes
+    with open("plots/2D_3D/data/{}_2D_3D_BFs.json".format(label),"w") as f:
         json.dump(Dictionary, f, indent=2, sort_keys=True)
 
 
@@ -85,10 +79,11 @@ def multipleEventBFs(log=False):
     stack_uLTs = ems.Stacking(uLTs_Files,kdedim=2)
     stack_uLs = ems.Stacking(uLs_Files,kdedim=3)
 
-    labels = ["UniformP (dL~,L~)", "UniformP (L1,L2)"]
-    colors = ["#66c2a5","#fc8d62"]
+    labels = ["(dL~,L~) Uniform Prior", "(L1,L2) Uniform Prior"]
+    #colors = ["#66c2a5","#fc8d62"] # Colors we used to use
+    colors = ["#8fbbd9", "#ff7f0f"]
     stacks = [stack_uLTs, stack_uLs]
-    eosList = ["BHF_BBB2","KDE0V","SKOP","H4","HQC18","SKMP","APR4_EPP","MPA1","MS1_PP","MS1B_PP"]
+    eosList = ["BHF_BBB2","KDE0V","KDE0V1","SKOP","H4","HQC18","SLY2","SLY230A","SKMP","RS","SK255","SLY9","APR4_EPP","SKI2","SKI4","SKI6","SK272","SKI3","SKI5","MPA1","MS1_PP","MS1B_PP"]
     stacks_BFs = []
     stacks_uncerts = []
     for stack in stacks:
@@ -106,7 +101,7 @@ def multipleEventBFs(log=False):
         stacks_uncerts.append(uncerts)
 
     x_axis = np.arange(len(eosList))
-    spacing = [-.1,.1]
+    spacing = [-.075,.075]
     plt.clf()
     plt.rcParams.update({'font.size': 18})
     plt.figure(figsize=(15, 10))
@@ -114,15 +109,12 @@ def multipleEventBFs(log=False):
         plt.bar(x_axis+spacing[index],stacks_BFs[index],.15,yerr=stacks_uncerts[index],label=labels[index],color=colors[index])
         #plt.bar(x_axis+spacing[index],stacks_BFs[index],.15,label=labels[index],color=colors[index])
 
-    if log == False: plt.ylim(top=1.2)
+    plt.yscale("log")
     plt.xticks(x_axis,eosList,rotation=45,ha="right")
-    ax = plt.gca()
-    if log == True: ax.set_yscale("log")
+    plt.axhline(1.0,color="k",linestyle="--")
+    plt.ylabel("Bayes-factor w.r.t SLY")
     plt.legend()
-    plt.xlabel("EoSs")
-    plt.ylabel("Joint Bayes Factor")
-    plt.title("EoS Joint Bayes Factors w.r.t. SLY")
-    plt.savefig("plots/2D_3D/allJoint_barplot_2D_3D_BFs.png")
+    plt.savefig("plots/2D_3D/allJoint_barplot_2D_3D_BFs.png",bbox_inches="tight")
 
     Dictionary = {labels[Index]:{eosList[eIndex]:[stacks_BFs[Index][eIndex],stacks_uncerts[Index][eIndex]] for eIndex in range(len(eosList))} for Index in range(len(labels))}
     with open("plots/2D_3D/data/allJoint_2D_3D_BFs.json","w") as f:

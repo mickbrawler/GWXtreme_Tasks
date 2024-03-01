@@ -57,14 +57,14 @@ def singleEventBFs():
         #plt.bar(x_axis+spacing[index],methods_BFs[index],.15,yerr=methods_uncerts[index],label=labels[index],color=colors[index])
         plt.bar(x_axis+spacing[index],methods_BFs[index],.15,label=labels[index],color=colors[index])
 
-        plt.errorbar(x_axis+spacing[index],methods_BFs[index],yerr=methods_uncerts[index],linewidth=1,capsize=3)
+        plt.errorbar(x_axis+spacing[index],methods_BFs[index],yerr=methods_uncerts[index],fmt="s",color="black",linewidth=1,capsize=3)
     
     plt.bar(x_axis+spacing[2],nest_BFs,.15,yerr=nest_stds,label=labels[2],color=colors[2])
 
     plt.yscale("log")
     plt.xticks(x_axis,eosList,rotation=45,ha="right")
     plt.ylim(1.0e-4,(max(BFs)+max(uncerts))*10.)
-    plt.axhline(1.0,color="k",linestyle="--")
+    #plt.axhline(1.0,color="k",linestyle="--")
     #plt.title("EoS Bayes Factors w.r.t. SLY")
     plt.ylabel("Bayes-factor w.r.t SLY")
     plt.legend()

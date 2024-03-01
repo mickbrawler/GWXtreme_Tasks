@@ -56,7 +56,7 @@ def singleEventBFs():
 
         plt.yscale("log")
         plt.xticks(x_axis,eosList,rotation=45,ha="right")
-        plt.axhline(1.0,color="k",linestyle="--")
+        #plt.axhline(1.0,color="k",linestyle="--")
         plt.ylabel("Bayes-factor w.r.t SLY")
         plt.legend()
         label = uLTs_File.split('/')[-2]
@@ -111,7 +111,7 @@ def multipleEventBFs(log=False):
 
     plt.yscale("log")
     plt.xticks(x_axis,eosList,rotation=45,ha="right")
-    plt.axhline(1.0,color="k",linestyle="--")
+    #plt.axhline(1.0,color="k",linestyle="--")
     plt.ylabel("Bayes-factor w.r.t SLY")
     plt.legend()
     plt.savefig("plots/2D_3D/allJoint_barplot_2D_3D_BFs.png",bbox_inches="tight")

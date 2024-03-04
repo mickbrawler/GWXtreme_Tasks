@@ -1,0 +1,79 @@
+import numpy as np
+from scipy.optimize import fsolve
+import json
+
+def simplify():
+
+    uLTs_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Taylor/uniformP_LTs/phenom-injections/TaylorF2"
+    uLs_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Taylor/uniformP_Ls/IMRPhenomPv2_NRTidal/APR4_EPP"
+    priors = [uLTs_Dir,uLs_Dir]
+
+    injections = ["282_1.58_1.37", "202_1.35_1.14", "179_1.35_1.23", "71_1.37_1.33", "122_1.77_1.19",
+                  "241_1.31_1.28", "220_1.36_1.24", "282_1.35_1.32", "149_1.35_1.23", "237_1.36_1.26",
+                  "138_1.5_1.21", "235_1.4_1.3", "219_1.3_1.28", "260_1.48_1.33", "164_1.34_1.19",
+                  "55_1.38_1.33", "78_1.35_1.32"]
+
+    filenameEnd = "bns_example_result.json"
+    lambdasLabels = [["lambda_tilde","delta_lambda"],["lambda_1","lambda_2"]]
+    outputEnd = "bns_example_result_simplified.json"
+
+    for prior,labels in zip(priors,lambdasLabels):
+        label_a, label_b = labels
+
+        for injection in injections:
+
+            # This first try except is due to my directory separation for "troublesome" injections
+            try:
+                with open("{}/{}/{}".format(prior,injection,filenameEnd),"r") as f:
+                    data = json.load(f)['posterior']['content']
+            except FileNotFoundError:
+                with open("{}/troublesome/{}/{}".format(prior,injection,filenameEnd),"r") as f:
+                    data = json.load(f)['posterior']['content']
+
+            # This second try except is for when the file supplied has no m1 and m2; converter is then used
+            try: m1, m2, q, mc, lambda_A, lambda_B = data['m1_source'],data['m2_source'],data['mass_ratio'],data['chirp_mass'],data[label_a],data[label_b]
+            except KeyError: 
+                q, mc, lambda_A, lambda_B = data['mass_ratio'],data['chirp_mass'],data[label_a],data[label_b]
+                m1, m2 = MassesInversion(q,mc).solve_system()
+
+            Dict = {'posterior':{'content':{'mass_1_source':m1,'mass_2_source':m2,'mass_ratio':q,'chirp_mass':mc,label_a:lambda_A,label_b:lambda_B}}}
+
+            # This third try except is due to same reason as first try except
+            try:
+                with open("{}/{}/{}".format(prior,injection,outputEnd),"w") as f:
+                    json.dump(Dict,f,indent=2,sort_keys=True)
+            except FileNotFoundError:
+                with open("{}/troublesome/{}/{}".format(prior,injection,outputEnd),"w") as f:
+                    json.dump(Dict,f,indent=2,sort_keys=True)
+
+
+
+class MassesInversion:
+
+    def __init__(self, q, mc):
+
+        self.q = q
+        self.mc = mc
+
+    def MassSolving(self, Ms):
+        # Expression providing function for fsolve call
+
+        Mass1 = Ms[0]
+        Mass2 = Ms[1]
+        expressions = np.zeros(2)
+        expressions[0] = (Mass2/Mass1) - self.q
+        expressions[1] = ( ((Mass1*Mass2)**(3/5)) / ((Mass1+Mass2)**(1/5)) ) - self.mc
+        return expressions
+
+    def solve_system(self):
+
+        Masses1 = []
+        Masses2 = []
+        for self.q, self.mc in zip(self.q, self.mc):
+
+            Mass1, Mass2 = fsolve(self.MassSolving,[1.0,1.0])
+            Masses1.append(Mass1)
+            Masses2.append(Mass2)
+
+        return(Masses1,Masses2)
+

@@ -8,18 +8,28 @@ def singleEventBFs():
     # Makes barplot of BFs for a single simulation comparing that of uP(LTs) and
     # uP(Ls) (with errorbars!).
 
-    uLTs_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Taylor/uniformP_LTs/IMRPhenomPv2_NRTidal/APR4_EPP"
+    uLTs_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Taylor/uniformP_LTs/phenom-injections/TaylorF2"
     uLs_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Taylor/uniformP_Ls/IMRPhenomPv2_NRTidal/APR4_EPP"
-    #injections = ["282_1.58_1.37", "202_1.35_1.14", "179_1.35_1.23", "71_1.37_1.33", "122_1.77_1.19", 
-    #              "241_1.31_1.28", "220_1.36_1.24", "282_1.35_1.32", "149_1.35_1.23", "237_1.36_1.26", 
-    #              "138_1.5_1.21", "235_1.4_1.3", "219_1.3_1.28", "260_1.48_1.33", "164_1.34_1.19", 
-    #              "55_1.38_1.33", "78_1.35_1.32"]
+
+    injections = ["282_1.58_1.37", "202_1.35_1.14", "179_1.35_1.23", "71_1.37_1.33", "122_1.77_1.19", 
+                  "241_1.31_1.28", "220_1.36_1.24", "282_1.35_1.32", "149_1.35_1.23", "237_1.36_1.26", 
+                  "138_1.5_1.21", "235_1.4_1.3", "219_1.3_1.28", "260_1.48_1.33", "164_1.34_1.19", 
+                  "55_1.38_1.33", "78_1.35_1.32"]
     injections = ["282_1.58_1.37"]
-    filenameEnd = "bns_example_result.json"
+
+    #filenameEnd = "bns_example_result.json"
+    filenameEnd = "bns_example_result_simplified.json"
+
     for injection in injections:
         print(injection)
-        uLTs_File = "{}/{}/{}".format(uLTs_Dir,injection,filenameEnd)
-        uLs_File = "{}/{}/{}".format(uLs_Dir,injection,filenameEnd)
+
+        try:
+            uLTs_File = "{}/{}/{}".format(uLTs_Dir,injection,filenameEnd)
+            uLs_File = "{}/{}/{}".format(uLs_Dir,injection,filenameEnd)
+        except FileNotFoundError:
+            uLTs_File = "{}/troublesome/{}/{}".format(uLTs_Dir,injection,filenameEnd)
+            uLs_File = "{}/troublesome/{}/{}".format(uLs_Dir,injection,filenameEnd)
+
 
         modsel_uLTs = ems.Model_selection(uLTs_File,Ns=4000,kdedim=2)
         modsel_uLs = ems.Model_selection(uLs_File,Ns=4000,kdedim=3)
@@ -51,8 +61,10 @@ def singleEventBFs():
         plt.rcParams.update({'font.size': 18})
         plt.figure(figsize=(15, 10))
         for index in range(len(methods)):
-            plt.bar(x_axis+spacing[index],methods_BFs[index],.15,yerr=methods_uncerts[index],label=labels[index],color=colors[index])
-            #plt.bar(x_axis+spacing[index],methods_BFs[index],.15,label=labels[index],color=colors[index])
+            #plt.bar(x_axis+spacing[index],methods_BFs[index],.15,yerr=methods_uncerts[index],label=labels[index],color=colors[index])
+            plt.bar(x_axis+spacing[index],methods_BFs[index],.15,label=labels[index],color=colors[index])
+
+            plt.errorbar(x_axis+spacing[index],methods_BFs[index],yerr=methods_uncerts[index],ls="none",ecolor="black")
 
         plt.yscale("log")
         plt.xticks(x_axis,eosList,rotation=45,ha="right")
@@ -67,14 +79,15 @@ def singleEventBFs():
         json.dump(Dictionary, f, indent=2, sort_keys=True)
 
 
-def multipleEventBFs(log=False):
+def multipleEventBFs():
     # Makes barplot of jointBFs using all simulations comparing that of uP(LTs) 
     # and uP(Ls) (with errorbars!).
 
-    uLTs_Dir = "../bilby_runs/3dkde_studies/Anarya_uniformLTs/phenom-injections/TaylorF2/"
-    uLs_Dir = "../bilby_runs/3dkde_studies/outdir/Phenom_Taylor/IMRPhenomPv2_NRTidal/APR4_EPP/"
-    uLTs_Files = glob.glob("{}/*/*.json".format(uLTs_Dir))
-    uLs_Files = glob.glob("{}/*/*.json".format(uLs_Dir))
+    uLTs_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Taylor/uniformP_LTs/phenom-injections/TaylorF2"
+    uLs_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Taylor/uniformP_Ls/IMRPhenomPv2_NRTidal/APR4_EPP"
+
+    uLTs_Files = glob.glob("{}/*/*.json".format(uLTs_Dir)) + glob.glob("{}/troublesome/*/*simplified.json".format(uLTs_Dir))
+    uLs_Files = glob.glob("{}/*/*.json".format(uLs_Dir)) + glob.glob("{}/troublesome/*/*simplified.json".format(uLs_Dir))
 
     stack_uLTs = ems.Stacking(uLTs_Files,kdedim=2)
     stack_uLs = ems.Stacking(uLs_Files,kdedim=3)
@@ -106,8 +119,10 @@ def multipleEventBFs(log=False):
     plt.rcParams.update({'font.size': 18})
     plt.figure(figsize=(15, 10))
     for index in range(len(stacks)):
-        plt.bar(x_axis+spacing[index],stacks_BFs[index],.15,yerr=stacks_uncerts[index],label=labels[index],color=colors[index])
-        #plt.bar(x_axis+spacing[index],stacks_BFs[index],.15,label=labels[index],color=colors[index])
+        #plt.bar(x_axis+spacing[index],stacks_BFs[index],.15,yerr=stacks_uncerts[index],label=labels[index],color=colors[index])
+        plt.bar(x_axis+spacing[index],stacks_BFs[index],.15,label=labels[index],color=colors[index])
+
+        plt.errorbar(x_axis+spacing[index],stacks_BFs[index],yerr=stacks_uncerts[index],ls="none",ecolor="black")
 
     plt.yscale("log")
     plt.xticks(x_axis,eosList,rotation=45,ha="right")

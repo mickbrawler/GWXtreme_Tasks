@@ -11,11 +11,11 @@ def singleEventBFs():
     uLTs_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Taylor/uniformP_LTs/phenom-injections/TaylorF2"
     uLs_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Taylor/uniformP_Ls/IMRPhenomPv2_NRTidal/APR4_EPP"
 
-    injections = ["282_1.58_1.37", "202_1.35_1.14", "179_1.35_1.23", "71_1.37_1.33", "122_1.77_1.19", 
+    #injections = ["282_1.58_1.37", "202_1.35_1.14", "179_1.35_1.23", "71_1.37_1.33", "122_1.77_1.19", 
+    injections = ["71_1.37_1.33", "122_1.77_1.19", 
                   "241_1.31_1.28", "220_1.36_1.24", "282_1.35_1.32", "149_1.35_1.23", "237_1.36_1.26", 
                   "138_1.5_1.21", "235_1.4_1.3", "219_1.3_1.28", "260_1.48_1.33", "164_1.34_1.19", 
                   "55_1.38_1.33", "78_1.35_1.32"]
-    injections = ["282_1.58_1.37"]
 
     #filenameEnd = "bns_example_result.json"
     filenameEnd = "bns_example_result_simplified.json"
@@ -26,13 +26,16 @@ def singleEventBFs():
         try:
             uLTs_File = "{}/{}/{}".format(uLTs_Dir,injection,filenameEnd)
             uLs_File = "{}/{}/{}".format(uLs_Dir,injection,filenameEnd)
+
+            modsel_uLTs = ems.Model_selection(uLTs_File,Ns=4000,kdedim=2)
+            modsel_uLs = ems.Model_selection(uLs_File,Ns=4000,kdedim=3)
+
         except FileNotFoundError:
             uLTs_File = "{}/troublesome/{}/{}".format(uLTs_Dir,injection,filenameEnd)
             uLs_File = "{}/troublesome/{}/{}".format(uLs_Dir,injection,filenameEnd)
 
-
-        modsel_uLTs = ems.Model_selection(uLTs_File,Ns=4000,kdedim=2)
-        modsel_uLs = ems.Model_selection(uLs_File,Ns=4000,kdedim=3)
+            modsel_uLTs = ems.Model_selection(uLTs_File,Ns=4000,kdedim=2)
+            modsel_uLs = ems.Model_selection(uLs_File,Ns=4000,kdedim=3)
 
         labels = ["(dL~,L~) Uniform Prior", "(L1,L2) Uniform Prior"]
         #colors = ["#66c2a5","#fc8d62"] # Colors we initially used
@@ -47,7 +50,7 @@ def singleEventBFs():
             uncerts = []
             for eos in eosList:
                 print(eos)
-                bf, bf_trials = method.computeEvidenceRatio(EoS1=eos,EoS2="SLY",trials=1000)
+                bf, bf_trials = method.computeEvidenceRatio(EoS1=eos,EoS2="SLY",trials=100)
                 #bf = method.computeEvidenceRatio(EoS1=eos,EoS2="SLY",trials=0)
                 uncert = np.std(bf_trials) * 2
                 BFs.append(bf)
@@ -86,8 +89,8 @@ def multipleEventBFs():
     uLTs_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Taylor/uniformP_LTs/phenom-injections/TaylorF2"
     uLs_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Taylor/uniformP_Ls/IMRPhenomPv2_NRTidal/APR4_EPP"
 
-    uLTs_Files = glob.glob("{}/*/*.json".format(uLTs_Dir)) + glob.glob("{}/troublesome/*/*simplified.json".format(uLTs_Dir))
-    uLs_Files = glob.glob("{}/*/*.json".format(uLs_Dir)) + glob.glob("{}/troublesome/*/*simplified.json".format(uLs_Dir))
+    uLTs_Files = glob.glob("{}/*/*simplified.json".format(uLTs_Dir)) + glob.glob("{}/troublesome/*/*simplified.json".format(uLTs_Dir))
+    uLs_Files = glob.glob("{}/*/*simplified.json".format(uLs_Dir)) + glob.glob("{}/troublesome/*/*simplified.json".format(uLs_Dir))
 
     stack_uLTs = ems.Stacking(uLTs_Files,kdedim=2)
     stack_uLs = ems.Stacking(uLs_Files,kdedim=3)
@@ -105,7 +108,7 @@ def multipleEventBFs():
         uncerts = []
         for eos in eosList:
             print(eos)
-            bf, bf_trials = stack.stack_events(EoS1=eos,EoS2="SLY",trials=1000)
+            bf, bf_trials = stack.stack_events(EoS1=eos,EoS2="SLY",trials=100)
             #bf = stack.stack_events(EoS1=eos,EoS2="SLY",trials=0)
             uncert = np.std(bf_trials) * 2
             BFs.append(bf)

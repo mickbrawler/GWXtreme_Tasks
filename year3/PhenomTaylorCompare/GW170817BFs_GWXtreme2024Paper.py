@@ -7,7 +7,7 @@ import json
 # #8fbbd9 #ff7f0f
 # #1f77b4 #ffd7b6 #bfe2bf
 
-def singleEventBFs(fromResults=True):
+def singleEventBFs():
     # Plots barplot of BFs using GW170817's uP(LTs) posterior and
     #                                       uP(Ls) posterior (with errorbars)!
 
@@ -39,7 +39,7 @@ def singleEventBFs(fromResults=True):
         uncerts = []
         for eos in eosList:
             print(eos)
-            bf, bf_trials = method.computeEvidenceRatio(EoS1=eos,EoS2="SLY",trials=1000)
+            bf, bf_trials = method.computeEvidenceRatio(EoS1=eos,EoS2="SLY",trials=100)
             #bf = method.computeEvidenceRatio(EoS1=eos,EoS2="SLY",trials=0)
             uncert = np.std(bf_trials) * 2
             BFs.append(bf)

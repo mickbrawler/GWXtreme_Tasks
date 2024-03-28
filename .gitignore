@@ -16,6 +16,7 @@ year3/PhenomTaylorCompare/plots/difPriors/data/
 year3/PhenomTaylorCompare/plots/old_2D3D_1000trials/data/
 year3/PhenomTaylorCompare/plots/2D3D_100trials/data/
 year3/PhenomTaylorCompare/plots/2D3D_1000trials/data/
+year3/PhenomTaylorCompare/plots/postSourceTest_2D3D_1000trials/data/
 
 year2/bilby_runs/3dkde_studies/ 
 year2/bilby_runs/.distance_marginalization_lookup.npz

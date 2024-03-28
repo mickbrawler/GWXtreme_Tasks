@@ -1,0 +1,1 @@
+The "postSourceConfirm" in the directory name refers to our confirmation that the masses PE results utilized for the BFs. The previous 1000 trial run didn't have this in mind so I can't vouch for it. Same goes for the previous previous one.

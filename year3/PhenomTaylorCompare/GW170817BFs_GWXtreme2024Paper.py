@@ -5,8 +5,8 @@ import json
 
 def singleEventBFs(Trials=1000):
 
-    uLTs_File = "/home/michael/projects/eos/GWXtreme_Tasks/year2/bilby_runs/simulations/outdir/real/uniformP_LTs/GW170817/data_labelsAdjusted.json" 
-    uLs_File = "/home/michael/projects/eos/GWXtreme_Tasks/year3/GW170817_prior_L1L2/CIT_attempt_successful/outdir/GW170817_result_simplified.json"
+    uLTs_File = "/home/michael/projects/eos/GWXtreme_Tasks/year2/bilby_runs/simulations/outdir/real/uniformP_LTs/GW170817/simplified_result.json" 
+    uLs_File = "/home/michael/projects/eos/GWXtreme_Tasks/year3/GW170817_prior_L1L2/CIT_attempt_successful/outdir/simplified_result.json"
 
     modsel_uLTs = ems.Model_selection(uLTs_File,Ns=4000,kdedim=2)
     modsel_uLs = ems.Model_selection(uLs_File,Ns=4000,kdedim=3)
@@ -42,12 +42,12 @@ def singleEventBFs(Trials=1000):
     methods_trials.append(nest_stds)
 
     Dictionary = {labels[Index]:{eosList[eIndex]:[methods_BFs[Index][eIndex],methods_trials[Index][eIndex]] for eIndex in range(len(eosList))} for Index in range(len(labels))}
-    with open("plots/2D3D_1000trials/data/GW170817_2D_3D_BFs.json","w") as f:
+    with open("plots/postSourceTest_2D3D_1000trials/data/GW170817_2D_3D_BFs.json","w") as f:
         json.dump(Dictionary, f, indent=2, sort_keys=True)
 
 def singleEventPlots():
 
-    File = "plots/2D3D_1000trials/data/GW170817_2D_3D_BFs.json"
+    File = "plots/postSourceTest_2D3D_1000trials/data/GW170817_2D_3D_BFs.json"
     with open(File,"r") as f:
         data = json.load(f)
 
@@ -92,5 +92,5 @@ def singleEventPlots():
     #plt.title("EoS Bayes Factors w.r.t. SLY")
     plt.ylabel("Bayes-factor w.r.t SLY")
     plt.legend()
-    plt.savefig("plots/2D3D_1000trials/GW170817_barplot_2D_3D_BFs.png",bbox_inches="tight")
+    plt.savefig("plots/postSourceTest_2D3D_1000trials/GW170817_barplot_2D_3D_BFs.png",bbox_inches="tight")
 

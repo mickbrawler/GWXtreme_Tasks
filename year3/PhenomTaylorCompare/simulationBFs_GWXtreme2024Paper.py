@@ -4,18 +4,17 @@ import matplotlib.pyplot as plt
 import json
 import glob
 
-def singleEventBFs():
-    # Makes barplot of BFs for a single simulation comparing that of uP(LTs) and
-    # uP(Ls) (with errorbars!).
+def singleEventBFs(Trials=1000):
 
+    labels = ["Phenom-Taylor (dL~,L~) Uniform Prior", "(Phenom-Taylor (L1,L2) Uniform Prior", "(Phenom-Phenom (L1,L2) Uniform Prior"]
     uLTs_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Taylor/uniformP_LTs/phenom-injections/TaylorF2"
     uLs_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Taylor/uniformP_Ls/IMRPhenomPv2_NRTidal/APR4_EPP"
+    phenomPhenom_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Phenom/IMRPhenomPv2_NRTidal/APR4_EPP"
 
-    #injections = ["282_1.58_1.37", "202_1.35_1.14", "179_1.35_1.23", "71_1.37_1.33", "122_1.77_1.19", 
-    injections = ["71_1.37_1.33", "122_1.77_1.19", 
+    injections = ["282_1.58_1.37", "202_1.35_1.14", "179_1.35_1.23", "122_1.77_1.19", 
+                  "71_1.37_1.33", "55_1.38_1.33", "78_1.35_1.32",
                   "241_1.31_1.28", "220_1.36_1.24", "282_1.35_1.32", "149_1.35_1.23", "237_1.36_1.26", 
-                  "138_1.5_1.21", "235_1.4_1.3", "219_1.3_1.28", "260_1.48_1.33", "164_1.34_1.19", 
-                  "55_1.38_1.33", "78_1.35_1.32"]
+                  "138_1.5_1.21", "235_1.4_1.3", "219_1.3_1.28", "260_1.48_1.33", "164_1.34_1.19"]
 
     #filenameEnd = "bns_example_result.json"
     filenameEnd = "bns_example_result_simplified.json"
@@ -26,21 +25,22 @@ def singleEventBFs():
         try:
             uLTs_File = "{}/{}/{}".format(uLTs_Dir,injection,filenameEnd)
             uLs_File = "{}/{}/{}".format(uLs_Dir,injection,filenameEnd)
+            phenomPhenom_File = "{}/{}/{}".format(phenomPhenom_Dir,injection,filenameEnd)
 
             modsel_uLTs = ems.Model_selection(uLTs_File,Ns=4000,kdedim=2)
             modsel_uLs = ems.Model_selection(uLs_File,Ns=4000,kdedim=3)
+            modsel_phenomPhenom = ems.Model_selection(phenomPhenom_File,Ns=4000,kdedim=3)
 
         except FileNotFoundError:
             uLTs_File = "{}/troublesome/{}/{}".format(uLTs_Dir,injection,filenameEnd)
             uLs_File = "{}/troublesome/{}/{}".format(uLs_Dir,injection,filenameEnd)
+            phenomPhenom_File = "{}/troublesome/{}/{}".format(phenomPhenom_Dir,injection,filenameEnd)
 
             modsel_uLTs = ems.Model_selection(uLTs_File,Ns=4000,kdedim=2)
             modsel_uLs = ems.Model_selection(uLs_File,Ns=4000,kdedim=3)
+            modsel_phenomPhenom = ems.Model_selection(phenomPhenom_File,Ns=4000,kdedim=3)
 
-        labels = ["(dL~,L~) Uniform Prior", "(L1,L2) Uniform Prior"]
-        #colors = ["#66c2a5","#fc8d62"] # Colors we initially used
-        colors = ["#8fbbd9", "#ff7f0f"]
-        methods = [modsel_uLTs, modsel_uLs]
+        methods = [modsel_uLTs, modsel_uLs,modsel_phenomPhenom]
         eosList = ["BHF_BBB2","KDE0V","KDE0V1","SKOP","H4","HQC18","SLY2","SLY230A","SKMP","RS","SK255","SLY9","APR4_EPP","SKI2","SKI4","SKI6","SK272","SKI3","SKI5","MPA1","MS1_PP","MS1B_PP"]
         methods_BFs = []
         methods_uncerts = []
@@ -50,7 +50,7 @@ def singleEventBFs():
             uncerts = []
             for eos in eosList:
                 print(eos)
-                bf, bf_trials = method.computeEvidenceRatio(EoS1=eos,EoS2="SLY",trials=100)
+                bf, bf_trials = method.computeEvidenceRatio(EoS1=eos,EoS2="SLY",trials=Trials)
                 #bf = method.computeEvidenceRatio(EoS1=eos,EoS2="SLY",trials=0)
                 uncert = np.std(bf_trials) * 2
                 BFs.append(bf)
@@ -58,33 +58,59 @@ def singleEventBFs():
             methods_BFs.append(BFs)
             methods_uncerts.append(uncerts)
 
+    Dictionary = {labels[Index]:{eosList[eIndex]:[methods_BFs[Index][eIndex],methods_uncerts[Index][eIndex]] for eIndex in range(len(eosList))} for Index in range(len(labels))}
+    with open("plots/2D3D_1000trials/data/{}_2D_3D_BFs.json".format(label),"w") as f:
+        json.dump(Dictionary, f, indent=2, sort_keys=True)
+
+def singleEventPlots():
+
+    Dir = "/home/michael/projects/eos/GWXtreme_Tasks/year3/PhenomTaylorCompare/plots/2D3D_1000trials/data/"
+    injections = ["282_1.58_1.37", "202_1.35_1.14", "179_1.35_1.23", "122_1.77_1.19", 
+                  "71_1.37_1.33", "55_1.38_1.33", "78_1.35_1.32",
+                  "241_1.31_1.28", "220_1.36_1.24", "282_1.35_1.32", "149_1.35_1.23", "237_1.36_1.26", 
+                  "138_1.5_1.21", "235_1.4_1.3", "219_1.3_1.28", "260_1.48_1.33", "164_1.34_1.19"]
+    for injection in injections:
+
+        File = "{}/{}_2D_3D_BFs.json".format(Dir,injection)
+        with open(File,"r") as f:
+            data = json.load(f)
+
+
+        labels = ["Phenom-Taylor (dL~,L~) Uniform Prior", "(Phenom-Taylor (L1,L2) Uniform Prior", "(Phenom-Phenom (L1,L2) Uniform Prior", "LALSuite Nested Sampling Result"]
+        eosList = ["BHF_BBB2","KDE0V","KDE0V1","SKOP","H4","HQC18","SLY2","SLY230A","SKMP","RS","SK255","SLY9","APR4_EPP","SKI2","SKI4","SKI6","SK272","SKI3","SKI5","MPA1","MS1_PP","MS1B_PP"]
+        #colors = ["#66c2a5","#fc8d62"] # Colors we initially used
+        colors = ["#e41a1c", "#377eb8", "#4daf4a", "#984ea3"]
         x_axis = np.arange(len(eosList))
-        spacing = [-.075,.075]
+        spacing = [-.3,-.1,.1,.3]
         plt.clf()
         plt.rcParams.update({'font.size': 18})
         plt.figure(figsize=(15, 10))
-        for index in range(len(methods)):
-            #plt.bar(x_axis+spacing[index],methods_BFs[index],.15,yerr=methods_uncerts[index],label=labels[index],color=colors[index])
-            plt.bar(x_axis+spacing[index],methods_BFs[index],.15,label=labels[index],color=colors[index])
 
-            plt.errorbar(x_axis+spacing[index],methods_BFs[index],yerr=methods_uncerts[index],ls="none",ecolor="black")
+        counter = 0
+        for label in labels:
+
+            BFs = []
+            uncerts = []
+            for eos in eosList:
+                BFs.append(data[label][eos][0]) 
+                uncerts.append(data[label][eos][1])
+
+            plt.bar(x_axis+spacing[counter],BFs,.175,label=label,color=colors[counter])
+
+            plt.errorbar(x_axis+spacing[counter],BFs,yerr=uncerts,ls="none",ecolor="black")
+
+            counter += 1
 
         plt.yscale("log")
-        plt.xticks(x_axis,eosList,rotation=45,ha="right")
-        #plt.axhline(1.0,color="k",linestyle="--")
+        plt.xticks(x_axis,eosList,rotation=90,ha="right")
+        plt.axhline(1.0,color="k",linestyle="--",alpha=0.2)
         plt.ylabel("Bayes-factor w.r.t SLY")
         plt.legend()
-        label = uLTs_File.split('/')[-2]
-        plt.savefig("plots/2D_3D/{}_barplot_2D_3D_BFs.png".format(label), bbox_inches="tight")
-
-    Dictionary = {labels[Index]:{eosList[eIndex]:[methods_BFs[Index][eIndex],methods_uncerts[Index][eIndex]] for eIndex in range(len(eosList))} for Index in range(len(labels))}
-    with open("plots/2D_3D/data/{}_2D_3D_BFs.json".format(label),"w") as f:
-        json.dump(Dictionary, f, indent=2, sort_keys=True)
+        plt.savefig("plots/2D3D_1000trials/{}_barplot_2D_3D_BFs.png".format(injection), bbox_inches="tight")
 
 
+# Still have to adopt above logic for a joint BF plot. Test above first before proceeding.
 def multipleEventBFs():
-    # Makes barplot of jointBFs using all simulations comparing that of uP(LTs) 
-    # and uP(Ls) (with errorbars!).
 
     uLTs_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Taylor/uniformP_LTs/phenom-injections/TaylorF2"
     uLs_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Taylor/uniformP_Ls/IMRPhenomPv2_NRTidal/APR4_EPP"

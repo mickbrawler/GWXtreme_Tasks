@@ -1,5 +1,6 @@
 package/
 
+year3/simulations/testUpdatedBilby/
 year3/LSAMP_Poster/anaryaShare/Files/
 year3/bilby_package/
 year3/dir.tar.gz
@@ -11,7 +12,12 @@ year3/share2D3DBF.tar.gz
 year3/share2D3DBF/
 year3/PhenomTaylorCompare/reweightPriorWork/
 year3/PhenomTaylorCompare/__pycache__
+year3/PhenomTaylorCompare/plots/difPriors/data/
+year3/PhenomTaylorCompare/plots/old_2D3D_1000trials/data/
+year3/PhenomTaylorCompare/plots/2D3D_100trials/data/
+year3/PhenomTaylorCompare/plots/2D3D_1000trials/data/
 
+year2/bilby_runs/3dkde_studies/ 
 year2/bilby_runs/.distance_marginalization_lookup.npz
 year2/bilby_runs/simulations/
 year2/bilby_runs/jason_driver_dir/share/

@@ -52,11 +52,13 @@ def singleEventPlots():
         data = json.load(f)
 
 
-    labels = ["2D KDE (GWXtreme)", "3D KDE (GWXtreme)", "Direct Computation"]
+#    labels = ["2D KDE (GWXtreme)", "3D KDE (GWXtreme)", "Direct Computation"]
+    labels = ["2D KDE (GWXtreme)", "3D KDE (GWXtreme)"]
     eosList = ["BHF_BBB2","KDE0V","KDE0V1","SKOP","H4","HQC18","SLY2","SLY230A","SKMP","RS","SK255","SLY9","APR4_EPP","SKI2","SKI4","SKI6","SK272","SKI3","SKI5","MPA1","MS1_PP","MS1B_PP"]
-    colors = ["#1f77b4", "#ffd7b6", "#bfe2bf"]
+#    colors = ["#1f77b4", "#ffd7b6", "#bfe2bf"]
+    colors = ["#1f77b4", "#ffd7b6"]
     x_axis = np.arange(len(eosList))
-    spacing = [-.15,0,.15]
+    spacing = [-.10,.10]
     plt.clf()
     plt.rcParams.update({"font.size":18})
     plt.figure(figsize=(15, 10))
@@ -81,7 +83,7 @@ def singleEventPlots():
         # other methods have the raw trials saved.
         uncert = np.std(trials) * 2
 
-        plt.bar(x_axis+spacing[counter],BFs,.15,label=labels[counter],color=colors[counter])
+        plt.bar(x_axis+spacing[counter],BFs,.20,label=labels[counter],color=colors[counter])
         plt.errorbar(x_axis+spacing[counter],BFs,yerr=uncerts,ls="none",ecolor="black")
         counter += 1
     

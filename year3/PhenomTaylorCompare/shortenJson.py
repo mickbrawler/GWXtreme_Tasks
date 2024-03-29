@@ -14,8 +14,7 @@ def simplifySimulation():
     uLs_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Taylor/uniformP_Ls/IMRPhenomPv2_NRTidal/APR4_EPP"
     phenomPhenom_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Phenom/IMRPhenomPv2_NRTidal/APR4_EPP"
 
-#    priors = [uLTs_Dir,uLs_Dir]
-    priors = [phenomPhenom_Dir]
+    priors = [uLTs_Dir,uLs_Dir,phenomPhenom_Dir]
 
     injections = ["282_1.58_1.37", "202_1.35_1.14", "179_1.35_1.23", "71_1.37_1.33", "122_1.77_1.19",
                   "241_1.31_1.28", "220_1.36_1.24", "282_1.35_1.32", "149_1.35_1.23", "237_1.36_1.26",
@@ -23,18 +22,20 @@ def simplifySimulation():
                   "55_1.38_1.33", "78_1.35_1.32"]
 
     filenameEnd = "bns_example_result.json"
-    #lambdasLabels = [["lambda_tilde","delta_lambda"],["lambda_1","lambda_2"]]
-    lambdasLabels = [["lambda_1","lambda_2"]]
+    lambdasLabels = [["lambda_tilde","delta_lambda"],["lambda_1","lambda_2"],["lambda_1","lambda_2"]]
     outputEnd = "bns_example_result_simplified.json"
 
-    for prior,labels in zip(priors,lambdasLabels):
+    for index in range(len(priors)):
+        prior = priors[index]
+        labels = lambdasLabels[index]
         label_a, label_b = labels
 
         for injection in injections:
 
-            D = injection.split('_')[0]
-            print(D)
-            z=z_at_value(Planck18.luminosity_distance,float(D)*units.Mpc).value
+            # If it turns out we were wrong and the z isn't taken into account already, we must implement this
+            #D = injection.split('_')[0]
+            #print(D)
+            #z=z_at_value(Planck18.luminosity_distance,float(D)*units.Mpc).value
 
             # This first try except is due to my directory separation for "troublesome" injections
             try:
@@ -50,7 +51,13 @@ def simplifySimulation():
                 q, mc, lambda_A, lambda_B = data['mass_ratio'],data['chirp_mass'],data[label_a],data[label_b]
                 m1, m2 = MassesInversion(q,mc).solve_system()
 
-            Dict = {'posterior':{'content':{'mass_1_source':m1,'mass_2_source':m2,'mass_ratio':q,'chirp_mass_source':mc,label_a:lambda_A,label_b:lambda_B}}}
+            if label_a == "lambda_tilde":
+                label_aa = "lambdat"
+                label_bb = "dlambdat"
+            else:
+                label_aa = "lambda_1"
+                label_bb = "lambda_2"
+            Dict = {'posterior':{'content':{'m1_source':m1,'m2_source':m2,'q':q,'mc_source':mc,label_aa:lambda_A,label_bb:lambda_B}}}
 
             # This third try except is due to same reason as first try except
             try:

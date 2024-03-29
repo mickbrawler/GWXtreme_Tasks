@@ -79,10 +79,6 @@ def singleEventPlots():
                 uncert = data[label][eos][1][0]
                 uncerts.append(uncert)
 
-        # Conditional will handle the LALSuite already produced uncertainty. The
-        # other methods have the raw trials saved.
-        uncert = np.std(trials) * 2
-
         plt.bar(x_axis+spacing[counter],BFs,.20,label=labels[counter],color=colors[counter])
         plt.errorbar(x_axis+spacing[counter],BFs,yerr=uncerts,ls="none",ecolor="black")
         counter += 1

@@ -86,7 +86,7 @@ def singleEventPlots():
         #colors = ["#66c2a5","#fc8d62"] # Colors we initially used
         #colors = ["#e41a1c", "#377eb8", "#4daf4a", "#984ea3"]
         #colors = ["#e41a1c", "#377eb8"]
-        colors = ["#1f78b4", "#b2df8a"]
+        colors = ["#66c2a5", "#fc8d62"]
         x_axis = np.arange(len(eosList))
 #        spacing = [-.3,-.1,.1,.3]
         spacing = [-.10,.10]

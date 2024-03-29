@@ -15,8 +15,7 @@ def singleEventBFs(Trials=1000):
 #                  "71_1.37_1.33", "55_1.38_1.33", "78_1.35_1.32",
 #                  "241_1.31_1.28", "220_1.36_1.24", "282_1.35_1.32", "149_1.35_1.23", "237_1.36_1.26", 
 #                  "138_1.5_1.21", "235_1.4_1.3", "219_1.3_1.28", "260_1.48_1.33", "164_1.34_1.19"]
-#    injections = ["282_1.58_1.37", "122_1.77_1.19", "55_1.38_1.33"] 
-    injections = ["282_1.58_1.37"]
+    injections = ["282_1.58_1.37", "122_1.77_1.19", "55_1.38_1.33"] 
 
     #filenameEnd = "bns_example_result.json"
     filenameEnd = "bns_example_result_simplified.json"
@@ -71,8 +70,7 @@ def singleEventPlots():
 #                  "71_1.37_1.33", "55_1.38_1.33", "78_1.35_1.32",
 #                  "241_1.31_1.28", "220_1.36_1.24", "282_1.35_1.32", "149_1.35_1.23", "237_1.36_1.26", 
 #                  "138_1.5_1.21", "235_1.4_1.3", "219_1.3_1.28", "260_1.48_1.33", "164_1.34_1.19"]
-#    injections = ["282_1.58_1.37", "122_1.77_1.19", "55_1.38_1.33"] 
-    injections = ["282_1.58_1.37"] 
+    injections = ["282_1.58_1.37", "122_1.77_1.19", "55_1.38_1.33"] 
 
     for injection in injections:
 
@@ -133,7 +131,7 @@ def multipleEventBFs():
 
     labels = ["(dL~,L~) Uniform Prior", "(L1,L2) Uniform Prior"]
     #colors = ["#66c2a5","#fc8d62"] # Colors we used to use
-    colors = ["#8fbbd9", "#ff7f0f"]
+    colors = ["#1f78b4", "#b2df8a"]
     stacks = [stack_uLTs, stack_uLs]
     eosList = ["BHF_BBB2","KDE0V","KDE0V1","SKOP","H4","HQC18","SLY2","SLY230A","SKMP","RS","SK255","SLY9","APR4_EPP","SKI2","SKI4","SKI6","SK272","SKI3","SKI5","MPA1","MS1_PP","MS1B_PP"]
     stacks_BFs = []

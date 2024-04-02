@@ -2,19 +2,24 @@ from GWXtreme import eos_model_selection as ems
 import numpy as np
 import matplotlib.pyplot as plt
 import json
+import os.path
 
 def singleEventBFs(Trials=1000):
 
     uLTs_File = "/home/michael/projects/eos/GWXtreme_Tasks/year2/bilby_runs/simulations/outdir/real/uniformP_LTs/GW170817/simplified_result.json" 
     uLs_File = "/home/michael/projects/eos/GWXtreme_Tasks/year3/GW170817_prior_L1L2/CIT_attempt_successful/outdir/simplified_result.json"
+    output = "plots/postSourceTest_2D3D_1000trials/data/GW170817_2D_3D_BFs.json"
 
     modsel_uLTs = ems.Model_selection(uLTs_File,Ns=4000,kdedim=2)
     modsel_uLs = ems.Model_selection(uLs_File,Ns=4000,kdedim=3)
 
-    labels = ["2D KDE (GWXtreme)", "3D KDE (GWXtreme)", "Direct Computation"]
-    methods = [modsel_uLTs, modsel_uLs]
-    eosList = ["BHF_BBB2","KDE0V","KDE0V1","SKOP","H4","HQC18","SLY2","SLY230A","SKMP","RS","SK255","SLY9","APR4_EPP","SKI2","SKI4","SKI6","SK272","SKI3","SKI5","MPA1","MS1_PP","MS1B_PP"]
-    
+    #labels = ["2D KDE (GWXtreme)", "3D KDE (GWXtreme)", "Direct Computation"]
+    labels = ["Test!!!"]
+    #methods = [modsel_uLTs, modsel_uLs]
+    methods = [modsel_uLTs]
+    #eosList = ["BHF_BBB2","KDE0V","KDE0V1","SKOP","H4","HQC18","SLY2","SLY230A","SKMP","RS","SK255","SLY9","APR4_EPP","SKI2","SKI4","SKI6","SK272","SKI3","SKI5","MPA1","MS1_PP","MS1B_PP"]
+    eosList = ["BHF_BBB2","KDE0V"]
+
     with open("/home/michael/projects/eos/GWXtreme_Tasks/year2/bilby_runs/simulations/outdir/nested_sampling_results.json","r") as f:
         nestSamp = json.load(f)
     nest_BFs = []
@@ -41,9 +46,27 @@ def singleEventBFs(Trials=1000):
     methods_BFs.append(nest_BFs)
     methods_trials.append(nest_stds)
 
-    Dictionary = {labels[Index]:{eosList[eIndex]:[methods_BFs[Index][eIndex],methods_trials[Index][eIndex]] for eIndex in range(len(eosList))} for Index in range(len(labels))}
-    with open("plots/postSourceTest_2D3D_1000trials/data/GW170817_2D_3D_BFs.json","w") as f:
-        json.dump(Dictionary, f, indent=2, sort_keys=True)
+    # If you've already done this run, likely for different waveforms/priors, 
+    # it will append the data to the current file under its label. 
+    # If same labels are used though, overwriting of that field will occur.
+    if os.path.isfile(output) == True: 
+        with open(output,"r") as f:
+            Dictionary = json.load(f)
+
+        for Index in range(len(labels)):
+            dictionary = {}
+            for eIndex in range(len(eosList)):
+                dictionary[eosList[eIndex]] = [methods_BFs[Index][eIndex],methods_trials[Index][eIndex]]
+            Dictionary[labels[Index]] = dictionary
+
+        with open(output,"w") as f:
+            json.dump(Dictionary, f, indent=2, sort_keys=True)
+
+
+    else: # First time doing this sort of run so new file is made@ 
+        Dictionary = {labels[Index]:{eosList[eIndex]:[methods_BFs[Index][eIndex],methods_trials[Index][eIndex]] for eIndex in range(len(eosList))} for Index in range(len(labels))}
+        with open(output,"w") as f:
+            json.dump(Dictionary, f, indent=2, sort_keys=True)
 
 def singleEventPlots():
 

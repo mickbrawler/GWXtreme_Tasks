@@ -59,9 +59,30 @@ def singleEventBFs(Trials=1000):
             methods_BFs.append(BFs)
             methods_trials.append(trials)
         
-        Dictionary = {labels[Index]:{eosList[eIndex]:[methods_BFs[Index][eIndex],methods_trials[Index][eIndex]] for eIndex in range(len(eosList))} for Index in range(len(labels))}
-        with open("plots/postSourceTest_2D3D_1000trials/data/{}_2D_3D_BFs.json".format(injection),"w") as f:
+        output = "plots/postSourceTest_2D3D_1000trials/data/{}_2D_3D_BFs.json"
+
+        # STILL UNTESTED # STILL UNTESTED # STILL UNTESTED # STILL UNTESTED # STILL UNTESTED
+        # If you've already done this run, likely for different waveforms/priors,
+        # it will append the data to the current file under its label.
+        # If same labels are used though, overwriting of that field will occur.
+        if os.path.isfile(output) == True:
+            with open(output,"r") as f:
+                Dictionary = json.load(f)
+
+        for Index in range(len(labels)):
+            dictionary = {}
+            for eIndex in range(len(eosList)):
+                dictionary[eosList[eIndex]] = [methods_BFs[Index][eIndex],methods_trials[Index][eIndex]]
+            Dictionary[labels[Index]] = dictionary
+
+        with open(output,"w") as f:
             json.dump(Dictionary, f, indent=2, sort_keys=True)
+
+        else: # First time doing this sort of run so new file is made@
+            Dictionary = {labels[Index]:{eosList[eIndex]:[methods_BFs[Index][eIndex],methods_trials[Index][eIndex]] for eIndex in range(len(eosList))} for Index in range(len(labels))}
+            with open(output,"w") as f:
+                json.dump(Dictionary, f, indent=2, sort_keys=True)
+
 
 def singleEventPlots():
 

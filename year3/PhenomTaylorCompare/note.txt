@@ -1,0 +1,9 @@
+Hello linux wanderer. It is I, Michael Camilo, the last person to work on the
+NS EoS project as of Spring 2024. For most of my last/third year of undergrad
+research, I used this directory (hopefully still called PhenomTaylorCompare) to
+make BF and constraint comparison plots. 
+
+In the beginning of May 2024, I saved all my files (plots and large datasets) 
+in my home computer. As to not have to update that tarred file due to me adding
+new plots and datasets, I began my final work in a new directory (probably 
+called lastStretch). 

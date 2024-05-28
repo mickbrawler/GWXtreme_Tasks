@@ -3,20 +3,20 @@ package/
 year3/simulations/
 year3/LSAMP_Poster/anaryaShare/Files/
 year3/bilby_package/
-year3/dir.tar.gz
 year3/BF_dif_waveforms/Files/
 year3/GW170817_prior_L1L2/alpha_attempt_unsucessful/anarya.ray
 year3/GW170817_prior_L1L2/alpha_attempt_unsucessful/outdir
 year3/GW170817_prior_L1L2/CIT_attempt_successful
-year3/share2D3DBF.tar.gz
 year3/share2D3DBF/
 year3/PhenomTaylorCompare/reweightPriorWork/
 year3/PhenomTaylorCompare/__pycache__
 year3/PhenomTaylorCompare/plots/difPriors/data/
-year3/PhenomTaylorCompare/plots/old_2D3D_1000trials/data/
 year3/PhenomTaylorCompare/plots/2D3D_100trials/data/
 year3/PhenomTaylorCompare/plots/2D3D_1000trials/data/
 year3/PhenomTaylorCompare/plots/postSourceTest_2D3D_1000trials/data/
+year3/PhenomTaylorCompare/sharePEwithAnarya/
+year3/lastStretch/plots/data/
+year3/lastStretch/files/
 
 year2/bilby_runs/3dkde_studies/ 
 year2/bilby_runs/.distance_marginalization_lookup.npz

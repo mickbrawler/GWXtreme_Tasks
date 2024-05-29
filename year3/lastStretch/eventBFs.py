@@ -52,6 +52,7 @@ def singleEventBFs(Trials=1000):
     methods_BFs.append(nest_BFs)
     methods_trials.append(nest_stds)
 
+
     # If you've already done this run, likely for different waveforms/priors, 
     # it will append the data to the current file under its label. 
     # If same labels are used though, overwriting of that field will occur.

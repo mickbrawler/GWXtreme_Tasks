@@ -16,7 +16,6 @@ def singleEventBFs(Trials=1000):
                   "71_1.37_1.33", "55_1.38_1.33", "78_1.35_1.32",
                   "241_1.31_1.28", "220_1.36_1.24", "282_1.35_1.32", "149_1.35_1.23", "237_1.36_1.26", 
                   "138_1.5_1.21", "235_1.4_1.3", "219_1.3_1.28", "260_1.48_1.33", "164_1.34_1.19"]
-    injections = ["282_1.58_1.37"] 
 
     #filenameEnd = "bns_example_result.json"
     filenameEnd = "bns_example_result_simplified.json"
@@ -45,7 +44,6 @@ def singleEventBFs(Trials=1000):
 
         methods = [modsel_uLTs, modsel_uLs,modsel_phenomPhenom]
         eosList = ["BHF_BBB2","KDE0V","KDE0V1","SKOP","H4","HQC18","SLY2","SLY230A","SKMP","RS","SK255","SLY9","APR4_EPP","SKI2","SKI4","SKI6","SK272","SKI3","SKI5","MPA1","MS1_PP","MS1B_PP"]
-        eosList = ["BHF_BBB2","KDE0V"]
         methods_BFs = []
         methods_trials = []
         for method in methods:
@@ -63,10 +61,7 @@ def singleEventBFs(Trials=1000):
         
         output = "plots/data/{}_2D_3D_BFs.json".format(injection)
 
-        # STILL UNTESTED # STILL UNTESTED # STILL UNTESTED # STILL UNTESTED # STILL UNTESTED
-        # If you've already done this run, likely for different waveforms/priors,
-        # it will append the data to the current file under its label.
-        # If same labels are used though, overwriting of that field will occur.
+
         if os.path.isfile(output) == True:
             with open(output,"r") as f:
                 Dictionary = json.load(f)
@@ -92,7 +87,6 @@ def singleEventPlots():
                   "71_1.37_1.33", "55_1.38_1.33", "78_1.35_1.32",
                   "241_1.31_1.28", "220_1.36_1.24", "282_1.35_1.32", "149_1.35_1.23", "237_1.36_1.26", 
                   "138_1.5_1.21", "235_1.4_1.3", "219_1.3_1.28", "260_1.48_1.33", "164_1.34_1.19"]
-    injections = ["282_1.58_1.37"] 
 
     for injection in injections:
 
@@ -103,7 +97,6 @@ def singleEventPlots():
 
         labels = ["TaylorF2 Prior 2D KDE", "TaylorF2 Prior 3D KDE", "PhenomNRT Prior 3D KDE"]
         eosList = ["BHF_BBB2","KDE0V","KDE0V1","SKOP","H4","HQC18","SLY2","SLY230A","SKMP","RS","SK255","SLY9","APR4_EPP","SKI2","SKI4","SKI6","SK272","SKI3","SKI5","MPA1","MS1_PP","MS1B_PP"]
-        eosList = ["BHF_BBB2","KDE0V"]
         colors = ["#d7191c","#fdae61","#abdda4"]
         x_axis = np.arange(len(eosList))
         spacing = [-.20,0.,.20]
@@ -135,25 +128,24 @@ def singleEventPlots():
         plt.legend()
         plt.savefig("plots/{}_barplot_2D_3D_BFs.png".format(injection), bbox_inches="tight")
 
-
-# Still have to adopt above logic for a joint BF plot. Test above first before proceeding.
-def multipleEventBFs():
+def multipleEventBFs(Trials=1000):
 
     uLTs_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Taylor/uniformP_LTs/phenom-injections/TaylorF2"
     uLs_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Taylor/uniformP_Ls/IMRPhenomPv2_NRTidal/APR4_EPP"
     phenomPhenom_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Phenom/IMRPhenomPv2_NRTidal/APR4_EPP"
 
-    ### Stopped here
     uLTs_Files = glob.glob("{}/*/*simplified.json".format(uLTs_Dir)) + glob.glob("{}/troublesome/*/*simplified.json".format(uLTs_Dir))
     uLs_Files = glob.glob("{}/*/*simplified.json".format(uLs_Dir)) + glob.glob("{}/troublesome/*/*simplified.json".format(uLs_Dir))
+    phenomPhenom_Files = glob.glob("{}/*/*simplified.json".format(phenomPhenom_Dir)) + glob.glob("{}/troublesome/*/*simplified.json".format(phenomPhenom_Dir))
 
     stack_uLTs = ems.Stacking(uLTs_Files,kdedim=2)
     stack_uLs = ems.Stacking(uLs_Files,kdedim=3)
+    stack_phenomPhenom = ems.Stacking(phenomPhenom_Files,kdedim=3)
 
-    labels = ["(dL~,L~) Uniform Prior", "(L1,L2) Uniform Prior"]
-    #colors = ["#66c2a5","#fc8d62"] # Colors we used to use
-    colors = ["#1f78b4", "#b2df8a"]
-    stacks = [stack_uLTs, stack_uLs]
+    output = "plots/data/allJoint_2D_3D_BFs.json"
+
+    labels = ["TaylorF2 Prior 2D KDE", "TaylorF2 Prior 3D KDE", "PhenomNRT Prior 3D KDE"]
+    stacks = [stack_uLTs, stack_uLs, stack_phenomPhenom]
     eosList = ["BHF_BBB2","KDE0V","KDE0V1","SKOP","H4","HQC18","SLY2","SLY230A","SKMP","RS","SK255","SLY9","APR4_EPP","SKI2","SKI4","SKI6","SK272","SKI3","SKI5","MPA1","MS1_PP","MS1B_PP"]
     stacks_BFs = []
     stacks_uncerts = []
@@ -163,7 +155,7 @@ def multipleEventBFs():
         uncerts = []
         for eos in eosList:
             print(eos)
-            bf, bf_trials = stack.stack_events(EoS1=eos,EoS2="SLY",trials=100)
+            bf, bf_trials = stack.stack_events(EoS1=eos,EoS2="SLY",trials=Trials)
             #bf = stack.stack_events(EoS1=eos,EoS2="SLY",trials=0)
             uncert = np.std(bf_trials) * 2
             BFs.append(bf)
@@ -171,26 +163,26 @@ def multipleEventBFs():
         stacks_BFs.append(BFs)
         stacks_uncerts.append(uncerts)
 
-    x_axis = np.arange(len(eosList))
-    spacing = [-.075,.075]
-    plt.clf()
-    plt.rcParams.update({'font.size': 18})
-    plt.figure(figsize=(15, 10))
-    for index in range(len(stacks)):
-        #plt.bar(x_axis+spacing[index],stacks_BFs[index],.15,yerr=stacks_uncerts[index],label=labels[index],color=colors[index])
-        plt.bar(x_axis+spacing[index],stacks_BFs[index],.15,label=labels[index],color=colors[index])
 
-        plt.errorbar(x_axis+spacing[index],stacks_BFs[index],yerr=stacks_uncerts[index],ls="none",ecolor="black")
+    #TEST THIS SOON PLEASE BEFORE USING
+    if os.path.isfile(output) == True:
+        with open(output,"r") as f:
+            Dictionary = json.load(f)
 
-    plt.yscale("log")
-    plt.xticks(x_axis,eosList,rotation=45,ha="right")
-    #plt.axhline(1.0,color="k",linestyle="--")
-    plt.ylabel("Bayes-factor w.r.t SLY")
-    plt.legend()
-    plt.savefig("plots/2D_3D/allJoint_barplot_2D_3D_BFs.png",bbox_inches="tight")
+        for Index in range(len(labels)):
+            dictionary = {}
+            for eIndex in range(len(eosList)):
+                dictionary[eosList[eIndex]] = [stacks_BFs[Index][eIndex],stacks_uncerts[Index][eIndex]]
+            Dictionary[labels[Index]] = dictionary
 
-    Dictionary = {labels[Index]:{eosList[eIndex]:[stacks_BFs[Index][eIndex],stacks_uncerts[Index][eIndex]] for eIndex in range(len(eosList))} for Index in range(len(labels))}
-    with open("plots/2D_3D/data/allJoint_2D_3D_BFs.json","w") as f:
-        json.dump(Dictionary, f, indent=2, sort_keys=True)
+        with open(output,"w") as f:
+            json.dump(Dictionary, f, indent=2, sort_keys=True)
 
-### Still need joint BF plotter
+    else: # First time doing this sort of run so new file is made
+
+        Dictionary = {labels[Index]:{eosList[eIndex]:[stacks_BFs[Index][eIndex],stacks_uncerts[Index][eIndex]] for eIndex in range(len(eosList))} for Index in range(len(labels))}
+        with open(output,"w") as f:
+            json.dump(Dictionary, f, indent=2, sort_keys=True)
+
+# For plotting either copy the eventBF script logic over or just use it.
+# Should follow same procedure.

@@ -7,7 +7,7 @@ import os.path
 
 def singleEventBFs(Trials=1000):
 
-    labels = ["TaylorF2 Prior 2D KDE", "TaylorF2 Prior 3D KDE", "PhenomNRT Prior 3D KDE"]
+    labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE PhenomNRT"]
     uLTs_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Taylor/uniformP_LTs/phenom-injections/TaylorF2"
     uLs_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Taylor/uniformP_Ls/IMRPhenomPv2_NRTidal/APR4_EPP"
     phenomPhenom_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Phenom/IMRPhenomPv2_NRTidal/APR4_EPP"
@@ -95,7 +95,7 @@ def singleEventPlots():
             data = json.load(f)
 
 
-        labels = ["TaylorF2 Prior 2D KDE", "TaylorF2 Prior 3D KDE", "PhenomNRT Prior 3D KDE"]
+        labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE PhenomNRT"]
         eosList = ["BHF_BBB2","KDE0V","KDE0V1","SKOP","H4","HQC18","SLY2","SLY230A","SKMP","RS","SK255","SLY9","APR4_EPP","SKI2","SKI4","SKI6","SK272","SKI3","SKI5","MPA1","MS1_PP","MS1B_PP"]
         colors = ["#d7191c","#fdae61","#abdda4"]
         x_axis = np.arange(len(eosList))
@@ -144,7 +144,7 @@ def multipleEventBFs(Trials=1000):
 
     output = "plots/data/allJoint_2D_3D_BFs.json"
 
-    labels = ["TaylorF2 Prior 2D KDE", "TaylorF2 Prior 3D KDE", "PhenomNRT Prior 3D KDE"]
+    labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE PhenomNRT"]
     stacks = [stack_uLTs, stack_uLs, stack_phenomPhenom]
     eosList = ["BHF_BBB2","KDE0V","KDE0V1","SKOP","H4","HQC18","SLY2","SLY230A","SKMP","RS","SK255","SLY9","APR4_EPP","SKI2","SKI4","SKI6","SK272","SKI3","SKI5","MPA1","MS1_PP","MS1B_PP"]
     stacks_BFs = []

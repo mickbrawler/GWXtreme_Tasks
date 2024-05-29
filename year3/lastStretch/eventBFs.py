@@ -1,4 +1,5 @@
 from GWXtreme import eos_model_selection as ems
+from GWXtreme.parametrized_eos_sampler import mcmc_sampler
 import numpy as np
 import matplotlib.pyplot as plt
 import json
@@ -119,4 +120,40 @@ def singleEventPlots():
     plt.ylabel("Bayes-factor w.r.t SLY")
     plt.legend()
     plt.savefig("plots/GW170817_barplot_2D_3D_BFs.png",bbox_inches="tight")
+
+def constraint():
+    # Adopted from the driver provided in GWXtreme's git. That said it may be restrictive.
+    # I don't think I can alter the "look" of the plot, and overlaying different constraints
+    # may be harder than the simple use of fig.show(). Old script used to this.
+
+    #Array Containing list of paths to the .dat files  containing the posterior samples for the events:
+    uLTs_File = "/home/michael/projects/eos/GWXtreme_Tasks/year2/bilby_runs/simulations/outdir/real/uniformP_LTs/GW170817/simplified_result.json" 
+    uLs_File = "/home/michael/projects/eos/GWXtreme_Tasks/year3/GW170817_prior_L1L2/CIT_attempt_successful/outdir/simplified_result.json"
+    uLs_phenom_File = "/home/michael/projects/eos/GWXtreme_Tasks/year3/lastStretch/files/GW170817phenom.json"
+    filesToCompare = [uLTs_File,uLs_File,uLs_phenom_File]
+    labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE PhenomNRT"]
+    Labels = ["2D-KDE-TaylorF2", "3D-KDE-TaylorF2", "3D-KDE-PhenomNRT"]
+    dims = [2,3,3]
+
+    for ii in range(len(filesToCompare)):
+
+        fnames=[filesToCompare[ii]]
+        #Name of/ Path to file in which EoS parameter posterior samples will be saved:
+        outname='plots/constraints/data/{}_GW170817inference'.format(Labels[ii])
+
+        #Initialize Sampler Object:
+        """For SPectral"""
+        sampler=mcmc_sampler(fnames, {'gamma1':{'params':{"min":0.2,"max":2.00}},'gamma2':{'params':{"min":-1.6,"max":1.7}},'gamma3':{'params':{"min":-0.6,"max":0.6}},'gamma4':{'params':{"min":-0.02,"max":0.02}}}, outname, nwalkers=10, Nsamples=1000, ndim=4, spectral=True,npool=100,kdedim=dims[ii])
+
+        #Run, Save , Plot
+        sampler.initialize_walkers()
+        sampler.run_sampler()
+        sampler.save_data()
+
+        fig=sampler.plot(cornerplot={'plot':True,'true vals':None},p_vs_rho={'plot':True,'true_eos':'AP4'})
+        fig['corner'].savefig('plots/constraints/corners/{}_GW170817_corner.png'.format(Labels[ii]))
+        fig['p_vs_rho'][0].savefig('plots/constraints/{}_GW170817_constraint.png'.format(Labels[ii]))
+        fig['p_vs_rho'][0].show()
+
+    plt.savefig('plots/constraints/GW170817_comparison.png')
 

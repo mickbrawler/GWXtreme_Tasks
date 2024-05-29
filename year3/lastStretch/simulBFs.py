@@ -6,16 +6,15 @@ import glob
 
 def singleEventBFs(Trials=1000):
 
-    labels = ["Phenom-Taylor (dL~,L~) Uniform Prior", "(Phenom-Taylor (L1,L2) Uniform Prior", "(Phenom-Phenom (L1,L2) Uniform Prior"]
+    labels = ["TaylorF2 Prior 2D KDE", "TaylorF2 Prior 3D KDE", "PhenomNRT Prior 3D KDE"]
     uLTs_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Taylor/uniformP_LTs/phenom-injections/TaylorF2"
     uLs_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Taylor/uniformP_Ls/IMRPhenomPv2_NRTidal/APR4_EPP"
     phenomPhenom_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Phenom/IMRPhenomPv2_NRTidal/APR4_EPP"
 
-#    injections = ["282_1.58_1.37", "202_1.35_1.14", "179_1.35_1.23", "122_1.77_1.19", 
-#                  "71_1.37_1.33", "55_1.38_1.33", "78_1.35_1.32",
-#                  "241_1.31_1.28", "220_1.36_1.24", "282_1.35_1.32", "149_1.35_1.23", "237_1.36_1.26", 
-#                  "138_1.5_1.21", "235_1.4_1.3", "219_1.3_1.28", "260_1.48_1.33", "164_1.34_1.19"]
-    injections = ["282_1.58_1.37", "122_1.77_1.19", "55_1.38_1.33"] 
+    injections = ["282_1.58_1.37", "202_1.35_1.14", "179_1.35_1.23", "122_1.77_1.19", 
+                  "71_1.37_1.33", "55_1.38_1.33", "78_1.35_1.32",
+                  "241_1.31_1.28", "220_1.36_1.24", "282_1.35_1.32", "149_1.35_1.23", "237_1.36_1.26", 
+                  "138_1.5_1.21", "235_1.4_1.3", "219_1.3_1.28", "260_1.48_1.33", "164_1.34_1.19"]
 
     #filenameEnd = "bns_example_result.json"
     filenameEnd = "bns_example_result_simplified.json"
@@ -59,7 +58,7 @@ def singleEventBFs(Trials=1000):
             methods_BFs.append(BFs)
             methods_trials.append(trials)
         
-        output = "plots/postSourceTest_2D3D_1000trials/data/{}_2D_3D_BFs.json"
+        output = "plots/data/{}_2D_3D_BFs.json".format(injection)
 
         # STILL UNTESTED # STILL UNTESTED # STILL UNTESTED # STILL UNTESTED # STILL UNTESTED
         # If you've already done this run, likely for different waveforms/priors,
@@ -86,7 +85,7 @@ def singleEventBFs(Trials=1000):
 
 def singleEventPlots():
 
-    Dir = "/home/michael/projects/eos/GWXtreme_Tasks/year3/PhenomTaylorCompare/plots/postSourceTest_2D3D_1000trials/data/"
+    Dir = "/home/michael/projects/eos/GWXtreme_Tasks/year3/PhenomTaylorCompare/plots/data/"
 #    injections = ["282_1.58_1.37", "202_1.35_1.14", "179_1.35_1.23", "122_1.77_1.19", 
 #                  "71_1.37_1.33", "55_1.38_1.33", "78_1.35_1.32",
 #                  "241_1.31_1.28", "220_1.36_1.24", "282_1.35_1.32", "149_1.35_1.23", "237_1.36_1.26", 
@@ -137,7 +136,7 @@ def singleEventPlots():
         plt.axhline(1.0,color="k",linestyle="--",alpha=0.2)
         plt.ylabel("Bayes-factor w.r.t SLY")
         plt.legend()
-        plt.savefig("plots/postSourceTest_2D3D_1000trials/{}_barplot_2D_3D_BFs.png".format(injection), bbox_inches="tight")
+        plt.savefig("plots/{}_barplot_2D_3D_BFs.png".format(injection), bbox_inches="tight")
 
 
 # Still have to adopt above logic for a joint BF plot. Test above first before proceeding.

@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import json
 import glob
+import os.path
 
 def singleEventBFs(Trials=1000):
 
@@ -15,6 +16,7 @@ def singleEventBFs(Trials=1000):
                   "71_1.37_1.33", "55_1.38_1.33", "78_1.35_1.32",
                   "241_1.31_1.28", "220_1.36_1.24", "282_1.35_1.32", "149_1.35_1.23", "237_1.36_1.26", 
                   "138_1.5_1.21", "235_1.4_1.3", "219_1.3_1.28", "260_1.48_1.33", "164_1.34_1.19"]
+    injections = ["282_1.58_1.37"] 
 
     #filenameEnd = "bns_example_result.json"
     filenameEnd = "bns_example_result_simplified.json"
@@ -43,6 +45,7 @@ def singleEventBFs(Trials=1000):
 
         methods = [modsel_uLTs, modsel_uLs,modsel_phenomPhenom]
         eosList = ["BHF_BBB2","KDE0V","KDE0V1","SKOP","H4","HQC18","SLY2","SLY230A","SKMP","RS","SK255","SLY9","APR4_EPP","SKI2","SKI4","SKI6","SK272","SKI3","SKI5","MPA1","MS1_PP","MS1B_PP"]
+        eosList = ["BHF_BBB2","KDE0V"]
         methods_BFs = []
         methods_trials = []
         for method in methods:
@@ -68,29 +71,28 @@ def singleEventBFs(Trials=1000):
             with open(output,"r") as f:
                 Dictionary = json.load(f)
 
-        for Index in range(len(labels)):
-            dictionary = {}
-            for eIndex in range(len(eosList)):
-                dictionary[eosList[eIndex]] = [methods_BFs[Index][eIndex],methods_trials[Index][eIndex]]
-            Dictionary[labels[Index]] = dictionary
+            for Index in range(len(labels)):
+                dictionary = {}
+                for eIndex in range(len(eosList)):
+                    dictionary[eosList[eIndex]] = [methods_BFs[Index][eIndex],methods_trials[Index][eIndex]]
+                Dictionary[labels[Index]] = dictionary
 
-        with open(output,"w") as f:
-            json.dump(Dictionary, f, indent=2, sort_keys=True)
+            with open(output,"w") as f:
+                json.dump(Dictionary, f, indent=2, sort_keys=True)
 
         else: # First time doing this sort of run so new file is made@
             Dictionary = {labels[Index]:{eosList[eIndex]:[methods_BFs[Index][eIndex],methods_trials[Index][eIndex]] for eIndex in range(len(eosList))} for Index in range(len(labels))}
             with open(output,"w") as f:
                 json.dump(Dictionary, f, indent=2, sort_keys=True)
 
-
 def singleEventPlots():
 
-    Dir = "/home/michael/projects/eos/GWXtreme_Tasks/year3/PhenomTaylorCompare/plots/data/"
-#    injections = ["282_1.58_1.37", "202_1.35_1.14", "179_1.35_1.23", "122_1.77_1.19", 
-#                  "71_1.37_1.33", "55_1.38_1.33", "78_1.35_1.32",
-#                  "241_1.31_1.28", "220_1.36_1.24", "282_1.35_1.32", "149_1.35_1.23", "237_1.36_1.26", 
-#                  "138_1.5_1.21", "235_1.4_1.3", "219_1.3_1.28", "260_1.48_1.33", "164_1.34_1.19"]
-    injections = ["282_1.58_1.37", "122_1.77_1.19", "55_1.38_1.33"] 
+    Dir = "/home/michael/projects/eos/GWXtreme_Tasks/year3/lastStretch/plots/data"
+    injections = ["282_1.58_1.37", "202_1.35_1.14", "179_1.35_1.23", "122_1.77_1.19", 
+                  "71_1.37_1.33", "55_1.38_1.33", "78_1.35_1.32",
+                  "241_1.31_1.28", "220_1.36_1.24", "282_1.35_1.32", "149_1.35_1.23", "237_1.36_1.26", 
+                  "138_1.5_1.21", "235_1.4_1.3", "219_1.3_1.28", "260_1.48_1.33", "164_1.34_1.19"]
+    injections = ["282_1.58_1.37"] 
 
     for injection in injections:
 
@@ -99,17 +101,12 @@ def singleEventPlots():
             data = json.load(f)
 
 
-#        labels = ["Phenom-Taylor (dL~,L~) Uniform Prior", "(Phenom-Taylor (L1,L2) Uniform Prior", "(Phenom-Phenom (L1,L2) Uniform Prior"]
-        labels = ["Phenom-Taylor (dL~,L~) Uniform Prior", "(Phenom-Taylor (L1,L2) Uniform Prior"]
-        Labels = ["2D KDE (GWXtreme)", "3D KDE (GWXtreme)"]
+        labels = ["TaylorF2 Prior 2D KDE", "TaylorF2 Prior 3D KDE", "PhenomNRT Prior 3D KDE"]
         eosList = ["BHF_BBB2","KDE0V","KDE0V1","SKOP","H4","HQC18","SLY2","SLY230A","SKMP","RS","SK255","SLY9","APR4_EPP","SKI2","SKI4","SKI6","SK272","SKI3","SKI5","MPA1","MS1_PP","MS1B_PP"]
-        #colors = ["#66c2a5","#fc8d62"] # Colors we initially used
-        #colors = ["#e41a1c", "#377eb8", "#4daf4a", "#984ea3"]
-        #colors = ["#e41a1c", "#377eb8"]
-        colors = ["#66c2a5", "#fc8d62"]
+        eosList = ["BHF_BBB2","KDE0V"]
+        colors = ["#d7191c","#fdae61","#abdda4"]
         x_axis = np.arange(len(eosList))
-#        spacing = [-.3,-.1,.1,.3]
-        spacing = [-.10,.10]
+        spacing = [-.20,0.,.20]
         plt.clf()
         plt.rcParams.update({'font.size': 18})
         plt.figure(figsize=(15, 10))
@@ -126,7 +123,7 @@ def singleEventPlots():
                 uncert = np.std(trials) * 2
                 uncerts.append(uncert)
 
-            plt.bar(x_axis+spacing[counter],BFs,.20,label=Labels[counter],color=colors[counter])
+            plt.bar(x_axis+spacing[counter],BFs,.20,label=labels[counter],color=colors[counter])
             plt.errorbar(x_axis+spacing[counter],BFs,yerr=uncerts,ls="none",ecolor="black")
             counter += 1
 
@@ -144,7 +141,9 @@ def multipleEventBFs():
 
     uLTs_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Taylor/uniformP_LTs/phenom-injections/TaylorF2"
     uLs_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Taylor/uniformP_Ls/IMRPhenomPv2_NRTidal/APR4_EPP"
+    phenomPhenom_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Phenom/IMRPhenomPv2_NRTidal/APR4_EPP"
 
+    ### Stopped here
     uLTs_Files = glob.glob("{}/*/*simplified.json".format(uLTs_Dir)) + glob.glob("{}/troublesome/*/*simplified.json".format(uLTs_Dir))
     uLs_Files = glob.glob("{}/*/*simplified.json".format(uLs_Dir)) + glob.glob("{}/troublesome/*/*simplified.json".format(uLs_Dir))
 
@@ -194,3 +193,4 @@ def multipleEventBFs():
     with open("plots/2D_3D/data/allJoint_2D_3D_BFs.json","w") as f:
         json.dump(Dictionary, f, indent=2, sort_keys=True)
 
+### Still need joint BF plotter

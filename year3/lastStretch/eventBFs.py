@@ -68,7 +68,6 @@ def singleEventBFs(Trials=1000):
         with open(output,"w") as f:
             json.dump(Dictionary, f, indent=2, sort_keys=True)
 
-
     else: # First time doing this sort of run so new file is made
         Dictionary = {labels[Index]:{eosList[eIndex]:[methods_BFs[Index][eIndex],methods_trials[Index][eIndex]] for eIndex in range(len(eosList))} for Index in range(len(labels))}
         with open(output,"w") as f:

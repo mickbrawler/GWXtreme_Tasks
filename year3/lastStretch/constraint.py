@@ -87,7 +87,6 @@ def calcConstraint2(burn_in_frac=0.5,thinning=None):
             logp.append(p)
 
         logp=np.array(logp)
-
         logp_CIup=np.array([np.quantile(logp[:,i],0.95) for i in range(len(rho))])
         logp_CIlow=np.array([np.quantile(logp[:,i],0.05) for i in range(len(rho))])
         logp_med=np.array([np.quantile(logp[:,i],0.5) for i in range(len(rho))])
@@ -115,10 +114,11 @@ def plotConstraint():
         filename='data/constraints/{}_GW170817inference.txt'.format(Label)
         rho, lower_bound, median, upper_bound = np.loadtxt(filename).T
 
-        ax1 = plt.gca()
-        plt.plot(lower_bound, rho, label=Label, color=Color)
-        plt.plot(upper_bound, rho, color=Color)
-        ax1.fill_betweenx(rho, lower_bound, x2=upper_bound, color=Color, alpha=0.45)
+        #plt.plot(lower_bound, rho, label=Label, color=Color)
+        #plt.plot(upper_bound, rho, color=Color)
+        plt.plot(rho, lower_bound, label=Label, color=Color)
+        plt.plot(rho, upper_bound, color=Color)
+        plt.fill_betweenx(rho, lower_bound, upper_bound, color=Color, alpha=0.45)
 
     plt.xlim([16.99, 18.25])
     plt.xlabel(r'$\log10{\frac{\rho}{g cm^-3}}$',fontsize=20)

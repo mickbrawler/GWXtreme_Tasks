@@ -116,7 +116,7 @@ def plotConstraint():
 
         #plt.plot(lower_bound, rho, label=Label, color=Color)
         #plt.plot(upper_bound, rho, color=Color)
-        plt.fill_betweenx(rho, lower_bound, upper_bound, color=Color, alpha=0.45, label=Label, zorder=1.)
+        plt.fill_between(rho, lower_bound, upper_bound, color=Color, alpha=0.45, label=Label, zorder=1.)
 
     plt.xlim([16.99, 18.25])
     plt.xlabel(r'$\log10{\frac{\rho}{g cm^-3}}$',fontsize=20)

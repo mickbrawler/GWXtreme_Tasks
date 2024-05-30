@@ -1,5 +1,6 @@
 from GWXtreme import eos_model_selection as ems
 from GWXtreme.parametrized_eos_sampler import mcmc_sampler
+from GWXtreme.eos_prior import is_valid_eos,eos_p_of_rho, spectral_eos,polytrope_eos
 import numpy as np
 import matplotlib.pyplot as plt
 import json
@@ -31,7 +32,7 @@ def calcConstraint1():
 
         #Initialize Sampler Object:
         """For SPectral"""
-        sampler=mcmc_sampler(fnames, {'gamma1':{'params':{"min":0.2,"max":2.00}},'gamma2':{'params':{"min":-1.6,"max":1.7}},'gamma3':{'params':{"min":-0.6,"max":0.6}},'gamma4':{'params':{"min":-0.02,"max":0.02}}}, outname, nwalkers=100, Nsamples=10000, ndim=4, spectral=True,npool=100,kdedim=dims[ii])
+        sampler=mcmc_sampler(fnames, {'gamma1':{'params':{"min":0.2,"max":2.00}},'gamma2':{'params':{"min":-1.6,"max":1.7}},'gamma3':{'params':{"min":-0.6,"max":0.6}},'gamma4':{'params':{"min":-0.02,"max":0.02}}}, outname, nwalkers=10, Nsamples=1000, ndim=4, spectral=True,npool=100,kdedim=dims[ii])
 
         #Run, Save , Plot
         sampler.initialize_walkers()
@@ -44,19 +45,19 @@ def calcConstraint1():
         fig['p_vs_rho'][0].savefig('plots/constraints/{}_GW170817_constraint.png'.format(Labels[ii]))
 
 
-def calcConstraint2():
+def calcConstraint2(burn_in_frac=0.5,thinning=None):
     # Adopted from Anarya's GWXtreme 3d kde prod branch's plotting logic.
 
     Labels = ["2D-KDE-TaylorF2", "3D-KDE-TaylorF2", "3D-KDE-PhenomNRT"]
     for label in Labels:
         # Load the samples
-        filename='data/constraints/{}_GW170817inference'.format(label)
+        filename='data/constraints/{}_GW170817inference.h5'.format(label)
         with h5py.File(filename,'r') as f:
-            samples = np.array(f['chains'])
+            Samples = np.array(f['chains'])
             logp = np.array(f['logp'])
 
         # "Clean" the samples
-        Ns=self.samples.shape
+        Ns=Samples.shape
         burn_in=int(Ns[0]*burn_in_frac)
         samples=[]
 
@@ -64,13 +65,13 @@ def calcConstraint2():
             thinning=int(Ns[0]/50.)
 
             try:
-                thinning=int(max(mc.autocorr.integrated_time(self.samples))/2.)
+                thinning=int(max(mc.autocorr.integrated_time(Samples))/2.)
             except mc.autocorr.AutocorrError as e:
                 print(e)
 
         for i in range(burn_in, Ns[0], thinning):
             for j in range(Ns[1]):
-                samples.append(self.samples[i,j,:])
+                samples.append(Samples[i,j,:])
 
         samples = np.array(samples)
 
@@ -81,7 +82,7 @@ def calcConstraint2():
         for s in samples:
             params=(s[0], s[1], s[2], s[3])
 
-            p=eos_p_of_rho(rho,self.eos(params))
+            p=eos_p_of_rho(rho,spectral_eos(params))
 
             logp.append(p)
 
@@ -92,7 +93,7 @@ def calcConstraint2():
         logp_med=np.array([np.quantile(logp[:,i],0.5) for i in range(len(rho))])
 
         # Save confidence interval data
-        np.savetxt("data/constraint/{}_GW170817inference.txt".format(label),np.array([rho,logp_CIlow,logp_med,logp_CIup]).T)
+        np.savetxt("data/constraints/{}_GW170817inference.txt".format(label),np.array([rho,logp_CIlow,logp_med,logp_CIup]).T)
 
 
 def plotConstraint():
@@ -104,8 +105,8 @@ def plotConstraint():
     plt.figure(figsize=(12,12))
     plt.rc('font', size=20)
     plt.rc('axes', facecolor='#E6E6E6', edgecolor='black')
-    plt.rc('xtick', direction='out', color='black', labelcolor='black')
-    plt.rc('ytick', direction='out', color='black', labelcolor='black')
+    plt.rc('xtick', direction='out', color='black')
+    plt.rc('ytick', direction='out', color='black')
     plt.rc('lines', linewidth=2)
 
     for Label, Color in zip(Labels,Colors): # increment over each plot file

@@ -98,27 +98,28 @@ def calcConstraint2(burn_in_frac=0.5,thinning=None):
 def plotConstraint():
     # Adopted from Anarya's GWXtreme 3d kde prod branch's plotting logic.
 
-    Labels = ["2D-KDE-TaylorF2", "3D-KDE-TaylorF2", "3D-KDE-PhenomNRT"]
+    labels = ["2D-KDE-TaylorF2", "3D-KDE-TaylorF2", "3D-KDE-PhenomNRT"]
+    Labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE PhenomNRT"]
     Colors = ["#d7191c","#fdae61","#abdda4"]
 
     plt.figure(figsize=(12,12))
-#    plt.rc('font', size=20)
-#    plt.rc('axes', facecolor='#E6E6E6', edgecolor='black')
-#    plt.rc('xtick', direction='out', color='black')
-#    plt.rc('ytick', direction='out', color='black')
-#    plt.rc('lines', linewidth=2)
+    plt.rc('font', size=20)
+    plt.rc('axes', facecolor='#E6E6E6', edgecolor='black')
+    plt.rc('xtick', direction='out', color='black')
+    plt.rc('ytick', direction='out', color='black')
+    plt.rc('lines', linewidth=2)
 
-    for Label, Color in zip(Labels,Colors): # increment over each plot file
+    for label, Label, Color in zip(labels,Labels,Colors): # increment over each plot file
 
         # Load the samples
-        filename='data/constraints/{}_GW170817inference.txt'.format(Label)
+        filename='data/constraints/{}_GW170817inference.txt'.format(label)
         rho, lower_bound, median, upper_bound = np.loadtxt(filename).T
 
         #plt.plot(lower_bound, rho, label=Label, color=Color)
         #plt.plot(upper_bound, rho, color=Color)
-        plt.fill_between(rho, lower_bound, upper_bound, color=Color, alpha=0.45, label=Label, zorder=1.)
+        plt.fill_between(np.log10(rho), lower_bound, upper_bound, color=Color, alpha=0.45, label=Label, zorder=1.)
 
-    plt.xlim([16.99, 18.25])
+#    plt.xlim([16.99, 18.25])
     plt.xlabel(r'$\log10{\frac{\rho}{g cm^-3}}$',fontsize=20)
     plt.ylabel(r'$log10(\frac{p}{dyne cm^{-2}})$',fontsize=20)
     plt.legend()

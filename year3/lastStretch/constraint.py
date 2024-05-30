@@ -102,11 +102,11 @@ def plotConstraint():
     Colors = ["#d7191c","#fdae61","#abdda4"]
 
     plt.figure(figsize=(12,12))
-    plt.rc('font', size=20)
-    plt.rc('axes', facecolor='#E6E6E6', edgecolor='black')
-    plt.rc('xtick', direction='out', color='black')
-    plt.rc('ytick', direction='out', color='black')
-    plt.rc('lines', linewidth=2)
+#    plt.rc('font', size=20)
+#    plt.rc('axes', facecolor='#E6E6E6', edgecolor='black')
+#    plt.rc('xtick', direction='out', color='black')
+#    plt.rc('ytick', direction='out', color='black')
+#    plt.rc('lines', linewidth=2)
 
     for Label, Color in zip(Labels,Colors): # increment over each plot file
 

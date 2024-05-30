@@ -115,7 +115,6 @@ def plotConstraint():
         filename='data/constraints/{}_GW170817inference.txt'.format(Label)
         rho, lower_bound, median, upper_bound = np.loadtxt(filename).T
 
-        plt.clf()
         ax1 = plt.gca()
         plt.plot(lower_bound, rho, label=Label, color=Color)
         plt.plot(upper_bound, rho, color=Color)

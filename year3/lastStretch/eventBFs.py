@@ -115,7 +115,7 @@ def singleEventPlots():
     
     plt.yscale("log")
     plt.xticks(x_axis,eosList,rotation=90,ha="right")
-    plt.ylim(1.0e-4,(max(BFs)+max(uncerts))*10.)
+    plt.ylim(1.0e-3,(max(BFs)+max(uncerts))*10.)
     plt.axhline(1.0,color="k",linestyle="--",alpha=0.2)
     #plt.title("EoS Bayes Factors w.r.t. SLY")
     plt.ylabel("Bayes-factor w.r.t SLY")

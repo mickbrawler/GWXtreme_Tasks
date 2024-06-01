@@ -18,7 +18,7 @@ def singleEventBFs(Trials=1000):
     #uLTs_File = "/home/michael/projects/eos/GWXtreme_Tasks/year2/bilby_runs/simulations/outdir/real/uniformP_LTs/GW170817/simplified_result.json" 
     #uLs_File = "/home/michael/projects/eos/GWXtreme_Tasks/year3/GW170817_prior_L1L2/CIT_attempt_successful/outdir/simplified_result.json"
     uLs_phenom_File = "/home/michael/projects/eos/GWXtreme_Tasks/year3/lastStretch/files/GW170817phenom.json"
-    output = "plots/data/GW170817_2D_3D_BFs.json"
+    output = "data/BFs/GW170817_2D_3D_BFs.json"
 
     #modsel_uLTs = ems.Model_selection(uLTs_File,Ns=4000,kdedim=2)
     #modsel_uLs = ems.Model_selection(uLs_File,Ns=4000,kdedim=3)
@@ -80,10 +80,9 @@ def singleEventBFs(Trials=1000):
 
 def singleEventPlots():
 
-    File = "plots/data/GW170817_2D_3D_BFs.json"
+    File = "data/BFs/GW170817_2D_3D_BFs.json"
     with open(File,"r") as f:
         data = json.load(f)
-
 
     labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE PhenomNRT", "LALInference_Nest"]
     eosList = ["BHF_BBB2","KDE0V","KDE0V1","SKOP","H4","HQC18","SLY2","SLY230A","SKMP","RS","SK255","SLY9","APR4_EPP","SKI2","SKI4","SKI6","SK272","SKI3","SKI5","MPA1","MS1_PP","MS1B_PP"]
@@ -94,7 +93,6 @@ def singleEventPlots():
     plt.clf()
     plt.rcParams.update({"font.size":18})
     plt.figure(figsize=(15, 10))
-
 
     counter = 0
     for label in labels:
@@ -122,5 +120,5 @@ def singleEventPlots():
     #plt.title("EoS Bayes Factors w.r.t. SLY")
     plt.ylabel("Bayes-factor w.r.t SLY")
     plt.legend()
-    plt.savefig("plots/GW170817_barplot_2D_3D_BFs.png",bbox_inches="tight")
+    plt.savefig("plots/BFs/GW170817_2D_3D_BFs.png",bbox_inches="tight")
 

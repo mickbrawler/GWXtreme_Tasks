@@ -59,8 +59,7 @@ def singleEventBFs(Trials=1000):
             methods_BFs.append(BFs)
             methods_trials.append(trials)
         
-        output = "plots/data/{}_2D_3D_BFs.json".format(injection)
-
+        output = "data/BFs/{}_2D_3D_BFs.json".format(injection)
 
         if os.path.isfile(output) == True:
             with open(output,"r") as f:
@@ -82,7 +81,7 @@ def singleEventBFs(Trials=1000):
 
 def singleEventPlots():
 
-    Dir = "/home/michael/projects/eos/GWXtreme_Tasks/year3/lastStretch/plots/data"
+    Dir = "/home/michael/projects/eos/GWXtreme_Tasks/year3/lastStretch/data/BFs"
     injections = ["282_1.58_1.37", "202_1.35_1.14", "179_1.35_1.23", "122_1.77_1.19", 
                   "71_1.37_1.33", "55_1.38_1.33", "78_1.35_1.32",
                   "241_1.31_1.28", "220_1.36_1.24", "282_1.35_1.32", "149_1.35_1.23", "237_1.36_1.26", 
@@ -94,7 +93,6 @@ def singleEventPlots():
         with open(File,"r") as f:
             data = json.load(f)
 
-
         labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE PhenomNRT"]
         eosList = ["BHF_BBB2","KDE0V","KDE0V1","SKOP","H4","HQC18","SLY2","SLY230A","SKMP","RS","SK255","SLY9","APR4_EPP","SKI2","SKI4","SKI6","SK272","SKI3","SKI5","MPA1","MS1_PP","MS1B_PP"]
         colors = ["#d7191c","#fdae61","#abdda4"]
@@ -103,7 +101,6 @@ def singleEventPlots():
         plt.clf()
         plt.rcParams.update({'font.size': 18})
         plt.figure(figsize=(15, 10))
-
 
         counter = 0
         for label in labels:
@@ -126,7 +123,7 @@ def singleEventPlots():
         plt.axhline(1.0,color="k",linestyle="--",alpha=0.2)
         plt.ylabel("Bayes-factor w.r.t SLY")
         plt.legend()
-        plt.savefig("plots/{}_barplot_2D_3D_BFs.png".format(injection), bbox_inches="tight")
+        plt.savefig("plots/BFs/{}_2D_3D_BFs.png".format(injection), bbox_inches="tight")
 
 def multipleEventBFs(Trials=1000):
 
@@ -134,19 +131,24 @@ def multipleEventBFs(Trials=1000):
     uLs_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Taylor/uniformP_Ls/IMRPhenomPv2_NRTidal/APR4_EPP"
     phenomPhenom_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Phenom/IMRPhenomPv2_NRTidal/APR4_EPP"
 
-    uLTs_Files = glob.glob("{}/*/*simplified.json".format(uLTs_Dir)) + glob.glob("{}/troublesome/*/*simplified.json".format(uLTs_Dir))
-    uLs_Files = glob.glob("{}/*/*simplified.json".format(uLs_Dir)) + glob.glob("{}/troublesome/*/*simplified.json".format(uLs_Dir))
-    phenomPhenom_Files = glob.glob("{}/*/*simplified.json".format(phenomPhenom_Dir)) + glob.glob("{}/troublesome/*/*simplified.json".format(phenomPhenom_Dir))
+    # Seems that only 13 of the events aren't called troublesome. Ig those caused extremely small BFs.
+    #uLTs_Files = glob.glob("{}/*/*simplified.json".format(uLTs_Dir)) + glob.glob("{}/troublesome/*/*simplified.json".format(uLTs_Dir))
+    #uLs_Files = glob.glob("{}/*/*simplified.json".format(uLs_Dir)) + glob.glob("{}/troublesome/*/*simplified.json".format(uLs_Dir))
+    #phenomPhenom_Files = glob.glob("{}/*/*simplified.json".format(phenomPhenom_Dir)) + glob.glob("{}/troublesome/*/*simplified.json".format(phenomPhenom_Dir))
+    uLTs_Files = glob.glob("{}/*/*simplified.json".format(uLTs_Dir))[:2] 
+    uLs_Files = glob.glob("{}/*/*simplified.json".format(uLs_Dir))[:2]
+    phenomPhenom_Files = glob.glob("{}/*/*simplified.json".format(phenomPhenom_Dir))[:2]
 
     stack_uLTs = ems.Stacking(uLTs_Files,kdedim=2)
     stack_uLs = ems.Stacking(uLs_Files,kdedim=3)
     stack_phenomPhenom = ems.Stacking(phenomPhenom_Files,kdedim=3)
 
-    output = "plots/data/allJoint_2D_3D_BFs.json"
+    output = "data/BFs/3simulations_2D_3D_BFs_100trial.json"
 
     labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE PhenomNRT"]
     stacks = [stack_uLTs, stack_uLs, stack_phenomPhenom]
     eosList = ["BHF_BBB2","KDE0V","KDE0V1","SKOP","H4","HQC18","SLY2","SLY230A","SKMP","RS","SK255","SLY9","APR4_EPP","SKI2","SKI4","SKI6","SK272","SKI3","SKI5","MPA1","MS1_PP","MS1B_PP"]
+    eosList = ["BHF_BBB2","KDE0V"]
     stacks_BFs = []
     stacks_uncerts = []
     for stack in stacks:
@@ -162,7 +164,6 @@ def multipleEventBFs(Trials=1000):
             uncerts.append(uncert)
         stacks_BFs.append(BFs)
         stacks_uncerts.append(uncerts)
-
 
     #TEST THIS SOON PLEASE BEFORE USING
     if os.path.isfile(output) == True:
@@ -184,5 +185,47 @@ def multipleEventBFs(Trials=1000):
         with open(output,"w") as f:
             json.dump(Dictionary, f, indent=2, sort_keys=True)
 
-# For plotting either copy the eventBF script logic over or just use it.
-# Should follow same procedure.
+
+def multipleEventPlots():
+     
+    File = "data/BFs/13simulations_2D_3D_BFs_100trial.json"
+    with open(File,"r") as f:
+        data = json.load(f)
+ 
+    labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE PhenomNRT"]
+    eosList = ["BHF_BBB2","KDE0V","KDE0V1","SKOP","H4","HQC18","SLY2","SLY230A","SKMP","RS","SK255","SLY9","APR4_EPP","SKI2","SKI4","SKI6","SK272","SKI3","SKI5","MPA1","MS1_PP","MS1B_PP"]
+    colors = ["#d7191c","#fdae61","#abdda4"]
+    x_axis = np.arange(len(eosList))
+    spacing = [-.20,0.,.20]
+
+    plt.clf()
+    plt.rcParams.update({"font.size":18})
+    plt.figure(figsize=(15, 10))
+ 
+    counter = 0
+    for label in labels:
+ 
+        BFs = []
+        uncerts = []
+        for eos in eosList:
+            BFs.append(data[label][eos][0])
+            if len(data[label][eos][1]) != 1:
+                trials = np.array(data[label][eos][1])
+                uncert = np.std(trials) * 2
+                uncerts.append(uncert)
+            else:
+                uncert = data[label][eos][1][0]
+                uncerts.append(uncert)
+ 
+        plt.bar(x_axis+spacing[counter],BFs,.20,label=labels[counter],color=colors[counter])
+        plt.errorbar(x_axis+spacing[counter],BFs,yerr=uncerts,ls="none",ecolor="black")
+        counter += 1
+
+    plt.yscale("log")
+    plt.xticks(x_axis,eosList,rotation=90,ha="right")
+    plt.ylim(1.0e-4,(max(BFs)+max(uncerts))*10.)
+    plt.axhline(1.0,color="k",linestyle="--",alpha=0.2)
+    plt.ylabel("Bayes-factor w.r.t SLY")
+    plt.legend()
+    plt.savefig("plots/BFs/13simulations_2D_3D_BFs_100trial.png",bbox_inches="tight")
+

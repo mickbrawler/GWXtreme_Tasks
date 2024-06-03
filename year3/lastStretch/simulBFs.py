@@ -132,23 +132,19 @@ def multipleEventBFs(Trials=1000):
     phenomPhenom_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Phenom/IMRPhenomPv2_NRTidal/APR4_EPP"
 
     # Seems that only 13 of the events aren't called troublesome. Ig those caused extremely small BFs.
-    #uLTs_Files = glob.glob("{}/*/*simplified.json".format(uLTs_Dir)) + glob.glob("{}/troublesome/*/*simplified.json".format(uLTs_Dir))
-    #uLs_Files = glob.glob("{}/*/*simplified.json".format(uLs_Dir)) + glob.glob("{}/troublesome/*/*simplified.json".format(uLs_Dir))
-    #phenomPhenom_Files = glob.glob("{}/*/*simplified.json".format(phenomPhenom_Dir)) + glob.glob("{}/troublesome/*/*simplified.json".format(phenomPhenom_Dir))
-    uLTs_Files = glob.glob("{}/*/*simplified.json".format(uLTs_Dir))[:2] 
-    uLs_Files = glob.glob("{}/*/*simplified.json".format(uLs_Dir))[:2]
-    phenomPhenom_Files = glob.glob("{}/*/*simplified.json".format(phenomPhenom_Dir))[:2]
+    uLTs_Files = glob.glob("{}/*/*simplified.json".format(uLTs_Dir)) + glob.glob("{}/troublesome/*/*simplified.json".format(uLTs_Dir))
+    uLs_Files = glob.glob("{}/*/*simplified.json".format(uLs_Dir)) + glob.glob("{}/troublesome/*/*simplified.json".format(uLs_Dir))
+    phenomPhenom_Files = glob.glob("{}/*/*simplified.json".format(phenomPhenom_Dir)) + glob.glob("{}/troublesome/*/*simplified.json".format(phenomPhenom_Dir))
 
     stack_uLTs = ems.Stacking(uLTs_Files,kdedim=2)
     stack_uLs = ems.Stacking(uLs_Files,kdedim=3)
     stack_phenomPhenom = ems.Stacking(phenomPhenom_Files,kdedim=3)
 
-    output = "data/BFs/3simulations_2D_3D_BFs_100trial.json"
+    output = "data/BFs/16simulations_2D_3D_BFs_1000trial.json"
 
     labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE PhenomNRT"]
     stacks = [stack_uLTs, stack_uLs, stack_phenomPhenom]
     eosList = ["BHF_BBB2","KDE0V","KDE0V1","SKOP","H4","HQC18","SLY2","SLY230A","SKMP","RS","SK255","SLY9","APR4_EPP","SKI2","SKI4","SKI6","SK272","SKI3","SKI5","MPA1","MS1_PP","MS1B_PP"]
-    eosList = ["BHF_BBB2","KDE0V"]
     stacks_BFs = []
     stacks_uncerts = []
     for stack in stacks:
@@ -188,7 +184,7 @@ def multipleEventBFs(Trials=1000):
 
 def multipleEventPlots():
      
-    File = "data/BFs/13simulations_2D_3D_BFs_100trial.json"
+    File = "data/BFs/16simulations_2D_3D_BFs_1000trial.json"
     with open(File,"r") as f:
         data = json.load(f)
  
@@ -209,13 +205,8 @@ def multipleEventPlots():
         uncerts = []
         for eos in eosList:
             BFs.append(data[label][eos][0])
-            if len(data[label][eos][1]) != 1:
-                trials = np.array(data[label][eos][1])
-                uncert = np.std(trials) * 2
-                uncerts.append(uncert)
-            else:
-                uncert = data[label][eos][1][0]
-                uncerts.append(uncert)
+            uncert = data[label][eos][1]
+            uncerts.append(uncert)
  
         plt.bar(x_axis+spacing[counter],BFs,.20,label=labels[counter],color=colors[counter])
         plt.errorbar(x_axis+spacing[counter],BFs,yerr=uncerts,ls="none",ecolor="black")
@@ -227,5 +218,5 @@ def multipleEventPlots():
     plt.axhline(1.0,color="k",linestyle="--",alpha=0.2)
     plt.ylabel("Bayes-factor w.r.t SLY")
     plt.legend()
-    plt.savefig("plots/BFs/13simulations_2D_3D_BFs_100trial.png",bbox_inches="tight")
+    plt.savefig("plots/BFs/16simulations_2D_3D_BFs_1000trial.png",bbox_inches="tight")
 

@@ -22,25 +22,20 @@ def calcConstraint1():
     uLTs_Files = glob.glob("{}/*/*simplified.json".format(uLTs_Dir)) + glob.glob("{}/troublesome/*/*simplified.json".format(uLTs_Dir))
     uLs_Files = glob.glob("{}/*/*simplified.json".format(uLs_Dir)) + glob.glob("{}/troublesome/*/*simplified.json".format(uLs_Dir))
     phenomPhenom_Files = glob.glob("{}/*/*simplified.json".format(phenomPhenom_Dir)) + glob.glob("{}/troublesome/*/*simplified.json".format(phenomPhenom_Dir))
-    #filesToCompare = [uLTs_Files,uLs_Files,phenomPhenom_Files]
-    filesToCompare = [uLTs_Files,phenomPhenom_Files] # Tester !!!
+    filesToCompare = [uLTs_Files,uLs_Files,phenomPhenom_Files]
 
-    #Labels = ["2D-KDE-TaylorF2", "3D-KDE-TaylorF2", "3D-KDE-PhenomNRT"]
-    Labels = ["2D-KDE-TaylorF2", "3D-KDE-PhenomNRT"] # Tester !!!
+    Labels = ["2D-KDE-TaylorF2", "3D-KDE-TaylorF2", "3D-KDE-PhenomNRT"]
     dims = [2,3,3]
 
     for ii in range(len(Labels)):
 
-        #fnames=filesToCompare[ii]
-        fnames=filesToCompare[ii][:2] # Tester!!!
+        fnames=filesToCompare[ii]
         #Name of/ Path to file in which EoS parameter posterior samples will be saved:
         outname='data/constraints/{}_16simulationsInference'.format(Labels[ii])
 
         #Initialize Sampler Object:
         """For SPectral"""
-        #sampler=mcmc_sampler(fnames, {'gamma1':{'params':{"min":0.2,"max":2.00}},'gamma2':{'params':{"min":-1.6,"max":1.7}},'gamma3':{'params':{"min":-0.6,"max":0.6}},'gamma4':{'params':{"min":-0.02,"max":0.02}}}, outname, nwalkers=100, Nsamples=10000, ndim=4, spectral=True,npool=100,kdedim=dims[ii])
-        # Tester !!!
-        sampler=mcmc_sampler(fnames, {'gamma1':{'params':{"min":0.2,"max":2.00}},'gamma2':{'params':{"min":-1.6,"max":1.7}},'gamma3':{'params':{"min":-0.6,"max":0.6}},'gamma4':{'params':{"min":-0.02,"max":0.02}}}, outname, nwalkers=10, Nsamples=1000, ndim=4, spectral=True,npool=100,kdedim=dims[ii])
+        sampler=mcmc_sampler(fnames, {'gamma1':{'params':{"min":0.2,"max":2.00}},'gamma2':{'params':{"min":-1.6,"max":1.7}},'gamma3':{'params':{"min":-0.6,"max":0.6}},'gamma4':{'params':{"min":-0.02,"max":0.02}}}, outname, nwalkers=100, Nsamples=10000, ndim=4, spectral=True,npool=100,kdedim=dims[ii])
 
         #Run, Save , Plot
         sampler.initialize_walkers()
@@ -56,8 +51,7 @@ def calcConstraint1():
 def calcConstraint2(burn_in_frac=0.5,thinning=None):
     # Adopted from Anarya's GWXtreme 3d kde prod branch's plotting logic.
 
-    #Labels = ["2D-KDE-TaylorF2", "3D-KDE-TaylorF2", "3D-KDE-PhenomNRT"]
-    Labels = ["2D-KDE-TaylorF2", "3D-KDE-PhenomNRT"] # Tester !!!
+    Labels = ["2D-KDE-TaylorF2", "3D-KDE-TaylorF2", "3D-KDE-PhenomNRT"]
     for label in Labels:
         # Load the samples
         filename='data/constraints/{}_16simulationsInference.h5'.format(label)
@@ -107,12 +101,9 @@ def calcConstraint2(burn_in_frac=0.5,thinning=None):
 def plotConstraint():
     # Adopted from Anarya's GWXtreme 3d kde prod branch's plotting logic.
 
-    #labels = ["2D-KDE-TaylorF2", "3D-KDE-TaylorF2", "3D-KDE-PhenomNRT"]
-    labels = ["2D-KDE-TaylorF2", "3D-KDE-PhenomNRT"]
-    #Labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE PhenomNRT"]
-    Labels = ["2D KDE TaylorF2", "3D KDE PhenomNRT"]
-    #Colors = ["#d7191c","#fdae61","#abdda4"]
-    Colors = ["#d7191c","#abdda4"]
+    labels = ["2D-KDE-TaylorF2", "3D-KDE-TaylorF2", "3D-KDE-PhenomNRT"]
+    Labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE PhenomNRT"]
+    Colors = ["#d7191c","#fdae61","#abdda4"]
 
     plt.figure(figsize=(12,12))
     plt.rc('font', size=20)

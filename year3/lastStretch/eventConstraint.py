@@ -74,6 +74,9 @@ def calcConstraint2(burn_in_frac=0.5,thinning=None):
                 samples.append(Samples[i,j,:])
 
         samples = np.array(samples)
+        # Save gamma sample data
+        np.savetxt("data/constraints/{}_GW170817inference_gammas.txt".format(label),samples)
+
 
         # Turn into confidence interval data
         logp=[]

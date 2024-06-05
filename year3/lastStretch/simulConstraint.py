@@ -31,11 +31,11 @@ def calcConstraint1():
 
         fnames=filesToCompare[ii]
         #Name of/ Path to file in which EoS parameter posterior samples will be saved:
-        outname='data/constraints/{}_16simulationsInference'.format(Labels[ii])
+        outname='data/constraints/{}_16simulationsInference1000samp'.format(Labels[ii])
 
         #Initialize Sampler Object:
         """For SPectral"""
-        sampler=mcmc_sampler(fnames, {'gamma1':{'params':{"min":0.2,"max":2.00}},'gamma2':{'params':{"min":-1.6,"max":1.7}},'gamma3':{'params':{"min":-0.6,"max":0.6}},'gamma4':{'params':{"min":-0.02,"max":0.02}}}, outname, nwalkers=100, Nsamples=10000, ndim=4, spectral=True,npool=100,kdedim=dims[ii])
+        sampler=mcmc_sampler(fnames, {'gamma1':{'params':{"min":0.2,"max":2.00}},'gamma2':{'params':{"min":-1.6,"max":1.7}},'gamma3':{'params':{"min":-0.6,"max":0.6}},'gamma4':{'params':{"min":-0.02,"max":0.02}}}, outname, nwalkers=100, Nsamples=1000, ndim=4, spectral=True,npool=100,kdedim=dims[ii])
 
         #Run, Save , Plot
         sampler.initialize_walkers()
@@ -44,8 +44,8 @@ def calcConstraint1():
 
         fig=sampler.plot(cornerplot={'plot':True,'true vals':None},p_vs_rho={'plot':True,'true_eos':'AP4'})
         # We follow the driver's logic that saves a constraint and corner plot cause... why not
-        fig['corner'].savefig('plots/corners/{}_16simulations_corner.png'.format(Labels[ii]))
-        fig['p_vs_rho'][0].savefig('plots/constraints/{}_16simulations_constraint.png'.format(Labels[ii]))
+        fig['corner'].savefig('plots/corners/{}_16simulations1000samp_corner.png'.format(Labels[ii]))
+        fig['p_vs_rho'][0].savefig('plots/constraints/{}_16simulations1000samp_constraint.png'.format(Labels[ii]))
 
 
 def calcConstraint2(burn_in_frac=0.5,thinning=None):
@@ -54,7 +54,7 @@ def calcConstraint2(burn_in_frac=0.5,thinning=None):
     Labels = ["2D-KDE-TaylorF2", "3D-KDE-TaylorF2", "3D-KDE-PhenomNRT"]
     for label in Labels:
         # Load the samples
-        filename='data/constraints/{}_16simulationsInference.h5'.format(label)
+        filename='data/constraints/{}_16simulationsInference1000samp.h5'.format(label)
         with h5py.File(filename,'r') as f:
             Samples = np.array(f['chains'])
             logp = np.array(f['logp'])
@@ -95,7 +95,7 @@ def calcConstraint2(burn_in_frac=0.5,thinning=None):
         logp_med=np.array([np.quantile(logp[:,i],0.5) for i in range(len(rho))])
 
         # Save confidence interval data
-        np.savetxt("data/constraints/{}_16simulationsInference.txt".format(label),np.array([rho,logp_CIlow,logp_med,logp_CIup]).T)
+        np.savetxt("data/constraints/{}_16simulationsInference1000samp.txt".format(label),np.array([rho,logp_CIlow,logp_med,logp_CIup]).T)
 
 
 def plotConstraint():
@@ -115,7 +115,7 @@ def plotConstraint():
     for label, Label, Color in zip(labels,Labels,Colors): # increment over each plot file
 
         # Load the samples
-        filename='data/constraints/{}_16simulationsInference.txt'.format(label)
+        filename='data/constraints/{}_16simulationsInference1000samp.txt'.format(label)
         rho, lower_bound, median, upper_bound = np.loadtxt(filename).T
 
         #plt.plot(lower_bound, rho, label=Label, color=Color)
@@ -126,5 +126,5 @@ def plotConstraint():
     plt.xlabel(r'$\log10{\frac{\rho}{g cm^-3}}$',fontsize=20)
     plt.ylabel(r'$log10(\frac{p}{dyne cm^{-2}})$',fontsize=20)
     plt.legend()
-    plt.savefig("plots/constraints/16simulations_constraint.png", bbox_inches='tight')
+    plt.savefig("plots/constraints/16simulations1000samp_constraint.png", bbox_inches='tight')
 

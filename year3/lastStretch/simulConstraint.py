@@ -9,6 +9,7 @@ import h5py
 import emcee as mc
 import glob
 from multiprocessing import cpu_count, Pool
+import lalsimulation
 
 def calcConstraint1():
     # Adopted from the driver provided in GWXtreme's git. That said it may be restrictive.
@@ -121,6 +122,10 @@ def plotConstraint():
         #plt.plot(lower_bound, rho, label=Label, color=Color)
         #plt.plot(upper_bound, rho, color=Color)
         plt.fill_between(np.log10(rho), lower_bound, upper_bound, color=Color, alpha=0.45, label=Label, zorder=1.)
+
+    logp=eos_p_of_rho(rho,lalsimulation.SimNeutronStarEOSByName("APR4_EPP"))
+    plt.plot(np.log10(rho),logp,color='black', linewidth=3.5)
+
 
     plt.xlim([16.99, 18.25])
     plt.xlabel(r'$\log10{\frac{\rho}{g cm^-3}}$',fontsize=20)

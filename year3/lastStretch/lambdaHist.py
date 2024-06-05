@@ -51,8 +51,8 @@ def plotLambda_parametrized(eosname="APR4_EPP"):
     Labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE PhenomNRT"]
     for ii in range(len(Labels)):
 
-        filename='data/lambdaHists/{}_16simulationsInference1000samp_Lambdas.txt'.format(labels[ii])
-        #filename='data/lambdaHists/{}_GW170817inference_Lambdas.txt'.format(labels[ii])
+        #filename='data/lambdaHists/{}_16simulationsInference1000samp_Lambdas.txt'.format(labels[ii])
+        filename='data/lambdaHists/{}_GW170817inference_Lambdas.txt'.format(labels[ii])
         Lambdas = np.loadtxt(filename).T
 
         plt.hist(Lambdas, label=Labels[ii], alpha=0.45, fill=True)
@@ -62,5 +62,5 @@ def plotLambda_parametrized(eosname="APR4_EPP"):
     plt.xlabel("$\Lambda$(1.4)",fontsize=20)
     plt.yticks([])
     plt.legend()
-    plt.savefig("plots/lambdaHists/16simulations1000samp_Lambdas.png", bbox_inches='tight')
-    #plt.savefig("plots/lambdaHists/GW170817_Lambdas.png", bbox_inches='tight')
+    #plt.savefig("plots/lambdaHists/16simulations1000samp_Lambdas.png", bbox_inches='tight')
+    plt.savefig("plots/lambdaHists/GW170817_Lambdas.png", bbox_inches='tight')

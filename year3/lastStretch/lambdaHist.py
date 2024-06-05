@@ -10,7 +10,8 @@ def calcLambda_parametrized():
 
     for ii in range(len(labels)):
 
-        filename='data/constraints/{}_16simulationsInference1000samp_gammas.txt'.format(labels[ii])
+        #filename='data/constraints/{}_16simulationsInference1000samp_gammas.txt'.format(labels[ii])
+        filename='data/constraints/{}_GW170817inference_gammas.txt'.format(labels[ii])
         samples = np.loadtxt(filename)
         Lambdas = []
         m=1.4
@@ -26,7 +27,8 @@ def calcLambda_parametrized():
             Lambda = (2/3)*kk/(cc**5)
             Lambdas.append(Lambda)
 
-        np.savetxt("data/lambdaHists/{}_16simulationsInference1000samp_Lambdas.txt".format(labels[ii]),np.array(Lambdas).T)
+        #np.savetxt("data/lambdaHists/{}_16simulationsInference1000samp_Lambdas.txt".format(labels[ii]),np.array(Lambdas).T)
+        np.savetxt("data/lambdaHists/{}_GW170817inference_Lambdas.txt".format(labels[ii]),np.array(Lambdas).T)
 
 
 def plotLambda_parametrized(eosname="APR4_EPP"):
@@ -50,9 +52,10 @@ def plotLambda_parametrized(eosname="APR4_EPP"):
     for ii in range(len(Labels)):
 
         filename='data/lambdaHists/{}_16simulationsInference1000samp_Lambdas.txt'.format(labels[ii])
+        #filename='data/lambdaHists/{}_GW170817inference_Lambdas.txt'.format(labels[ii])
         Lambdas = np.loadtxt(filename).T
 
-        plt.hist(Lambdas, label=Labels[ii], alpha=0.45, fill=False)
+        plt.hist(Lambdas, label=Labels[ii], alpha=0.45, fill=True)
 
     plt.axvline(x=eosLambda, label=eosname)
 
@@ -60,3 +63,4 @@ def plotLambda_parametrized(eosname="APR4_EPP"):
     plt.yticks([])
     plt.legend()
     plt.savefig("plots/lambdaHists/16simulations1000samp_Lambdas.png", bbox_inches='tight')
+    #plt.savefig("plots/lambdaHists/GW170817_Lambdas.png", bbox_inches='tight')

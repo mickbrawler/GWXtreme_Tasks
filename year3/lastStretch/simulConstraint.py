@@ -124,7 +124,7 @@ def plotConstraint():
         plt.fill_between(np.log10(rho), lower_bound, upper_bound, color=Color, alpha=0.45, label=Label, zorder=1.)
 
     logp=eos_p_of_rho(rho,lalsimulation.SimNeutronStarEOSByName("APR4_EPP"))
-    plt.plot(np.log10(rho),logp,color='black', linewidth=3.5)
+    plt.plot(np.log10(rho),logp,color='black', linewidth=3.5, label="APR4_EPP")
 
 
     plt.xlim([16.99, 18.25])

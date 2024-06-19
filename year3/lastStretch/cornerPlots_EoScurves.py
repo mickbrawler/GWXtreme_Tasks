@@ -68,7 +68,7 @@ for yi in range(ndim):
     for xi in range(yi):
         print([yi,xi])
         ax = axes[yi, xi]
-        ax.plot(EoS_values[yi], EoS_values[xi], color="red")
+        ax.plot(EoS_values[xi], EoS_values[yi], color="red")
 
 plt.savefig("cornerCurvesGW230529.png")
 

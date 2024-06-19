@@ -57,7 +57,7 @@ Lambda1,Lambda2 = get_Lambda_for_eos(M1, max_mass, eosfunc),get_Lambda_for_eos(M
 
 
 # Format curve values
-EoS_values = np.array([M1,M2,Q,MC,Lambda1,Lambda2])
+EoS_values = np.array([Lambda1,Lambda2,M1,M2,MC,Q])
 
 # Construct corner & and overlay appropriate curves
 Data = az.from_dict(data)
@@ -66,8 +66,9 @@ ndim = 6
 axes = np.array(figure.axes).reshape((ndim, ndim))
 for yi in range(ndim):
     for xi in range(yi):
+        print([yi,xi])
         ax = axes[yi, xi]
-        ax.plot(EoS_values[xi], EoS_values[yi], color="red")
+        ax.plot(EoS_values[yi], EoS_values[xi], color="red")
 
-plt.savefig("test.png")
+plt.savefig("cornerCurvesGW230529.png")
 

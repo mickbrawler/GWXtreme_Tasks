@@ -104,9 +104,12 @@ def calcConstraint2(burn_in_frac=0.5,thinning=None):
 def plotConstraint():
     # Adopted from Anarya's GWXtreme 3d kde prod branch's plotting logic.
 
-    labels = ["2D-KDE-TaylorF2", "3D-KDE-TaylorF2", "3D-KDE-PhenomNRT"]
-    Labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE PhenomNRT"]
-    Colors = ["#d7191c","#fdae61","#abdda4"]
+    #labels = ["2D-KDE-TaylorF2", "3D-KDE-TaylorF2", "3D-KDE-PhenomNRT"]
+    labels = ["3D-KDE-TaylorF2", "3D-KDE-PhenomNRT"]
+    #Labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE PhenomNRT"]
+    Labels = ["3D KDE TaylorF2", "3D KDE PhenomNRT"]
+    #Colors = ["#d7191c","#fdae61","#abdda4"]
+    Colors = ["#fdae61","#abdda4"]
 
     plt.figure(figsize=(12,12))
     plt.rc('font', size=20)
@@ -118,7 +121,7 @@ def plotConstraint():
     for label, Label, Color in zip(labels,Labels,Colors): # increment over each plot file
 
         # Load the samples
-        filename='data/constraints/{}_16simulationsInference.txt'.format(label)
+        filename='data/constraints/{}_16simulationsInference1000samp.txt'.format(label)
         rho, lower_bound, median, upper_bound = np.loadtxt(filename).T
 
         #plt.plot(lower_bound, rho, label=Label, color=Color)
@@ -133,5 +136,6 @@ def plotConstraint():
     plt.xlabel(r'$\log10{\frac{\rho}{g cm^-3}}$',fontsize=20)
     plt.ylabel(r'$log10(\frac{p}{dyne cm^{-2}})$',fontsize=20)
     plt.legend()
-    plt.savefig("plots/constraints/16simulations_constraint.png", bbox_inches='tight')
+    #plt.savefig("plots/constraints/16simulations_constraint.png", bbox_inches='tight')
+    plt.savefig("plots/NSFreport/16simulations_constraint2.png", bbox_inches='tight')
 

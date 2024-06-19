@@ -10,7 +10,8 @@ import lal
 from scipy.interpolate import interp1d
 
 # Load event posterior
-event = "files/gw230529_phenom_lowSpin.json"
+#event = "files/gw230529_phenom_lowSpin.json"
+event = "files/GW170817phenom.json"
 with open(event,"r") as f:
     data = json.load(f)['posterior']['content']
 (m1,m2,q,mc,Lambda1,Lambda2)=(np.array(data['m1_source']),
@@ -70,5 +71,6 @@ for yi in range(ndim):
         ax = axes[yi, xi]
         ax.plot(EoS_values[xi], EoS_values[yi], color="red")
 
-plt.savefig("cornerCurvesGW230529.png")
+#plt.savefig("cornerCurvesGW230529.png")
+plt.savefig("cornerCurvesGW170817.png")
 

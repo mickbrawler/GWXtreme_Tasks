@@ -134,7 +134,7 @@ def plotConstraint():
     EoSs = ["APR4_EPP","H4","SLY","MS1_PP"]
     for EoS in EoSs:
         logp=eos_p_of_rho(rho,lalsimulation.SimNeutronStarEOSByName(EoS))
-        plt.plot(np.log10(rho),logp,color='black', linewidth=1.5, label=EoS, alpha=0.35)
+        plt.plot(np.log10(rho),logp, linewidth=2.0, label=EoS, alpha=0.35)
 
     plt.xlim([16.99, 18.25])
     plt.xlabel(r'$\log10{\frac{\rho}{g cm^-3}}$',fontsize=20)

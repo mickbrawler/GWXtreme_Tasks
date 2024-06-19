@@ -105,14 +105,14 @@ def plotConstraint():
     # Adopted from Anarya's GWXtreme 3d kde prod branch's plotting logic.
 
     #labels = ["2D-KDE-TaylorF2", "3D-KDE-TaylorF2", "3D-KDE-PhenomNRT"]
-    labels = ["2D-KDE-TaylorF2", "3D-KDE-TaylorF2"]
-    #labels = ["3D-KDE-TaylorF2", "3D-KDE-PhenomNRT"]
+    #labels = ["2D-KDE-TaylorF2", "3D-KDE-TaylorF2"]
+    labels = ["3D-KDE-TaylorF2", "3D-KDE-PhenomNRT"]
     #Labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE PhenomNRT"]
-    Labels = ["2D KDE TaylorF2", "3D KDE TaylorF2"]
-    #Labels = ["3D KDE TaylorF2", "3D KDE PhenomNRT"]
+    #Labels = ["2D KDE TaylorF2", "3D KDE TaylorF2"]
+    Labels = ["3D KDE TaylorF2", "3D KDE PhenomNRT"]
     #Colors = ["#d7191c","#fdae61","#abdda4"]
-    Colors = ["#d7191c","#fdae61"]
-    #Colors = ["#fdae61","#abdda4"]
+    #Colors = ["#d7191c","#fdae61"]
+    Colors = ["#fdae61","#abdda4"]
 
     plt.figure(figsize=(12,12))
     plt.rc('font', size=20)
@@ -141,5 +141,5 @@ def plotConstraint():
     plt.ylabel(r'$log10(\frac{p}{dyne cm^{-2}})$',fontsize=20)
     plt.legend()
     #plt.savefig("plots/constraints/16simulations_constraint.png", bbox_inches='tight')
-    plt.savefig("plots/NSFreport/16simulations_constraint.png", bbox_inches='tight')
+    plt.savefig("plots/NSFreport/16simulations_constraint2.pdf", bbox_inches='tight')
 

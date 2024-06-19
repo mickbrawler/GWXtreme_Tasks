@@ -124,6 +124,6 @@ def singleEventPlots():
     plt.ylabel("Bayes-factor w.r.t SLY")
     plt.legend()
     #plt.savefig("plots/BFs/GW170817_2D_3D_BFs.png",bbox_inches="tight")
-    plt.savefig("plots/NSFreport/GW170817_2D_3D_BFs.png",bbox_inches="tight")
+    plt.savefig("plots/NSFreport/GW170817_2D_3D_BFs.pdf",bbox_inches="tight")
     #plt.savefig("plots/BFs/GW230529_2D_3D_BFs.png",bbox_inches="tight")
 

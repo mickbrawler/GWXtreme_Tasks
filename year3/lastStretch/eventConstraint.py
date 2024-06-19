@@ -8,6 +8,8 @@ import os.path
 import h5py
 import emcee as mc
 from multiprocessing import cpu_count, Pool
+import lalsimulation
+import lal
 
 def calcConstraint1():
     # Adopted from the driver provided in GWXtreme's git. That said it may be restrictive.
@@ -102,12 +104,15 @@ def plotConstraint():
     # Adopted from Anarya's GWXtreme 3d kde prod branch's plotting logic.
 
     #labels = ["2D-KDE-TaylorF2", "3D-KDE-TaylorF2", "3D-KDE-PhenomNRT"]
-    labels = ["3D-KDE-TaylorF2", "3D-KDE-PhenomNRT"]
+    labels = ["2D-KDE-TaylorF2", "3D-KDE-TaylorF2"]
+    #labels = ["3D-KDE-TaylorF2", "3D-KDE-PhenomNRT"]
     #Labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE PhenomNRT"]
-    Labels = ["3D KDE TaylorF2", "3D KDE PhenomNRT"]
+    Labels = ["2D KDE TaylorF2", "3D KDE TaylorF2"]
+    #Labels = ["3D KDE TaylorF2", "3D KDE PhenomNRT"]
     #Colors = ["#d7191c","#fdae61","#abdda4"]
     #Colors = ['#e41a1c','#377eb8','#4daf4a']
-    Colors = ['#377eb8','#4daf4a']
+    Colors = ['#e41a1c','#377eb8']
+    #Colors = ['#377eb8','#4daf4a']
 
     plt.figure(figsize=(12,12))
     plt.rc('font', size=20)
@@ -126,10 +131,15 @@ def plotConstraint():
         #plt.plot(upper_bound, rho, color=Color)
         plt.fill_between(np.log10(rho), lower_bound, upper_bound, color=Color, alpha=0.45, label=Label, zorder=1.)
 
-    plt.xlim([16.99, 18.25])
+    EoSs = ["APR4_EPP","H4","SLY","MS1_PP"]
+    for EoS in EoSs:
+        logp=eos_p_of_rho(rho,lalsimulation.SimNeutronStarEOSByName(EoS))
+        plt.plot(np.log10(rho),logp, linewidth=2.0, label=EoS, alpha=0.35)
+
+    plt.xlim([min(np.log10(rho)), 18.25])
     plt.xlabel(r'$\log10{\frac{\rho}{g cm^-3}}$',fontsize=20)
     plt.ylabel(r'$log10(\frac{p}{dyne cm^{-2}})$',fontsize=20)
     plt.legend()
     #plt.savefig("plots/constraints/GW170817_constraint.png", bbox_inches='tight')
-    plt.savefig("plots/NSFreport/GW170817_constraint2.png", bbox_inches='tight')
+    plt.savefig("plots/NSFreport/GW170817_constraint.pdf", bbox_inches='tight')
 

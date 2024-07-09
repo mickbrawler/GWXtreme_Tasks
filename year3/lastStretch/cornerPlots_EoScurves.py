@@ -72,5 +72,5 @@ for yi in range(ndim):
         ax.plot(EoS_values[xi], EoS_values[yi], color="red")
 
 #plt.savefig("cornerCurvesGW230529.png")
-plt.savefig("cornerCurvesGW170817_2.png")
+plt.savefig("plots/cornerCurvesGW170817_2.png")
 

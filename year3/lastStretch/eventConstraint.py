@@ -137,7 +137,7 @@ def plotConstraint():
     #labels = ["2D-KDE-TaylorF2", "3D-KDE-TaylorF2"]
     #labels = ["3D-KDE-TaylorF2", "3D-KDE-PhenomNRT"]
     #Labels = ["lalsim_nest PhenomNRT", "2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE PhenomNRT"]
-    Labels = ["lalsim_nest PhenomNRT", "3D KDE PhenomNRT"]
+    Labels = ["full-parameter-space Nest runs", "3D KDE PhenomNRT"]
     #Labels = ["2D KDE TaylorF2", "3D KDE TaylorF2"]
     #Labels = ["3D KDE TaylorF2", "3D KDE PhenomNRT"]
     #Colors = ['#e41a1c','#377eb8','#4daf4a','#984ea3']

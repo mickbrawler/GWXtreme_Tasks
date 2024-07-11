@@ -3,8 +3,8 @@ import lal
 import lalsimulation as lalsim
 import matplotlib.pyplot as plt
 
-#labels = ["lalsim_nest-PhenomNRT", "2D-KDE-TaylorF2", "3D-KDE-TaylorF2", "3D-KDE-PhenomNRT"]
-labels = ["2D-KDE-TaylorF2", "3D-KDE-TaylorF2", "3D-KDE-PhenomNRT"]
+labels = ["lalsim_nest-PhenomNRT", "2D-KDE-TaylorF2", "3D-KDE-TaylorF2", "3D-KDE-PhenomNRT"]
+#labels = ["2D-KDE-TaylorF2", "3D-KDE-TaylorF2", "3D-KDE-PhenomNRT"]
 #labels = ["lalsim_nest-PhenomNRT"]
 
 def calcLambda_parametrized():
@@ -52,12 +52,12 @@ def plotLambda_parametrized(eosname="APR4_EPP"):
     plt.rc('xtick', direction='out', color='black')
     plt.rc('ytick', direction='out', color='black')
     plt.rc('lines', linewidth=2)
-    #Labels = ["lalsim_nest PhenomNRT", "2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE PhenomNRT"]
-    Labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE PhenomNRT"]
+    Labels = ["lalsim_nest PhenomNRT", "2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE PhenomNRT"]
+    #Labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE PhenomNRT"]
     for ii in range(len(Labels)):
 
-        filename='data/lambdaHists/{}_16simulationsInference_Lambdas.txt'.format(labels[ii])
-        #filename='data/lambdaHists/{}_GW170817inference_Lambdas.txt'.format(labels[ii])
+        #filename='data/lambdaHists/{}_16simulationsInference_Lambdas.txt'.format(labels[ii])
+        filename='data/lambdaHists/{}_GW170817inference_Lambdas.txt'.format(labels[ii])
         Lambdas = np.loadtxt(filename).T
         plt.hist(Lambdas, label=Labels[ii], alpha=0.45, fill=True, density=True, color=Colors[ii], histtype='step')
 
@@ -66,6 +66,6 @@ def plotLambda_parametrized(eosname="APR4_EPP"):
     plt.xlabel("$\Lambda$(1.4)",fontsize=20)
     plt.yticks([])
     plt.legend()
-    plt.savefig("plots/lambdaHists/16simulations_Lambdas.png", bbox_inches='tight')
-    #plt.savefig("plots/lambdaHists/GW170817_Lambdas.png", bbox_inches='tight')
+    #plt.savefig("plots/lambdaHists/16simulations_Lambdas.png", bbox_inches='tight')
+    plt.savefig("plots/lambdaHists/GW170817_Lambdas.png", bbox_inches='tight')
 

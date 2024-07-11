@@ -159,7 +159,7 @@ def plotConstraint():
 
         #plt.plot(lower_bound, rho, label=Label, color=Color)
         #plt.plot(upper_bound, rho, color=Color)
-        plt.fill_between(np.log10(rho), lower_bound, upper_bound, color=Color, alpha=0.45, label=Label, zorder=1.)
+        plt.fill_between(np.log10(rho), lower_bound, upper_bound, color=Color, alpha=0.45, label=Label, zorder=1., hatch='')
 
     #EoSs = ["APR4_EPP","H4","SLY","MS1_PP"]
     #for EoS in EoSs:

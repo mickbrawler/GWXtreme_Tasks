@@ -138,8 +138,7 @@ def plotConstraint():
     Labels = ["lalsim_nest PhenomNRT", "2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE PhenomNRT"]
     #Labels = ["2D KDE TaylorF2", "3D KDE TaylorF2"]
     #Labels = ["3D KDE TaylorF2", "3D KDE PhenomNRT"]
-    Colors = ["#7fc97f","#beaed4","#fdc086","#ffff99"]
-    #Colors = ["#d7191c","#fdae61","#abdda4"]
+    Colors = ['#e41a1c','#377eb8','#4daf4a','#984ea3']
     #Colors = ['#e41a1c','#377eb8','#4daf4a']
     #Colors = ['#e41a1c','#377eb8']
     #Colors = ['#377eb8','#4daf4a']
@@ -151,7 +150,7 @@ def plotConstraint():
     plt.rc('ytick', direction='out', color='black')
     plt.rc('lines', linewidth=2)
 
-    Hatches = ["+","","",""]
+    Hatches = ["+","","","/"]
 
     for label, Label, Color, Hatch in zip(labels,Labels,Colors,Hatches): # increment over each plot file
 

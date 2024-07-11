@@ -151,7 +151,9 @@ def plotConstraint():
     plt.rc('ytick', direction='out', color='black')
     plt.rc('lines', linewidth=2)
 
-    for label, Label, Color in zip(labels,Labels,Colors): # increment over each plot file
+    Hatches = ["+","","",""]
+
+    for label, Label, Color, Hatch in zip(labels,Labels,Colors,Hatches): # increment over each plot file
 
         # Load the samples
         filename='data/constraints/{}_GW170817inference.txt'.format(label)
@@ -159,7 +161,7 @@ def plotConstraint():
 
         #plt.plot(lower_bound, rho, label=Label, color=Color)
         #plt.plot(upper_bound, rho, color=Color)
-        plt.fill_between(np.log10(rho), lower_bound, upper_bound, color=Color, alpha=0.45, label=Label, zorder=1., hatch='')
+        plt.fill_between(np.log10(rho), lower_bound, upper_bound, color=Color, alpha=0.45, label=Label, zorder=1., hatch=Hatch)
 
     #EoSs = ["APR4_EPP","H4","SLY","MS1_PP"]
     #for EoS in EoSs:

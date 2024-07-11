@@ -132,13 +132,16 @@ def CalcConstraint2():
 def plotConstraint():
     # Adopted from Anarya's GWXtreme 3d kde prod branch's plotting logic.
 
-    labels = ["lalsim_nest-PhenomNRT", "2D-KDE-TaylorF2", "3D-KDE-TaylorF2", "3D-KDE-PhenomNRT"]
+    #labels = ["lalsim_nest-PhenomNRT", "2D-KDE-TaylorF2", "3D-KDE-TaylorF2", "3D-KDE-PhenomNRT"]
+    labels = ["lalsim_nest-PhenomNRT", "3D-KDE-PhenomNRT"]
     #labels = ["2D-KDE-TaylorF2", "3D-KDE-TaylorF2"]
     #labels = ["3D-KDE-TaylorF2", "3D-KDE-PhenomNRT"]
-    Labels = ["lalsim_nest PhenomNRT", "2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE PhenomNRT"]
+    #Labels = ["lalsim_nest PhenomNRT", "2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE PhenomNRT"]
+    Labels = ["lalsim_nest PhenomNRT", "3D KDE PhenomNRT"]
     #Labels = ["2D KDE TaylorF2", "3D KDE TaylorF2"]
     #Labels = ["3D KDE TaylorF2", "3D KDE PhenomNRT"]
-    Colors = ['#e41a1c','#377eb8','#4daf4a','#984ea3']
+    #Colors = ['#e41a1c','#377eb8','#4daf4a','#984ea3']
+    Colors = ['#e41a1c','#984ea3']
     #Colors = ['#e41a1c','#377eb8','#4daf4a']
     #Colors = ['#e41a1c','#377eb8']
     #Colors = ['#377eb8','#4daf4a']
@@ -150,7 +153,8 @@ def plotConstraint():
     plt.rc('ytick', direction='out', color='black')
     plt.rc('lines', linewidth=2)
 
-    Hatches = ["+","","","/"]
+    #Hatches = ["+","","","/"]
+    Hatches = ["",""]
 
     for label, Label, Color, Hatch in zip(labels,Labels,Colors,Hatches): # increment over each plot file
 

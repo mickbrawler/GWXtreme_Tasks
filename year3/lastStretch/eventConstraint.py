@@ -154,7 +154,7 @@ def plotConstraint():
     plt.rc('lines', linewidth=2)
 
     #Hatches = ["+","","","/"]
-    Hatches = ["",""]
+    Hatches = ["","+"]
 
     for label, Label, Color, Hatch in zip(labels,Labels,Colors,Hatches): # increment over each plot file
 

@@ -142,6 +142,7 @@ def plotConstraint():
     #Labels = ["3D KDE TaylorF2", "3D KDE PhenomNRT"]
     #Colors = ['#e41a1c','#377eb8','#4daf4a','#984ea3']
     Colors = ['#e41a1c','#984ea3']
+    Colors = ['red','blue']
     #Colors = ['#e41a1c','#377eb8','#4daf4a']
     #Colors = ['#e41a1c','#377eb8']
     #Colors = ['#377eb8','#4daf4a']

@@ -16,27 +16,33 @@ def calcConstraint1():
     # I don't think I can alter the "look" of the plot, and overlaying different constraints
     # may be harder than the simple use of fig.show(). Old script used to this.
 
-    uLTs_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Taylor/uniformP_LTs/phenom-injections/TaylorF2"
-    uLs_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Taylor/uniformP_Ls/IMRPhenomPv2_NRTidal/APR4_EPP"
-    phenomPhenom_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Phenom/IMRPhenomPv2_NRTidal/APR4_EPP"
+#    uLTs_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Taylor/uniformP_LTs/phenom-injections/TaylorF2"
+#    uLs_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Taylor/uniformP_Ls/IMRPhenomPv2_NRTidal/APR4_EPP"
+#    phenomPhenom_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Phenom/IMRPhenomPv2_NRTidal/APR4_EPP"
+    nsbhPhenom_Dir = '/home/michael/projects/eos/GWXtreme_Tasks/year3/lastStretch/files/NSBH_IMRPhenomPv2_NRTidal/APR4_EPP'
 
-    uLTs_Files = glob.glob("{}/*/*simplified.json".format(uLTs_Dir)) + glob.glob("{}/troublesome/*/*simplified.json".format(uLTs_Dir))
-    uLs_Files = glob.glob("{}/*/*simplified.json".format(uLs_Dir)) + glob.glob("{}/troublesome/*/*simplified.json".format(uLs_Dir))
-    phenomPhenom_Files = glob.glob("{}/*/*simplified.json".format(phenomPhenom_Dir)) + glob.glob("{}/troublesome/*/*simplified.json".format(phenomPhenom_Dir))
-    filesToCompare = [uLTs_Files,uLs_Files,phenomPhenom_Files]
+#    uLTs_Files = glob.glob("{}/*/*simplified.json".format(uLTs_Dir)) + glob.glob("{}/troublesome/*/*simplified.json".format(uLTs_Dir))
+#    uLs_Files = glob.glob("{}/*/*simplified.json".format(uLs_Dir)) + glob.glob("{}/troublesome/*/*simplified.json".format(uLs_Dir))
+#    phenomPhenom_Files = glob.glob("{}/*/*simplified.json".format(phenomPhenom_Dir)) + glob.glob("{}/troublesome/*/*simplified.json".format(phenomPhenom_Dir))
+    nsbhPhenom_Files = glob.glob("{}/*/*simplified.json".format(nsbhPhenom_Dir))
+#    filesToCompare = [uLTs_Files,uLs_Files,phenomPhenom_Files]
+    filesToCompare = [nsbhPhenom_Files]
 
-    Labels = ["2D-KDE-TaylorF2", "3D-KDE-TaylorF2", "3D-KDE-PhenomNRT"]
-    dims = [2,3,3]
+#    Labels = ["2D-KDE-TaylorF2", "3D-KDE-TaylorF2", "3D-KDE-PhenomNRT"]
+    Labels = ["3D-KDE-PhenomNRT"]
+#    dims = [2,3,3]
+    dims = [3]
 
     for ii in range(len(Labels)):
 
         fnames=filesToCompare[ii]
         #Name of/ Path to file in which EoS parameter posterior samples will be saved:
-        outname='data/constraints/{}_16simulationsInference'.format(Labels[ii])
+        #outname='data/constraints/{}_16simulationsInference'.format(Labels[ii])
+        outname='data/constraints/{}_18simulationsInference_1000samp'.format(Labels[ii])
 
         #Initialize Sampler Object:
         """For SPectral"""
-        sampler=mcmc_sampler(fnames, {'gamma1':{'params':{"min":0.2,"max":2.00}},'gamma2':{'params':{"min":-1.6,"max":1.7}},'gamma3':{'params':{"min":-0.6,"max":0.6}},'gamma4':{'params':{"min":-0.02,"max":0.02}}}, outname, nwalkers=100, Nsamples=10000, ndim=4, spectral=True,npool=100,kdedim=dims[ii])
+        sampler=mcmc_sampler(fnames, {'gamma1':{'params':{"min":0.2,"max":2.00}},'gamma2':{'params':{"min":-1.6,"max":1.7}},'gamma3':{'params':{"min":-0.6,"max":0.6}},'gamma4':{'params':{"min":-0.02,"max":0.02}}}, outname, nwalkers=100, Nsamples=1000, ndim=4, spectral=True,npool=100,kdedim=dims[ii])
 
         #Run, Save , Plot
         sampler.initialize_walkers()
@@ -45,17 +51,21 @@ def calcConstraint1():
 
         fig=sampler.plot(cornerplot={'plot':True,'true vals':None},p_vs_rho={'plot':True,'true_eos':'AP4'})
         # We follow the driver's logic that saves a constraint and corner plot cause... why not
-        fig['corner'].savefig('plots/corners/{}_16simulations_corner.png'.format(Labels[ii]))
-        fig['p_vs_rho'][0].savefig('plots/constraints/{}_16simulations_constraint.png'.format(Labels[ii]))
+        #fig['corner'].savefig('plots/corners/{}_16simulations_corner.png'.format(Labels[ii]))
+        fig['corner'].savefig('plots/corners/{}_18simulations_1000samp_corner.png'.format(Labels[ii]))
+        #fig['p_vs_rho'][0].savefig('plots/constraints/{}_16simulations_constraint.png'.format(Labels[ii]))
+        fig['p_vs_rho'][0].savefig('plots/constraints/{}_18simulations_1000samp_constraint.png'.format(Labels[ii]))
 
 
 def calcConstraint2(burn_in_frac=0.5,thinning=None):
     # Adopted from Anarya's GWXtreme 3d kde prod branch's plotting logic.
 
-    Labels = ["2D-KDE-TaylorF2", "3D-KDE-TaylorF2", "3D-KDE-PhenomNRT"]
+#    Labels = ["2D-KDE-TaylorF2", "3D-KDE-TaylorF2", "3D-KDE-PhenomNRT"]
+    Labels = ["3D-KDE-PhenomNRT"]
     for label in Labels:
         # Load the samples
-        filename='data/constraints/{}_16simulationsInference.h5'.format(label)
+        #filename='data/constraints/{}_16simulationsInference.h5'.format(label)
+        filename='data/constraints/{}_18simulationsInference_1000samp.h5'.format(label)
         with h5py.File(filename,'r') as f:
             Samples = np.array(f['chains'])
             logp = np.array(f['logp'])
@@ -79,7 +89,7 @@ def calcConstraint2(burn_in_frac=0.5,thinning=None):
 
         samples = np.array(samples)
         # Save gamma sample data
-        np.savetxt("data/constraints/{}_16simulationsInference_gammas.txt".format(label),samples)
+        np.savetxt("data/constraints/{}_18simulationsInference_1000samp_gammas.txt".format(label),samples)
 
         # Turn into confidence interval data
         logp=[]
@@ -98,21 +108,18 @@ def calcConstraint2(burn_in_frac=0.5,thinning=None):
         logp_med=np.array([np.quantile(logp[:,i],0.5) for i in range(len(rho))])
 
         # Save confidence interval data
-        np.savetxt("data/constraints/{}_16simulationsInference.txt".format(label),np.array([rho,logp_CIlow,logp_med,logp_CIup]).T)
+        np.savetxt("data/constraints/{}_18simulationsInference_1000samp.txt".format(label),np.array([rho,logp_CIlow,logp_med,logp_CIup]).T)
 
 
 def plotConstraint():
     # Adopted from Anarya's GWXtreme 3d kde prod branch's plotting logic.
 
-    labels = ["2D-KDE-TaylorF2", "3D-KDE-TaylorF2", "3D-KDE-PhenomNRT"]
-    #labels = ["2D-KDE-TaylorF2", "3D-KDE-TaylorF2"]
-    #labels = ["3D-KDE-TaylorF2", "3D-KDE-PhenomNRT"]
-    Labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE PhenomNRT"]
-    #Labels = ["2D KDE TaylorF2", "3D KDE TaylorF2"]
-    #Labels = ["3D KDE TaylorF2", "3D KDE PhenomNRT"]
-    Colors = ["#d7191c","#fdae61","#abdda4"]
-    #Colors = ["#d7191c","#fdae61"]
-    #Colors = ["#fdae61","#abdda4"]
+    #labels = ["2D-KDE-TaylorF2", "3D-KDE-TaylorF2", "3D-KDE-PhenomNRT"]
+    labels = ["3D-KDE-PhenomNRT"]
+    #Labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE PhenomNRT"]
+    Labels = ["3D KDE PhenomNRT"]
+    #Colors = ["#d7191c","#fdae61","#abdda4"]
+    Colors = ["#fdae61"]
 
     plt.figure(figsize=(12,12))
     plt.rc('font', size=20)
@@ -124,7 +131,8 @@ def plotConstraint():
     for label, Label, Color in zip(labels,Labels,Colors): # increment over each plot file
 
         # Load the samples
-        filename='data/constraints/{}_16simulationsInference.txt'.format(label)
+        #filename='data/constraints/{}_16simulationsInference.txt'.format(label)
+        filename='data/constraints/{}_18simulationsInference_1000samp.txt'.format(label)
         rho, lower_bound, median, upper_bound = np.loadtxt(filename).T
 
         #plt.plot(lower_bound, rho, label=Label, color=Color)
@@ -141,6 +149,6 @@ def plotConstraint():
     plt.xlabel(r'$\log10{\frac{\rho}{g cm^-3}}$',fontsize=20)
     plt.ylabel(r'$log10(\frac{p}{dyne cm^{-2}})$',fontsize=20)
     plt.legend()
-    plt.savefig("plots/constraints/16simulations_constraint.png", bbox_inches='tight')
-    #plt.savefig("plots/NSFreport/16simulations_constraint2.pdf", bbox_inches='tight')
+    #plt.savefig("plots/constraints/16simulations_constraint.png", bbox_inches='tight')
+    plt.savefig("plots/constraints/18simulations_1000samp_constraint.png", bbox_inches='tight')
 

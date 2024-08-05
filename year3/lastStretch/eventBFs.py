@@ -19,26 +19,25 @@ def singleEventBFs(Trials=1000):
     uLs_File = "/home/michael/projects/eos/GWXtreme_Tasks/year3/GW170817_prior_L1L2/CIT_attempt_successful/outdir/simplified_result.json"
     uLs_phenom_File = "/home/michael/projects/eos/GWXtreme_Tasks/year3/lastStretch/files/GW170817phenom.json"
     #uLs_phenom_File = "/home/michael/projects/eos/GWXtreme_Tasks/year3/lastStretch/files/gw230529_phenom_lowSpin.json"
-    output = "data/BFs/GW170817_2D_3D_BFs.json"
-    #output = "data/BFs/GW230529_2D_3D_BFs.json"
+    output = "data/BNS/BFs/GW170817_2D_3D_BFs.json"
+    #output = "data/NSBH/BFs/GW230529_2D_3D_BFs.json"
 
-    #modsel_uLTs = ems.Model_selection(uLTs_File,Ns=4000,kdedim=2)
-    #modsel_uLs = ems.Model_selection(uLs_File,Ns=4000,kdedim=3)
+    modsel_uLTs = ems.Model_selection(uLTs_File,Ns=4000,kdedim=2)
+    modsel_uLs = ems.Model_selection(uLs_File,Ns=4000,kdedim=3)
     modsel_phenom_uLs = ems.Model_selection(uLs_phenom_File,Ns=4000,kdedim=3)
 
-    #labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE PhenomNRT", "LALInference_Nest"]
-    labels = ["3D KDE PhenomNRT"]
-    #methods = [modsel_uLTs, modsel_uLs]
-    methods = [modsel_phenom_uLs]
+    labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE PhenomNRT", "TaylorF2 LALInference_Nest"]
+    methods = [modsel_uLTs, modsel_uLs, modsel_phenom_uLs]
     eosList = ["BHF_BBB2","KDE0V","KDE0V1","SKOP","H4","HQC18","SLY2","SLY230A","SKMP","RS","SK255","SLY9","APR4_EPP","SKI2","SKI4","SKI6","SK272","SKI3","SKI5","MPA1","MS1_PP","MS1B_PP"]
 
-    with open("/home/michael/projects/eos/GWXtreme_Tasks/year2/bilby_runs/simulations/outdir/nested_sampling_results.json","r") as f:
-        nestSamp = json.load(f)
-    nest_BFs = []
-    nest_stds = []
-    for eos in eosList:
-        nest_BFs.append(nestSamp[eos][0])
-        nest_stds.append([nestSamp[eos][1]])
+    #with open("/home/michael/projects/eos/GWXtreme_Tasks/year2/bilby_runs/simulations/outdir/nested_sampling_results.json","r") as f:
+    #with open("files/TaylorF2_eos_prior_narrow_results.json","r") as f:
+    #    nestSamp = json.load(f)
+    #nest_BFs = []
+    #nest_stds = []
+    #for eos in eosList:
+    #    nest_BFs.append(nestSamp[eos][0])
+    #    nest_stds.append([nestSamp[eos][1]])
 
     methods_BFs = []
     methods_trials = []
@@ -48,12 +47,12 @@ def singleEventBFs(Trials=1000):
         trias = []
         for eos in eosList:
             print(eos)
-            #bf, bf_trials = method.computeEvidenceRatio(EoS1=eos,EoS2="SLY",trials=Trials)
-            bf = method.computeEvidenceRatio(EoS1=eos,EoS2="SLY",trials=0)
+            bf, bf_trials = method.computeEvidenceRatio(EoS1=eos,EoS2="SLY",trials=Trials)
+            #bf = method.computeEvidenceRatio(EoS1=eos,EoS2="SLY",trials=0)
             BFs.append(bf)
-            #trials.append(bf_trials.tolist())
+            trials.append(bf_trials.tolist())
         methods_BFs.append(BFs)
-        #methods_trials.append(trials)
+        methods_trials.append(trials)
 
     methods_BFs.append(nest_BFs)
     methods_trials.append(nest_stds)
@@ -82,17 +81,21 @@ def singleEventBFs(Trials=1000):
 
 def singleEventPlots():
 
-    File = "data/BFs/GW170817_2D_3D_BFs.json"
-    #File = "data/BFs/GW230529_2D_3D_BFs.json"
+    File = "data/BNS/BFs/GW170817_2D_3D_BFs.json"
+    #File = "data/NSBH/BFs/GW230529_2D_3D_BFs.json"
     with open(File,"r") as f:
         data = json.load(f)
 
-    labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE PhenomNRT", "LALInference_Nest"]
+    #labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE PhenomNRT"]
+    #labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "TaylorF2 LALInference_Nest"]
+    labels = ["3D KDE PhenomNRT", "IMRPhenom LALInference_Nest"]
     eosList = ["BHF_BBB2","KDE0V","KDE0V1","SKOP","H4","HQC18","SLY2","SLY230A","SKMP","RS","SK255","SLY9","APR4_EPP","SKI2","SKI4","SKI6","SK272","SKI3","SKI5","MPA1","MS1_PP","MS1B_PP"]
-    #colors = ["#d7191c","#fdae61","#abdda4","#2b83ba"]
-    colors = ['#e41a1c','#377eb8','#4daf4a','#984ea3']
+    #colors = ['#ffffb3','#bebada','#fb8072']
+    #colors = ['#66c2a5','#fc8d62','#e78ac3']
+    colors = ['#beaed4','#fdc086']
     x_axis = np.arange(len(eosList))
-    spacing = [-.30,-.10,.10,.30]
+    #spacing = [-.20,.0,.20]
+    spacing = [-.10,.10]
     plt.clf()
     plt.rcParams.update({"font.size":18})
     plt.figure(figsize=(15, 10))
@@ -123,7 +126,6 @@ def singleEventPlots():
     #plt.title("EoS Bayes Factors w.r.t. SLY")
     plt.ylabel("Bayes-factor w.r.t SLY")
     plt.legend()
-    #plt.savefig("plots/BFs/GW170817_2D_3D_BFs.png",bbox_inches="tight")
-    plt.savefig("plots/NSFreport/GW170817_2D_3D_BFs.pdf",bbox_inches="tight")
-    #plt.savefig("plots/BFs/GW230529_2D_3D_BFs.png",bbox_inches="tight")
+    plt.savefig("plots/BNS/BFs/GW170817_2D_3D_BFs3.png",bbox_inches="tight")
+    #plt.savefig("plots/NSBH/BFs/GW230529_2D_3D_BFs.png",bbox_inches="tight")
 

@@ -127,24 +127,31 @@ def singleEventPlots():
 
 def multipleEventBFs(Trials=1000):
 
-    uLTs_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Taylor/uniformP_LTs/phenom-injections/TaylorF2"
-    uLs_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Taylor/uniformP_Ls/IMRPhenomPv2_NRTidal/APR4_EPP"
-    phenomPhenom_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Phenom/IMRPhenomPv2_NRTidal/APR4_EPP"
+    #uLTs_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Taylor/uniformP_LTs/phenom-injections/TaylorF2"
+    #uLs_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Taylor/uniformP_Ls/IMRPhenomPv2_NRTidal/APR4_EPP"
+    #phenomPhenom_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Phenom/IMRPhenomPv2_NRTidal/APR4_EPP"
+    nsbhPhenom_Dir = '/home/michael/projects/eos/GWXtreme_Tasks/year3/lastStretch/files/NSBH_IMRPhenomPv2_NRTidal/APR4_EPP'
 
     # Seems that only 13 of the events aren't called troublesome. Ig those caused extremely small BFs.
-    uLTs_Files = glob.glob("{}/*/*simplified.json".format(uLTs_Dir)) + glob.glob("{}/troublesome/*/*simplified.json".format(uLTs_Dir))
-    uLs_Files = glob.glob("{}/*/*simplified.json".format(uLs_Dir)) + glob.glob("{}/troublesome/*/*simplified.json".format(uLs_Dir))
-    phenomPhenom_Files = glob.glob("{}/*/*simplified.json".format(phenomPhenom_Dir)) + glob.glob("{}/troublesome/*/*simplified.json".format(phenomPhenom_Dir))
+    #uLTs_Files = glob.glob("{}/*/*simplified.json".format(uLTs_Dir)) + glob.glob("{}/troublesome/*/*simplified.json".format(uLTs_Dir))
+    #uLs_Files = glob.glob("{}/*/*simplified.json".format(uLs_Dir)) + glob.glob("{}/troublesome/*/*simplified.json".format(uLs_Dir))
+    #phenomPhenom_Files = glob.glob("{}/*/*simplified.json".format(phenomPhenom_Dir)) + glob.glob("{}/troublesome/*/*simplified.json".format(phenomPhenom_Dir))
+    nsbhPhenom_Files = glob.glob("{}/*/*simplified.json".format(nsbhPhenom_Dir))
 
-    stack_uLTs = ems.Stacking(uLTs_Files,kdedim=2)
-    stack_uLs = ems.Stacking(uLs_Files,kdedim=3)
-    stack_phenomPhenom = ems.Stacking(phenomPhenom_Files,kdedim=3)
+    #stack_uLTs = ems.Stacking(uLTs_Files,kdedim=2)
+    #stack_uLs = ems.Stacking(uLs_Files,kdedim=3)
+    #stack_phenomPhenom = ems.Stacking(phenomPhenom_Files,kdedim=3)
+    stack_nsbhPhenom = ems.Stacking(nsbhPhenom_Files,kdedim=3)
 
-    output = "data/BFs/16simulations_2D_3D_BFs_1000trial.json"
+    #output = "data/BFs/16simulations_2D_3D_BFs_1000trial.json"
+    output = "data/BFs/18simulations_BFs_100trial.json"
 
-    labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE PhenomNRT"]
-    stacks = [stack_uLTs, stack_uLs, stack_phenomPhenom]
-    eosList = ["BHF_BBB2","KDE0V","KDE0V1","SKOP","H4","HQC18","SLY2","SLY230A","SKMP","RS","SK255","SLY9","APR4_EPP","SKI2","SKI4","SKI6","SK272","SKI3","SKI5","MPA1","MS1_PP","MS1B_PP"]
+    #labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE PhenomNRT"]
+    labels = ["3D KDE PhenomPv2"]
+    #stacks = [stack_uLTs, stack_uLs, stack_phenomPhenom]
+    stacks = [stack_nsbhPhenom]
+    #eosList = ["BHF_BBB2","KDE0V","KDE0V1","SKOP","H4","HQC18","SLY2","SLY230A","SKMP","RS","SK255","SLY9","APR4_EPP","SKI2","SKI4","SKI6","SK272","SKI3","SKI5","MPA1","MS1_PP","MS1B_PP"]
+    eosList = ["KDE0V","KDE0V1","SKOP","H4","HQC18","SLY2","SLY230A","SKMP","RS","SK255","SLY9","APR4_EPP","SKI2","SKI4","SKI6","SK272","SKI3","SKI5","MPA1","MS1_PP","MS1B_PP"]
     stacks_BFs = []
     stacks_uncerts = []
     for stack in stacks:

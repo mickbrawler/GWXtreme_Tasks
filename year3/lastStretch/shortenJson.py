@@ -10,19 +10,27 @@ from astropy import units
 
 def simplifySimulation():
 
-    uLTs_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Taylor/uniformP_LTs/phenom-injections/TaylorF2"
-    uLs_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Taylor/uniformP_Ls/IMRPhenomPv2_NRTidal/APR4_EPP"
-    phenomPhenom_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Phenom/IMRPhenomPv2_NRTidal/APR4_EPP"
+#    uLTs_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Taylor/uniformP_LTs/phenom-injections/TaylorF2"
+#    uLs_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Taylor/uniformP_Ls/IMRPhenomPv2_NRTidal/APR4_EPP"
+#    phenomPhenom_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Phenom/IMRPhenomPv2_NRTidal/APR4_EPP"
+#    nsbhPhenom_Dir = '/home/michael/projects/eos/GWXtreme_Tasks/year3/lastStretch/files/NSBH_IMRPhenomPv2_NRTidal/APR4_EPP'
+    nsbhPhenom_Dir = '/home/michael/projects/eos/GWXtreme_Tasks/year3/lastStretch/files/NSBH_IMRPhenomNSBH/APR4_EPP'
 
-    priors = [uLTs_Dir,uLs_Dir,phenomPhenom_Dir]
+#    priors = [uLTs_Dir,uLs_Dir,phenomPhenom_Dir]
+    priors = [nsbhPhenom_Dir]
 
-    injections = ["282_1.58_1.37", "202_1.35_1.14", "179_1.35_1.23", "71_1.37_1.33", "122_1.77_1.19",
-                  "241_1.31_1.28", "220_1.36_1.24", "282_1.35_1.32", "149_1.35_1.23", "237_1.36_1.26",
-                  "138_1.5_1.21", "235_1.4_1.3", "219_1.3_1.28", "260_1.48_1.33", "164_1.34_1.19",
-                  "55_1.38_1.33", "78_1.35_1.32"]
+#    injections = ["282_1.58_1.37", "202_1.35_1.14", "179_1.35_1.23", "71_1.37_1.33", "122_1.77_1.19",
+#                  "241_1.31_1.28", "220_1.36_1.24", "282_1.35_1.32", "149_1.35_1.23", "237_1.36_1.26",
+#                  "138_1.5_1.21", "235_1.4_1.3", "219_1.3_1.28", "260_1.48_1.33", "164_1.34_1.19",
+#                  "55_1.38_1.33", "78_1.35_1.32"]
+    injections = ['261_4.16_2.08','455_2.33_1.97','380_7.95_2.1','227_4.19_2.05','386_2.64_1.81',
+                  '177_9.59_1.97','756_7.0_1.58','196_3.34_2.13','103_8.82_1.23','267_4.47_1.66',
+                  '236_7.03_1.96','432_3.51_1.94','452_3.55_1.47','116_9.83_1.15','467_5.58_2.06',
+                  '321_3.11_2.08','327_3.11_1.22','131_2.2_1.53']
 
     filenameEnd = "bns_example_result.json"
-    lambdasLabels = [["lambda_tilde","delta_lambda"],["lambda_1","lambda_2"],["lambda_1","lambda_2"]]
+    #lambdasLabels = [["lambda_tilde","delta_lambda"],["lambda_1","lambda_2"],["lambda_1","lambda_2"]]
+    lambdasLabels = [["lambda_1","lambda_2"]]
     outputEnd = "bns_example_result_simplified.json"
 
     for index in range(len(priors)):

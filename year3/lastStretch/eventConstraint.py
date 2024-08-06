@@ -30,7 +30,7 @@ def calcConstraint1():
 
         fnames=[filesToCompare[ii]]
         #Name of/ Path to file in which EoS parameter posterior samples will be saved:
-        outname='data/constraints/{}_GW170817inference'.format(Labels[ii])
+        outname='data/BNS/constraints/{}_GW170817inference'.format(Labels[ii])
 
         #Initialize Sampler Object:
         """For SPectral"""
@@ -43,8 +43,8 @@ def calcConstraint1():
 
         fig=sampler.plot(cornerplot={'plot':True,'true vals':None},p_vs_rho={'plot':True,'true_eos':'AP4'})
         # We follow the driver's logic that saves a constraint and corner plot cause... why not
-        fig['corner'].savefig('plots/corners/{}_GW170817_corner.png'.format(Labels[ii]))
-        fig['p_vs_rho'][0].savefig('plots/constraints/{}_GW170817_constraint.png'.format(Labels[ii]))
+        fig['corner'].savefig('plots/BNS/corners/{}_GW170817_corner.png'.format(Labels[ii]))
+        fig['p_vs_rho'][0].savefig('plots/BNS/constraints/{}_GW170817_constraint.png'.format(Labels[ii]))
 
 
 def calcConstraint2(burn_in_frac=0.5,thinning=None):
@@ -53,7 +53,7 @@ def calcConstraint2(burn_in_frac=0.5,thinning=None):
     Labels = ["2D-KDE-TaylorF2", "3D-KDE-TaylorF2", "3D-KDE-PhenomNRT"]
     for label in Labels:
         # Load the samples
-        filename='data/constraints/{}_GW170817inference.h5'.format(label)
+        filename='data/BNS/constraints/{}_GW170817inference.h5'.format(label)
         with h5py.File(filename,'r') as f:
             Samples = np.array(f['chains'])
             logp = np.array(f['logp'])
@@ -77,7 +77,7 @@ def calcConstraint2(burn_in_frac=0.5,thinning=None):
 
         samples = np.array(samples)
         # Save gamma sample data
-        np.savetxt("data/constraints/{}_GW170817inference_gammas.txt".format(label),samples)
+        np.savetxt("data/BNS/constraints/{}_GW170817inference_gammas.txt".format(label),samples)
 
         # Turn into confidence interval data
         logp=[]
@@ -96,7 +96,7 @@ def calcConstraint2(burn_in_frac=0.5,thinning=None):
         logp_med=np.array([np.quantile(logp[:,i],0.5) for i in range(len(rho))])
 
         # Save confidence interval data
-        np.savetxt("data/constraints/{}_GW170817inference.txt".format(label),np.array([rho,logp_CIlow,logp_med,logp_CIup]).T)
+        np.savetxt("data/BNS/constraints/{}_GW170817inference.txt".format(label),np.array([rho,logp_CIlow,logp_med,logp_CIup]).T)
 
         Labels = ["lalsim_nest-PhenomNRT"]
 
@@ -111,7 +111,7 @@ def CalcConstraint2():
     logp=[]
     rho=np.logspace(17.1,18.25,1000)
 
-    samples = np.loadtxt("files/{}_GW170817inference_gammas.txt".format(Label))
+    samples = np.loadtxt("files/BNS/{}_GW170817inference_gammas.txt".format(Label))
     print(len(samples))
     for s in samples:
         params=(s[0], s[1], s[2], s[3])
@@ -126,26 +126,18 @@ def CalcConstraint2():
     logp_med=np.array([np.quantile(logp[:,i],0.5) for i in range(len(rho))])
 
     # Save confidence interval data
-    np.savetxt("data/constraints/{}_GW170817inference.txt".format(Label),np.array([rho,logp_CIlow,logp_med,logp_CIup]).T)
+    np.savetxt("data/BNS/constraints/{}_GW170817inference.txt".format(Label),np.array([rho,logp_CIlow,logp_med,logp_CIup]).T)
 
 
 def plotConstraint():
     # Adopted from Anarya's GWXtreme 3d kde prod branch's plotting logic.
 
-    #labels = ["lalsim_nest-PhenomNRT", "2D-KDE-TaylorF2", "3D-KDE-TaylorF2", "3D-KDE-PhenomNRT"]
-    labels = ["lalsim_nest-PhenomNRT", "3D-KDE-PhenomNRT"]
-    #labels = ["2D-KDE-TaylorF2", "3D-KDE-TaylorF2"]
-    #labels = ["3D-KDE-TaylorF2", "3D-KDE-PhenomNRT"]
-    #Labels = ["lalsim_nest PhenomNRT", "2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE PhenomNRT"]
-    Labels = ["full-parameter-space Nest runs", "3D KDE PhenomNRT"]
-    #Labels = ["2D KDE TaylorF2", "3D KDE TaylorF2"]
-    #Labels = ["3D KDE TaylorF2", "3D KDE PhenomNRT"]
-    #Colors = ['#e41a1c','#377eb8','#4daf4a','#984ea3']
-    Colors = ['#e41a1c','#984ea3']
-    Colors = ['red','blue']
-    #Colors = ['#e41a1c','#377eb8','#4daf4a']
-    #Colors = ['#e41a1c','#377eb8']
-    #Colors = ['#377eb8','#4daf4a']
+    #labels = ["2D-KDE-TaylorF2", "3D-KDE-TaylorF2", "3D-KDE-PhenomNRT"]
+    labels = ["3D-KDE-PhenomNRT", "lalsim_nest-PhenomNRT"]
+    #Labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE PhenomNRT"]
+    Labels = ["3D KDE PhenomNRT", "full-parameter-space Nest runs"]
+    #Colors = ['#ffffb3','#bebada','#fb8072']
+    Colors = ['#beaed4','#fdc086']
 
     plt.figure(figsize=(12,12))
     plt.rc('font', size=20)
@@ -154,13 +146,12 @@ def plotConstraint():
     plt.rc('ytick', direction='out', color='black')
     plt.rc('lines', linewidth=2)
 
-    #Hatches = ["+","","","/"]
-    Hatches = ["","+"]
+    Hatches = ["",""]
 
     for label, Label, Color, Hatch in zip(labels,Labels,Colors,Hatches): # increment over each plot file
 
         # Load the samples
-        filename='data/constraints/{}_GW170817inference.txt'.format(label)
+        filename='data/BNS/constraints/{}_GW170817inference.txt'.format(label)
         rho, lower_bound, median, upper_bound = np.loadtxt(filename).T
 
         #plt.plot(lower_bound, rho, label=Label, color=Color)
@@ -176,5 +167,5 @@ def plotConstraint():
     plt.xlabel(r'$\log10{\frac{\rho}{g cm^-3}}$',fontsize=20)
     plt.ylabel(r'$log10(\frac{p}{dyne cm^{-2}})$',fontsize=20)
     plt.legend()
-    plt.savefig("plots/constraints/GW170817_constraint.png", bbox_inches='tight')
+    plt.savefig("plots/BNS/constraints/GW170817_constraint2.png", bbox_inches='tight')
 

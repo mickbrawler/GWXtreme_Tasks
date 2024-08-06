@@ -19,7 +19,8 @@ def singleEventBFs(Trials=1000):
 #                  "241_1.31_1.28", "220_1.36_1.24", "282_1.35_1.32", "149_1.35_1.23", "237_1.36_1.26", 
 #                  "138_1.5_1.21", "235_1.4_1.3", "219_1.3_1.28", "260_1.48_1.33", "164_1.34_1.19"]
 
-    injections = ['103_8.82_1.23','116_9.83_1.15','131_2.2_1.53','177_9.59_1.97','196_3.34_2.13',
+    #injections = ['103_8.82_1.23','116_9.83_1.15','131_2.2_1.53','177_9.59_1.97','196_3.34_2.13',
+    injections = ['177_9.59_1.97',
                   '227_4.19_2.05','236_7.03_1.96','261_4.16_2.08','267_4.47_1.66','321_3.11_2.08',
                   '327_3.11_1.22','380_7.95_2.1','386_2.64_1.81','432_3.51_1.94','452_3.55_1.47',
                   '455_2.33_1.97','467_5.58_2.06','756_7.0_1.58']
@@ -62,6 +63,7 @@ def singleEventBFs(Trials=1000):
             for eos in eosList:
                 print(eos)
                 bf, bf_trials = method.computeEvidenceRatio(EoS1=eos,EoS2="SLY",trials=Trials)
+                print(bf)
                 #bf = method.computeEvidenceRatio(EoS1=eos,EoS2="SLY",trials=0)
                 BFs.append(bf)
                 trials.append(bf_trials.tolist())
@@ -146,7 +148,7 @@ def multipleEventBFs(Trials=1000):
     #uLTs_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Taylor/uniformP_LTs/phenom-injections/TaylorF2"
     #uLs_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Taylor/uniformP_Ls/IMRPhenomPv2_NRTidal/APR4_EPP"
     #phenomPhenom_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Phenom/IMRPhenomPv2_NRTidal/APR4_EPP"
-    nsbhPhenom_Dir = '/home/michael/projects/eos/GWXtreme_Tasks/year3/lastStretch/files/NSBH_IMRPhenomPv2_NRTidal/APR4_EPP'
+    nsbhPhenom_Dir = '/home/michael/projects/eos/GWXtreme_Tasks/year3/lastStretch/files/NSBH/IMRPhenomPv2_NRTidal/APR4_EPP'
 
     # Seems that only 13 of the events aren't called troublesome. Ig those caused extremely small BFs.
     #uLTs_Files = glob.glob("{}/*/*simplified.json".format(uLTs_Dir)) + glob.glob("{}/troublesome/*/*simplified.json".format(uLTs_Dir))
@@ -159,15 +161,14 @@ def multipleEventBFs(Trials=1000):
     #stack_phenomPhenom = ems.Stacking(phenomPhenom_Files,kdedim=3)
     stack_nsbhPhenom = ems.Stacking(nsbhPhenom_Files,kdedim=3)
 
-    #output = "data/BFs/16simulations_2D_3D_BFs_1000trial.json"
-    output = "data/BFs/18simulations_BFs_100trial.json"
+    #output = "data/BNS/BFs/16simulations_2D_3D_BFs_1000trial.json"
+    output = "data/NSBH/BFs/18simulations_BFs_100trial.json"
 
     #labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE PhenomNRT"]
     labels = ["3D KDE PhenomPv2"]
     #stacks = [stack_uLTs, stack_uLs, stack_phenomPhenom]
     stacks = [stack_nsbhPhenom]
-    #eosList = ["BHF_BBB2","KDE0V","KDE0V1","SKOP","H4","HQC18","SLY2","SLY230A","SKMP","RS","SK255","SLY9","APR4_EPP","SKI2","SKI4","SKI6","SK272","SKI3","SKI5","MPA1","MS1_PP","MS1B_PP"]
-    eosList = ["KDE0V","KDE0V1","SKOP","H4","HQC18","SLY2","SLY230A","SKMP","RS","SK255","SLY9","APR4_EPP","SKI2","SKI4","SKI6","SK272","SKI3","SKI5","MPA1","MS1_PP","MS1B_PP"]
+    eosList = ["BHF_BBB2","KDE0V","KDE0V1","SKOP","H4","HQC18","SLY2","SLY230A","SKMP","RS","SK255","SLY9","APR4_EPP","SKI2","SKI4","SKI6","SK272","SKI3","SKI5","MPA1","MS1_PP","MS1B_PP"]
     stacks_BFs = []
     stacks_uncerts = []
     for stack in stacks:
@@ -207,7 +208,7 @@ def multipleEventBFs(Trials=1000):
 
 def multipleEventPlots():
      
-    #File = "data/BFs/16simulations_2D_3D_BFs_1000trial.json"
+    #File = "data/BNS/BFs/16simulations_2D_3D_BFs_1000trial.json"
     File = "data/NSBH/BFs/18simulations_BFs_100trial.json"
     with open(File,"r") as f:
         data = json.load(f)

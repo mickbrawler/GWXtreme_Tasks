@@ -132,12 +132,12 @@ def CalcConstraint2():
 def plotConstraint():
     # Adopted from Anarya's GWXtreme 3d kde prod branch's plotting logic.
 
-    labels = ["2D-KDE-TaylorF2", "3D-KDE-TaylorF2", "3D-KDE-PhenomNRT"]
-    #labels = ["3D-KDE-PhenomNRT", "lalsim_nest-PhenomNRT"]
-    Labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE PhenomNRT"]
-    #Labels = ["3D KDE PhenomNRT", "full-parameter-space Nest runs"]
-    Colors = ['#ffffb3','#bebada','#fb8072']
-    #Colors = ['#beaed4','#fdc086']
+    #labels = ["2D-KDE-TaylorF2", "3D-KDE-TaylorF2", "3D-KDE-PhenomNRT"]
+    labels = ["3D-KDE-PhenomNRT", "lalsim_nest-PhenomNRT"]
+    #Labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE PhenomNRT"]
+    Labels = ["3D KDE PhenomNRT", "full-parameter-space Nest runs"]
+    #Colors = ['#ffffb3','#bebada','#fb8072']
+    Colors = ['#beaed4','#fdc086']
 
     plt.figure(figsize=(12,12))
     plt.rc('font', size=20)
@@ -146,7 +146,7 @@ def plotConstraint():
     plt.rc('ytick', direction='out', color='black')
     plt.rc('lines', linewidth=2)
 
-    Hatches = ["","","+"]
+    Hatches = ["","x"]
 
     for label, Label, Color, Hatch in zip(labels,Labels,Colors,Hatches): # increment over each plot file
 

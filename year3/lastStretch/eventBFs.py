@@ -82,15 +82,15 @@ def singleEventPlots():
         data = json.load(f)
 
     #labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE PhenomNRT"]
-    #labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "TaylorF2 LALInference_Nest"]
-    labels = ["3D KDE PhenomNRT", "IMRPhenom LALInference_Nest"]
+    labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "TaylorF2 LALInference_Nest"]
+    #labels = ["3D KDE PhenomNRT", "IMRPhenom LALInference_Nest"]
     eosList = ["SKOP","H4","HQC18","SLY2","SLY230A","SKMP","RS","SK255","SLY9","APR4_EPP","SKI2","SKI4","SKI6","SK272","SKI3","SKI5","MPA1","MS1_PP","MS1B_PP"]
     #colors = ['#ffffb3','#bebada','#fb8072']
-    #colors = ['#66c2a5','#fc8d62','#e78ac3']
-    colors = ['#beaed4','#fdc086']
+    colors = ['#ffffb3','#bebada','#fdc086']
+    #colors = ['#beaed4','#fdc086']
     x_axis = np.arange(len(eosList))
-    #spacing = [-.20,.0,.20]
-    spacing = [-.10,.10]
+    spacing = [-.20,.0,.20]
+    #spacing = [-.10,.10]
     plt.clf()
     plt.rcParams.update({"font.size":18})
     plt.figure(figsize=(15, 10))
@@ -121,6 +121,6 @@ def singleEventPlots():
     #plt.title("EoS Bayes Factors w.r.t. SLY")
     plt.ylabel("Bayes-factor w.r.t SLY")
     plt.legend()
-    plt.savefig("plots/BNS/BFs/GW170817_2D_3D_BFs3.png",bbox_inches="tight")
+    plt.savefig("plots/BNS/BFs/GW170817_2D_3D_BFs2.png",bbox_inches="tight")
     #plt.savefig("plots/NSBH/BFs/GW230529_2D_3D_BFs.png",bbox_inches="tight")
 

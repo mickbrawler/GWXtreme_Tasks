@@ -124,8 +124,8 @@ def simplifyRealEvent():
                 m1, m2, lambda_A, lambda_B = np.array(data['mass_1']),np.array(data['mass_2']),data[label_a],data[label_b]
                 D = 40.4 # Mpc
                 z=z_at_value(Planck18.luminosity_distance,float(D)*units.Mpc).value
-                m1 *= (1+z)
-                m2 *= (1+z)
+                m1 /= (1+z)
+                m2 /= (1+z)
                 q = m2 / m1
                 mc = ( (m1*m2)**(3/5) ) / ( (m1+m2)**(1/5) )
 

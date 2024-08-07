@@ -19,7 +19,7 @@ def calcConstraint1():
 #    uLTs_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Taylor/uniformP_LTs/phenom-injections/TaylorF2"
 #    uLs_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Taylor/uniformP_Ls/IMRPhenomPv2_NRTidal/APR4_EPP"
 #    phenomPhenom_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Phenom/IMRPhenomPv2_NRTidal/APR4_EPP"
-    nsbhPhenom_Dir = '/home/michael/projects/eos/GWXtreme_Tasks/year3/lastStretch/files/NSBH_IMRPhenomPv2_NRTidal/APR4_EPP'
+    nsbhPhenom_Dir = '/home/michael/projects/eos/GWXtreme_Tasks/year3/lastStretch/files/NSBH/IMRPhenomPv2_NRTidal/APR4_EPP'
 
 #    uLTs_Files = glob.glob("{}/*/*simplified.json".format(uLTs_Dir)) + glob.glob("{}/troublesome/*/*simplified.json".format(uLTs_Dir))
 #    uLs_Files = glob.glob("{}/*/*simplified.json".format(uLs_Dir)) + glob.glob("{}/troublesome/*/*simplified.json".format(uLs_Dir))
@@ -114,12 +114,12 @@ def calcConstraint2(burn_in_frac=0.5,thinning=None):
 def plotConstraint():
     # Adopted from Anarya's GWXtreme 3d kde prod branch's plotting logic.
 
-    #labels = ["2D-KDE-TaylorF2", "3D-KDE-TaylorF2", "3D-KDE-PhenomNRT"]
-    labels = ["3D-KDE-PhenomNRT"]
-    #Labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE PhenomNRT"]
-    Labels = ["3D KDE PhenomNRT"]
-    #Colors = ["#d7191c","#fdae61","#abdda4"]
-    Colors = ["#fdae61"]
+    labels = ["2D-KDE-TaylorF2", "3D-KDE-TaylorF2", "3D-KDE-PhenomNRT"]
+    #labels = ["3D-KDE-PhenomNRT"]
+    Labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE PhenomNRT"]
+    #Labels = ["3D KDE PhenomNRT"]
+    Colors = ['#ffffb3','#bebada','#fb8072']
+    #Colors = ["#fdae61"]
 
     plt.figure(figsize=(12,12))
     plt.rc('font', size=20)
@@ -128,16 +128,18 @@ def plotConstraint():
     plt.rc('ytick', direction='out', color='black')
     plt.rc('lines', linewidth=2)
 
-    for label, Label, Color in zip(labels,Labels,Colors): # increment over each plot file
+    Hatches = ["","/",""]
+
+    for label, Label, Color, Hatch in zip(labels,Labels,Colors,Hatches): # increment over each plot file
 
         # Load the samples
-        #filename='data/BNS/constraints/{}_16simulationsInference.txt'.format(label)
-        filename='data/NSBH/constraints/{}_18simulationsInference_1000samp.txt'.format(label)
+        filename='data/BNS/constraints/{}_16simulationsInference.txt'.format(label)
+        #filename='data/NSBH/constraints/{}_18simulationsInference_1000samp.txt'.format(label)
         rho, lower_bound, median, upper_bound = np.loadtxt(filename).T
 
         #plt.plot(lower_bound, rho, label=Label, color=Color)
         #plt.plot(upper_bound, rho, color=Color)
-        plt.fill_between(np.log10(rho), lower_bound, upper_bound, color=Color, alpha=0.45, label=Label, zorder=1.)
+        plt.fill_between(np.log10(rho), lower_bound, upper_bound, color=Color, alpha=0.45, label=Label, zorder=1., hatch=Hatch)
 
     #EoSs = ["APR4_EPP","H4","SLY","MS1_PP"]
     EoSs = ["APR4_EPP"]
@@ -149,6 +151,6 @@ def plotConstraint():
     plt.xlabel(r'$\log10{\frac{\rho}{g cm^-3}}$',fontsize=20)
     plt.ylabel(r'$log10(\frac{p}{dyne cm^{-2}})$',fontsize=20)
     plt.legend()
-    #plt.savefig("plots/BNS/constraints/16simulations_constraint.png", bbox_inches='tight')
-    plt.savefig("plots/NSBH/constraints/18simulations_1000samp_constraint.png", bbox_inches='tight')
+    plt.savefig("plots/BNS/constraints/16simulations_constraint.png", bbox_inches='tight')
+    #plt.savefig("plots/NSBH/constraints/18simulations_1000samp_constraint.png", bbox_inches='tight')
 

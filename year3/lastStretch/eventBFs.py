@@ -28,7 +28,7 @@ def singleEventBFs(Trials=1000):
 
     labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE PhenomNRT", "TaylorF2 LALInference_Nest"]
     methods = [modsel_uLTs, modsel_uLs, modsel_phenom_uLs]
-    eosList = ["BHF_BBB2","KDE0V","KDE0V1","SKOP","H4","HQC18","SLY2","SLY230A","SKMP","RS","SK255","SLY9","APR4_EPP","SKI2","SKI4","SKI6","SK272","SKI3","SKI5","MPA1","MS1_PP","MS1B_PP"]
+    eosList = ["SKOP","H4","HQC18","SLY2","SLY230A","SKMP","RS","SK255","SLY9","APR4_EPP","SKI2","SKI4","SKI6","SK272","SKI3","SKI5","MPA1","MS1_PP","MS1B_PP"]
 
     #with open("/home/michael/projects/eos/GWXtreme_Tasks/year2/bilby_runs/simulations/outdir/nested_sampling_results.json","r") as f:
     #with open("files/TaylorF2_eos_prior_narrow_results.json","r") as f:
@@ -89,7 +89,7 @@ def singleEventPlots():
     #labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE PhenomNRT"]
     #labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "TaylorF2 LALInference_Nest"]
     labels = ["3D KDE PhenomNRT", "IMRPhenom LALInference_Nest"]
-    eosList = ["BHF_BBB2","KDE0V","KDE0V1","SKOP","H4","HQC18","SLY2","SLY230A","SKMP","RS","SK255","SLY9","APR4_EPP","SKI2","SKI4","SKI6","SK272","SKI3","SKI5","MPA1","MS1_PP","MS1B_PP"]
+    eosList = ["SKOP","H4","HQC18","SLY2","SLY230A","SKMP","RS","SK255","SLY9","APR4_EPP","SKI2","SKI4","SKI6","SK272","SKI3","SKI5","MPA1","MS1_PP","MS1B_PP"]
     #colors = ['#ffffb3','#bebada','#fb8072']
     #colors = ['#66c2a5','#fc8d62','#e78ac3']
     colors = ['#beaed4','#fdc086']

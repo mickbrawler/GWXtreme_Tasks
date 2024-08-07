@@ -13,8 +13,8 @@ def simplifySimulation():
 #    uLTs_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Taylor/uniformP_LTs/phenom-injections/TaylorF2"
 #    uLs_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Taylor/uniformP_Ls/IMRPhenomPv2_NRTidal/APR4_EPP"
 #    phenomPhenom_Dir = "../../year2/bilby_runs/simulations/outdir/1st_Phenom_Phenom/IMRPhenomPv2_NRTidal/APR4_EPP"
-#    nsbhPhenom_Dir = '/home/michael/projects/eos/GWXtreme_Tasks/year3/lastStretch/files/NSBH_IMRPhenomPv2_NRTidal/APR4_EPP'
-    nsbhPhenom_Dir = '/home/michael/projects/eos/GWXtreme_Tasks/year3/lastStretch/files/NSBH_IMRPhenomNSBH/APR4_EPP'
+#    nsbhPhenom_Dir = '/home/michael/projects/eos/GWXtreme_Tasks/year3/lastStretch/files/NSBH/IMRPhenomPv2_NRTidal/APR4_EPP'
+    nsbhPhenom_Dir = '/home/michael/projects/eos/GWXtreme_Tasks/year3/lastStretch/files/NSBH/IMRPhenomNSBH/APR4_EPP'
 
 #    priors = [uLTs_Dir,uLs_Dir,phenomPhenom_Dir]
     priors = [nsbhPhenom_Dir]
@@ -54,10 +54,18 @@ def simplifySimulation():
                     data = json.load(f)['posterior']['content']
 
             # This second try except is for when the file supplied has no m1 and m2; converter is then used
-            try: m1, m2, q, mc, lambda_A, lambda_B = data['m1_source'],data['m2_source'],data['mass_ratio'],data['chirp_mass'],data[label_a],data[label_b]
+            try: m1, m2, q, mc, lambda_A, lambda_B = data['m1_source'],data['m2_source'],data['mass_ratio_source'],data['chirp_mass_source'],data[label_a],data[label_b]
             except KeyError: 
-                q, mc, lambda_A, lambda_B = data['mass_ratio'],data['chirp_mass'],data[label_a],data[label_b]
-                m1, m2 = MassesInversion(q,mc).solve_system()
+                try: m1, m2, q, mc, lambda_A, lambda_B = data['mass_1_source'],data['mass_2_source'],data['mass_ratio_source'],data['chirp_mass_source'],data[label_a],data[label_b]
+                except KeyError:
+                    try: 
+                        m1, m2, lambda_A, lambda_B = np.array(data['mass_1_source']),np.array(data['mass_2_source']),data[label_a],data[label_b]
+                        q = m2/m1
+                        mc=(m1*m2)**(3./5.)/(m1+m2)**(1./5.)
+                        m1, m2, q, mc = m1.tolist(), m2.tolist(), q.tolist(), mc.tolist()
+                    except KeyError:
+                        q, mc, lambda_A, lambda_B = data['mass_ratio_source'],data['chirp_mass_source'],data[label_a],data[label_b]
+                        m1, m2 = MassesInversion(q,mc).solve_system()
 
             if label_a == "lambda_tilde":
                 label_aa = "lambdat"

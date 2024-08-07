@@ -8,11 +8,6 @@ import h5py
 import emcee as mc
 from multiprocessing import cpu_count, Pool
 
-# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-# DO NOT DELETE ANYTHING THAT IS COMMENTED OUT. I'M A LAZY CODER AND JUST COMMENT
-# STUFF IN AND OUT INSTEAD OF OVERENGINEERING A SCRIPT.
-# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
 def singleEventBFs(Trials=1000):
 
     uLTs_File = "/home/michael/projects/eos/GWXtreme_Tasks/year2/bilby_runs/simulations/outdir/real/uniformP_LTs/GW170817/simplified_result.json" 

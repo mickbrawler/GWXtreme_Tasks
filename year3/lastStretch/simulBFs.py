@@ -158,7 +158,7 @@ def multipleEventBFs(Trials=1000):
     #stack_uLTs = ems.Stacking(uLTs_Files,kdedim=2)
     #stack_uLs = ems.Stacking(uLs_Files,kdedim=3)
     #stack_phenomPhenom = ems.Stacking(phenomPhenom_Files,kdedim=3)
-    stack_nsbhPhenom = ems.Stacking(nsbhPhenom_Files,kdedim=3)
+    stack_nsbhPhenom = ems.Stacking(nsbhPhenom_Files,kdedim=3, Ns=4000)
 
     #output = "data/BNS/BFs/16simulations_2D_3D_BFs_1000trial.json"
     output = "data/NSBH/BFs/18simulations_BFs_100trial.json"
@@ -170,19 +170,26 @@ def multipleEventBFs(Trials=1000):
     eosList = ["SKOP","H4","HQC18","SLY2","SLY230A","SKMP","RS","SK255","SLY9","APR4_EPP","SKI2","SKI4","SKI6","SK272","SKI3","SKI5","MPA1","MS1_PP","MS1B_PP"]
     stacks_BFs = []
     stacks_uncerts = []
+    stacks_uncerts2 = []
     for stack in stacks:
         print(stack)
         BFs = []
         uncerts = []
+        uncerts2 = []
         for eos in eosList:
             print(eos)
-            bf, bf_trials = stack.stack_events(EoS1=eos,EoS2="SLY",trials=Trials)
+            bf, bf_trials = stack.stack_events(EoS1=eos,EoS2="SLY",trials=Trials) # bf_trials here is the joint bf array
+            events_errors = stack.all_bayes_factors_errors # each events separate error
             #bf = stack.stack_events(EoS1=eos,EoS2="SLY",trials=0)
-            uncert = np.std(bf_trials) * 2
+            uncert = np.std(bf_trials) * 2 # np.std of joint BF array (traditional method)
+            uncert2 = np.std(events_errors) * 2 # double np.std
             BFs.append(bf)
+            #uncerts.append(np.nan) # 0 TRIAL CASE
             uncerts.append(uncert)
+            uncerts2.append(uncert)
         stacks_BFs.append(BFs)
         stacks_uncerts.append(uncerts)
+        stacks_uncerts2.append(uncerts2)
 
     #TEST THIS SOON PLEASE BEFORE USING
     if os.path.isfile(output) == True:
@@ -192,7 +199,7 @@ def multipleEventBFs(Trials=1000):
         for Index in range(len(labels)):
             dictionary = {}
             for eIndex in range(len(eosList)):
-                dictionary[eosList[eIndex]] = [stacks_BFs[Index][eIndex],stacks_uncerts[Index][eIndex]]
+                dictionary[eosList[eIndex]] = [stacks_BFs[Index][eIndex],stacks_uncerts[Index][eIndex],stacks_uncerts2[Index][eIndex]]
             Dictionary[labels[Index]] = dictionary
 
         with open(output,"w") as f:
@@ -200,26 +207,26 @@ def multipleEventBFs(Trials=1000):
 
     else: # First time doing this sort of run so new file is made
 
-        Dictionary = {labels[Index]:{eosList[eIndex]:[stacks_BFs[Index][eIndex],stacks_uncerts[Index][eIndex]] for eIndex in range(len(eosList))} for Index in range(len(labels))}
+        Dictionary = {labels[Index]:{eosList[eIndex]:[stacks_BFs[Index][eIndex],stacks_uncerts[Index][eIndex],stacks_uncerts2[Index][eIndex]] for eIndex in range(len(eosList))} for Index in range(len(labels))}
         with open(output,"w") as f:
             json.dump(Dictionary, f, indent=2, sort_keys=True)
 
 
 def multipleEventPlots():
      
-    File = "data/BNS/BFs/16simulations_2D_3D_BFs_1000trial.json"
-    #File = "data/NSBH/BFs/18simulations_BFs_100trial.json"
+    #File = "data/BNS/BFs/16simulations_2D_3D_BFs_1000trial.json"
+    File = "data/NSBH/BFs/18simulations_BFs_100trial.json"
     with open(File,"r") as f:
         data = json.load(f)
  
-    labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE PhenomNRT"]
-    #labels = ["3D KDE PhenomPv2"]
-    eosList = ["SKOP","H4","HQC18","SLY2","SLY230A","SKMP","RS","SK255","SLY9","APR4_EPP","SKI2","SKI4","SKI6","SK272","SKI3","SKI5","MPA1","MS1_PP","MS1B_PP"]
-    colors = ['#ffffb3','#bebada','#fb8072']
-    #colors = ["#d7191c"]
+    #labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE PhenomNRT"]
+    labels = ["3D KDE PhenomPv2"]
+    eosList = ["SKOP","H4","HQC18","SLY2","SLY230A","SKMP","RS","SK255","SLY9","APR4_EPP","SKI2","SKI4","SKI6","SK272","SKI3","SKI5","MPA1","MS1B_PP","MS1_PP"]
+    #colors = ['#ffffb3','#bebada','#fb8072']
+    colors = ["#d7191c"]
     x_axis = np.arange(len(eosList))
-    spacing = [-.20,0.,.20]
-    #spacing = [.0]
+    #spacing = [-.20,0.,.20]
+    spacing = [.0]
 
     plt.clf()
     plt.rcParams.update({"font.size":18})
@@ -232,7 +239,7 @@ def multipleEventPlots():
         uncerts = []
         for eos in eosList:
             BFs.append(data[label][eos][0])
-            uncert = data[label][eos][1]
+            uncert = data[label][eos][-1]
             uncerts.append(uncert)
  
         plt.bar(x_axis+spacing[counter],BFs,.20,label=labels[counter],color=colors[counter])
@@ -243,8 +250,8 @@ def multipleEventPlots():
     plt.xticks(x_axis,eosList,rotation=90,ha="right")
     plt.ylim(1.0e-3,(max(BFs)+max(uncerts))*10.)
     plt.axhline(1.0,color="k",linestyle="--",alpha=0.2)
-    plt.ylabel("Bayes-factor w.r.t SLY")
+    plt.ylabel("Joint Bayes-factor w.r.t SLY")
     plt.legend()
-    plt.savefig("plots/BNS/BFs/16simulations_2D_3D_BFs_1000trial.png",bbox_inches="tight")
-    #plt.savefig("plots/NSBH/BFs/18simulations_BFs_100trial.png",bbox_inches="tight")
+    #plt.savefig("plots/BNS/BFs/16simulations_2D_3D_BFs_1000trial.png",bbox_inches="tight")
+    plt.savefig("plots/NSBH/BFs/18simulations_BFs_100trial.png",bbox_inches="tight")
 

@@ -221,6 +221,7 @@ def multipleEventPlots():
  
     #labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE PhenomNRT"]
     labels = ["3D KDE PhenomPv2"]
+    Labels = ["3D KDE IMRPhenomPv2_NRTidal"]
     eosList = ["SKOP","H4","HQC18","SLY2","SLY230A","SKMP","RS","SK255","SLY9","APR4_EPP","SKI2","SKI4","SKI6","SK272","SKI3","SKI5","MPA1","MS1B_PP","MS1_PP"]
     #colors = ['#ffffb3','#bebada','#fb8072']
     colors = ["#d7191c"]
@@ -239,10 +240,11 @@ def multipleEventPlots():
         uncerts = []
         for eos in eosList:
             BFs.append(data[label][eos][0])
-            uncert = data[label][eos][-1]
+            #uncert = data[label][eos][1]
+            uncert = data[label][eos][2]
             uncerts.append(uncert)
  
-        plt.bar(x_axis+spacing[counter],BFs,.20,label=labels[counter],color=colors[counter])
+        plt.bar(x_axis+spacing[counter],BFs,.20,label=Labels[counter],color=colors[counter])
         plt.errorbar(x_axis+spacing[counter],BFs,yerr=uncerts,ls="none",ecolor="black")
         counter += 1
 
@@ -253,5 +255,5 @@ def multipleEventPlots():
     plt.ylabel("Joint Bayes-factor w.r.t SLY")
     plt.legend()
     #plt.savefig("plots/BNS/BFs/16simulations_2D_3D_BFs_1000trial.png",bbox_inches="tight")
-    plt.savefig("plots/NSBH/BFs/18simulations_BFs_100trial.png",bbox_inches="tight")
+    plt.savefig("plots/NSBH/BFs/18simulations_BFs_100trial_stdDouble.png",bbox_inches="tight")
 

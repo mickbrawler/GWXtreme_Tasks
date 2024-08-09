@@ -23,7 +23,7 @@ def singleEventBFs(Trials=1000):
                   '227_4.19_2.05','236_7.03_1.96','261_4.16_2.08','267_4.47_1.66','321_3.11_2.08',
                   '327_3.11_1.22','380_7.95_2.1','386_2.64_1.81','432_3.51_1.94','452_3.55_1.47',
                   '455_2.33_1.97','467_5.58_2.06','756_7.0_1.58']
-    #filenameEnd = "bns_example_result.json"
+
     filenameEnd = "bns_example_result_simplified.json"
 
     index = 0
@@ -45,6 +45,7 @@ def singleEventBFs(Trials=1000):
             uLTs_File = "{}/troublesome/{}/{}".format(uLTs_Dir,injection,filenameEnd)
             uLs_File = "{}/troublesome/{}/{}".format(uLs_Dir,injection,filenameEnd)
             phenomPhenom_File = "{}/troublesome/{}/{}".format(phenomPhenom_Dir,injection,filenameEnd)
+            # there are no nsbhPhenom troublesome sims
 
             modsel_uLTs = ems.Model_selection(uLTs_File,Ns=4000,kdedim=2)
             modsel_uLs = ems.Model_selection(uLs_File,Ns=4000,kdedim=3)
@@ -52,7 +53,7 @@ def singleEventBFs(Trials=1000):
 
         #methods = [modsel_uLTs, modsel_uLs,modsel_phenomPhenom]
         methods = [modsel_nsbhPhenom]
-        eosList = ["SKOP","H4","HQC18","SLY2","SLY230A","SKMP","RS","SK255","SLY9","APR4_EPP","SKI2","SKI4","SKI6","SK272","SKI3","SKI5","MPA1","MS1_PP","MS1B_PP"]
+        eosList = ["SKOP","H4","HQC18","SLY2","SLY230A","SKMP","RS","SK255","SLY9","APR4_EPP","SKI2","SKI4","SKI6","SK272","SKI3","SKI5","MPA1","MS1B_PP","MS1_PP"]
         methods_BFs = []
         methods_trials = []
         for method in methods:
@@ -62,13 +63,14 @@ def singleEventBFs(Trials=1000):
             for eos in eosList:
                 print(eos)
                 bf, bf_trials = method.computeEvidenceRatio(EoS1=eos,EoS2="SLY",trials=Trials)
-                print(bf)
                 #bf = method.computeEvidenceRatio(EoS1=eos,EoS2="SLY",trials=0)
                 BFs.append(bf)
-                trials.append(bf_trials.tolist())
+                #trials.append(np.nan) # 0 TRIAL CASE
+                trials.append(bf_trials)
             methods_BFs.append(BFs)
             methods_trials.append(trials)
         
+        #output = "data/NSBH/BFs/{}_BFs_0samp.json".format(injection)
         output = "data/NSBH/BFs/{}_BFs_100samp.json".format(injection)
 
         if os.path.isfile(output) == True:
@@ -109,9 +111,14 @@ def singleEventPlots():
             data = json.load(f)
 
         #labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE PhenomNRT"]
+        #Labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE IMRPhenomPv2_NRTidal"]
         labels = ["3D KDE PhenomPv2"]
+        Labels = ["3D KDE IMRPhenomPv2_NRTidal"]
+
         eosList = ["SKOP","H4","HQC18","SLY2","SLY230A","SKMP","RS","SK255","SLY9","APR4_EPP","SKI2","SKI4","SKI6","SK272","SKI3","SKI5","MPA1","MS1_PP","MS1B_PP"]
-        colors = ["#d7191c"]
+        #colors = ['#ffffb3','#bebada','#fb8072']
+        #colors = ["#984ea3","#ff7f00"]
+        colors = ["#984ea3"]
         x_axis = np.arange(len(eosList))
         #spacing = [-.20,0.,.20]
         spacing = [0]
@@ -155,9 +162,9 @@ def multipleEventBFs(Trials=1000):
     #phenomPhenom_Files = glob.glob("{}/*/*simplified.json".format(phenomPhenom_Dir)) + glob.glob("{}/troublesome/*/*simplified.json".format(phenomPhenom_Dir))
     nsbhPhenom_Files = glob.glob("{}/*/*simplified.json".format(nsbhPhenom_Dir))
 
-    #stack_uLTs = ems.Stacking(uLTs_Files,kdedim=2)
-    #stack_uLs = ems.Stacking(uLs_Files,kdedim=3)
-    #stack_phenomPhenom = ems.Stacking(phenomPhenom_Files,kdedim=3)
+    #stack_uLTs = ems.Stacking(uLTs_Files,kdedim=2, Ns=4000)
+    #stack_uLs = ems.Stacking(uLs_Files,kdedim=3, Ns=4000)
+    #stack_phenomPhenom = ems.Stacking(phenomPhenom_Files,kdedim=3, Ns=4000)
     stack_nsbhPhenom = ems.Stacking(nsbhPhenom_Files,kdedim=3, Ns=4000)
 
     #output = "data/BNS/BFs/16simulations_2D_3D_BFs_1000trial.json"
@@ -182,11 +189,10 @@ def multipleEventBFs(Trials=1000):
             events_errors = stack.all_bayes_factors_errors # each events separate error
             #bf = stack.stack_events(EoS1=eos,EoS2="SLY",trials=0)
             uncert = np.std(bf_trials) * 2 # np.std of joint BF array (traditional method)
-            uncert2 = np.std(events_errors) * 2 # double np.std
             BFs.append(bf)
             #uncerts.append(np.nan) # 0 TRIAL CASE
             uncerts.append(uncert)
-            uncerts2.append(uncert)
+            uncerts2.append(events_errors)
         stacks_BFs.append(BFs)
         stacks_uncerts.append(uncerts)
         stacks_uncerts2.append(uncerts2)
@@ -224,7 +230,8 @@ def multipleEventPlots():
     Labels = ["3D KDE IMRPhenomPv2_NRTidal"]
     eosList = ["SKOP","H4","HQC18","SLY2","SLY230A","SKMP","RS","SK255","SLY9","APR4_EPP","SKI2","SKI4","SKI6","SK272","SKI3","SKI5","MPA1","MS1B_PP","MS1_PP"]
     #colors = ['#ffffb3','#bebada','#fb8072']
-    colors = ["#d7191c"]
+    #colors = ["#984ea3","#ff7f00"]
+    colors = ["#984ea3"]
     x_axis = np.arange(len(eosList))
     #spacing = [-.20,0.,.20]
     spacing = [.0]
@@ -241,7 +248,7 @@ def multipleEventPlots():
         for eos in eosList:
             BFs.append(data[label][eos][0])
             #uncert = data[label][eos][1]
-            uncert = data[label][eos][2]
+            uncert = np.std(data[label][eos][2])
             uncerts.append(uncert)
  
         plt.bar(x_axis+spacing[counter],BFs,.20,label=Labels[counter],color=colors[counter])

@@ -39,7 +39,7 @@ def singleEventBFs(Trials=1000):
             #modsel_uLTs = ems.Model_selection(uLTs_File,Ns=4000,kdedim=2)
             #modsel_uLs = ems.Model_selection(uLs_File,Ns=4000,kdedim=3)
             #modsel_phenomPhenom = ems.Model_selection(phenomPhenom_File,Ns=4000,kdedim=3)
-            modsel_nsbhPhenom = ems.Model_selection(nsbhPhenom_File,Ns=4000,kdedim=3)
+            modsel_nsbhPhenom = ems.Model_selection(nsbhPhenom_File,Ns=4000,kdedim=3, logq=True)
 
         except FileNotFoundError:
             uLTs_File = "{}/troublesome/{}/{}".format(uLTs_Dir,injection,filenameEnd)
@@ -63,14 +63,16 @@ def singleEventBFs(Trials=1000):
             for eos in eosList:
                 print(eos)
                 bf, bf_trials = method.computeEvidenceRatio(EoS1=eos,EoS2="SLY",trials=Trials)
+                print(bf)
                 #bf = method.computeEvidenceRatio(EoS1=eos,EoS2="SLY",trials=0)
                 BFs.append(bf)
                 #trials.append(np.nan) # 0 TRIAL CASE
-                trials.append(bf_trials)
+                trials.append(bf_trials.tolist())
             methods_BFs.append(BFs)
             methods_trials.append(trials)
         
-        #output = "data/NSBH/BFs/{}_BFs_0samp.json".format(injection)
+        #output = "data/BNS/BFs/{}_BFs_1000samp.json".format(injection)
+        #output = "data/NSBH/BFs/{}_BFs_1000samp.json".format(injection)
         output = "data/NSBH/BFs/{}_BFs_100samp.json".format(injection)
 
         if os.path.isfile(output) == True:
@@ -106,7 +108,7 @@ def singleEventPlots():
 
     for injection in injections:
 
-        File = "{}/{}_BFs_100samp.json".format(Dir,injection)
+        File = "{}/{}_BFs_1000samp.json".format(Dir,injection)
         with open(File,"r") as f:
             data = json.load(f)
 
@@ -147,7 +149,7 @@ def singleEventPlots():
         plt.axhline(1.0,color="k",linestyle="--",alpha=0.2)
         plt.ylabel("Bayes-factor w.r.t SLY")
         plt.legend()
-        plt.savefig("plots/NSBH/BFs/{}_2D_3D_BFs_100samp.png".format(injection), bbox_inches="tight")
+        plt.savefig("plots/NSBH/BFs/{}_2D_3D_BFs_1000samp.png".format(injection), bbox_inches="tight")
 
 def multipleEventBFs(Trials=1000):
 
@@ -165,10 +167,11 @@ def multipleEventBFs(Trials=1000):
     #stack_uLTs = ems.Stacking(uLTs_Files,kdedim=2, Ns=4000)
     #stack_uLs = ems.Stacking(uLs_Files,kdedim=3, Ns=4000)
     #stack_phenomPhenom = ems.Stacking(phenomPhenom_Files,kdedim=3, Ns=4000)
-    stack_nsbhPhenom = ems.Stacking(nsbhPhenom_Files,kdedim=3, Ns=4000)
+    stack_nsbhPhenom = ems.Stacking(nsbhPhenom_Files,kdedim=3, Ns=4000, logq=True)
 
     #output = "data/BNS/BFs/16simulations_2D_3D_BFs_1000trial.json"
-    output = "data/NSBH/BFs/18simulations_BFs_100trial.json"
+    #output = "data/NSBH/BFs/18simulations_BFs_1000trial.json"
+    output = "data/NSBH/BFs/18simulations_BFs.json"
 
     #labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE PhenomNRT"]
     labels = ["3D KDE PhenomPv2"]
@@ -178,6 +181,7 @@ def multipleEventBFs(Trials=1000):
     stacks_BFs = []
     stacks_uncerts = []
     stacks_uncerts2 = []
+    Index = 0
     for stack in stacks:
         print(stack)
         BFs = []
@@ -185,43 +189,46 @@ def multipleEventBFs(Trials=1000):
         uncerts2 = []
         for eos in eosList:
             print(eos)
-            bf, bf_trials = stack.stack_events(EoS1=eos,EoS2="SLY",trials=Trials) # bf_trials here is the joint bf array
-            events_errors = stack.all_bayes_factors_errors # each events separate error
-            #bf = stack.stack_events(EoS1=eos,EoS2="SLY",trials=0)
-            uncert = np.std(bf_trials) * 2 # np.std of joint BF array (traditional method)
+            #bf, bf_trials = stack.stack_events(EoS1=eos,EoS2="SLY",trials=Trials) # bf_trials here is the joint bf array
+            #events_errors = stack.all_bayes_factors_errors # each events separate error
+            #uncert = np.std(bf_trials) * 2 # np.std of joint BF array (traditional method)
+            #uncerts.append(uncert)
+            bf = stack.stack_events(EoS1=eos,EoS2="SLY",trials=0)
+            print(bf)
+            events_errors = [np.nan]
             BFs.append(bf)
-            #uncerts.append(np.nan) # 0 TRIAL CASE
-            uncerts.append(uncert)
+            uncerts.append(np.nan) # 0 TRIAL CASE
+
             uncerts2.append(events_errors)
         stacks_BFs.append(BFs)
         stacks_uncerts.append(uncerts)
         stacks_uncerts2.append(uncerts2)
 
-    #TEST THIS SOON PLEASE BEFORE USING
-    if os.path.isfile(output) == True:
-        with open(output,"r") as f:
-            Dictionary = json.load(f)
+        if os.path.isfile(output) == True:
+            with open(output,"r") as f:
+                Dictionary = json.load(f)
 
-        for Index in range(len(labels)):
             dictionary = {}
             for eIndex in range(len(eosList)):
                 dictionary[eosList[eIndex]] = [stacks_BFs[Index][eIndex],stacks_uncerts[Index][eIndex],stacks_uncerts2[Index][eIndex]]
             Dictionary[labels[Index]] = dictionary
 
-        with open(output,"w") as f:
-            json.dump(Dictionary, f, indent=2, sort_keys=True)
+            with open(output,"w") as f:
+                json.dump(Dictionary, f, indent=2, sort_keys=True)
 
-    else: # First time doing this sort of run so new file is made
+        else: # First time doing this sort of run so new file is made
 
-        Dictionary = {labels[Index]:{eosList[eIndex]:[stacks_BFs[Index][eIndex],stacks_uncerts[Index][eIndex],stacks_uncerts2[Index][eIndex]] for eIndex in range(len(eosList))} for Index in range(len(labels))}
-        with open(output,"w") as f:
-            json.dump(Dictionary, f, indent=2, sort_keys=True)
+            Dictionary = {labels[Index]:{eosList[eIndex]:[stacks_BFs[Index][eIndex],stacks_uncerts[Index][eIndex],stacks_uncerts2[Index][eIndex]] for eIndex in range(len(eosList))}}
+            with open(output,"w") as f:
+                json.dump(Dictionary, f, indent=2, sort_keys=True)
+
+        Index += 1
 
 
 def multipleEventPlots():
      
     #File = "data/BNS/BFs/16simulations_2D_3D_BFs_1000trial.json"
-    File = "data/NSBH/BFs/18simulations_BFs_100trial.json"
+    File = "data/NSBH/BFs/18simulations_BFs_1000trial.json"
     with open(File,"r") as f:
         data = json.load(f)
  
@@ -262,5 +269,5 @@ def multipleEventPlots():
     plt.ylabel("Joint Bayes-factor w.r.t SLY")
     plt.legend()
     #plt.savefig("plots/BNS/BFs/16simulations_2D_3D_BFs_1000trial.png",bbox_inches="tight")
-    plt.savefig("plots/NSBH/BFs/18simulations_BFs_100trial_stdDouble.png",bbox_inches="tight")
+    plt.savefig("plots/NSBH/BFs/18simulations_BFs_1000trial_stdDouble.png",bbox_inches="tight")
 

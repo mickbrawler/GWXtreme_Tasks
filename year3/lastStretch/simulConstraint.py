@@ -67,7 +67,7 @@ def calcConstraint2(burn_in_frac=0.5,thinning=None):
     for label in Labels:
         # Load the samples
         #filename='data/BNS/constraints/{}_16simulationsInference_1000samp.h5'.format(label)
-        filename='data/NSBH/constraints/{}_18simulationsInference_1000samp.h5'.format(label)
+        filename='data/NSBH/constraints/{}_18simulationsInference_10000samp.h5'.format(label)
         with h5py.File(filename,'r') as f:
             Samples = np.array(f['chains'])
             logp = np.array(f['logp'])
@@ -92,7 +92,7 @@ def calcConstraint2(burn_in_frac=0.5,thinning=None):
         samples = np.array(samples)
         # Save gamma sample data
         #np.savetxt("data/BNS/constraints/{}_16simulationsInference_1000samp_gammas.txt".format(label),samples)
-        np.savetxt("data/NSBH/constraints/{}_18simulationsInference_1000samp_gammas.txt".format(label),samples)
+        np.savetxt("data/NSBH/constraints/{}_18simulationsInference_10000samp_gammas.txt".format(label),samples)
 
         # Turn into confidence interval data
         logp=[]
@@ -112,7 +112,7 @@ def calcConstraint2(burn_in_frac=0.5,thinning=None):
 
         # Save confidence interval data
         #np.savetxt("data/BNS/constraints/{}_16simulationsInference_1000samp.txt".format(label),np.array([rho,logp_CIlow,logp_med,logp_CIup]).T)
-        np.savetxt("data/NSBH/constraints/{}_18simulationsInference_1000samp.txt".format(label),np.array([rho,logp_CIlow,logp_med,logp_CIup]).T)
+        np.savetxt("data/NSBH/constraints/{}_18simulationsInference_10000samp.txt".format(label),np.array([rho,logp_CIlow,logp_med,logp_CIup]).T)
 
 
 def plotConstraint():
@@ -139,7 +139,7 @@ def plotConstraint():
 
         # Load the samples
         #filename='data/BNS/constraints/{}_16simulationsInference_1000samp.txt'.format(label)
-        filename='data/NSBH/constraints/{}_18simulationsInference_1000samp.txt'.format(label)
+        filename='data/NSBH/constraints/{}_18simulationsInference_10000samp.txt'.format(label)
         rho, lower_bound, median, upper_bound = np.loadtxt(filename).T
 
         #plt.plot(lower_bound, rho, label=Label, color=Color)
@@ -157,5 +157,5 @@ def plotConstraint():
     plt.ylabel(r'$log10(\frac{p}{dyne cm^{-2}})$',fontsize=20)
     plt.legend()
     #plt.savefig("plots/BNS/constraints/16simulations_1000samp_constraint.png", bbox_inches='tight')
-    plt.savefig("plots/NSBH/constraints/18simulations_1000samp_constraint.png", bbox_inches='tight')
+    plt.savefig("plots/NSBH/constraints/18simulations_10000samp_constraint.png", bbox_inches='tight')
 

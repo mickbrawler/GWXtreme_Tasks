@@ -6,13 +6,13 @@ import json
 # variations on its "error": 1) quadrature sum, 2) "worst possible error",
 # 3) fractional error.
 
-with open("files/BNS/TaylorF2_eos_prior_narrow_results.json","r") as f:
+with open("files/BNS/TaylorF2_eos_prior_narrow_evidences.json","r") as f:
     Taylor_nest_data = json.load(f)
 
-with open("files/BNS/IMRphenom_eos_prior_narrow_results.json","r") as f:
+with open("files/BNS/IMRphenom_eos_prior_narrow_evidences.json","r") as f:
     Phenom_nest_data = json.load(f)
 
-with open("data/BNS/BFs/GW170817_2D_3D_BFs.json","r") as f:
+with open("data/BNS/BFs/GW170817_2D_3D_BFs_10000samp.json","r") as f:
     data = json.load(f)
 
 labels = ['TaylorF2 LALInference_Nest','IMRPhenom LALInference_Nest']
@@ -46,6 +46,6 @@ for nest_data, label in zip(datasets,labels):
 
     data[label] = EoSs_BF_err
 
-with open("data/BNS/BFs/GW170817_2D_3D_BFs.json","w") as f:
+with open("data/BNS/BFs/GW170817_2D_3D_BFs_10000samp.json","w") as f:
     json.dump(data, f, indent=2, sort_keys=True)
 

@@ -85,18 +85,18 @@ def singleEventPlots():
     with open(File,"r") as f:
         data = json.load(f)
 
-    labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "TaylorF2 LALInference_Nest"] # for three methods being compared
-    #labels = ["3D KDE IMRPhenomPv2_NRTidal", "IMRPhenomPv2_NRTidal LALInference_Nest"]
+    #labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "TaylorF2 LALInference_Nest"] # for three methods being compared
+    labels = ["3D KDE IMRPhenomPv2_NRTidal", "IMRPhenomPv2_NRTidal LALInference_Nest"]
 
     eosList = ["SKOP","H4","HQC18","SLY2","SLY230A","SKMP","RS","SK255","SLY9","APR4_EPP","SKI2","SKI4","SKI6","SK272","SKI3","SKI5","MPA1","MS1_PP","MS1B_PP"]
 
-    colors = ['#ffffb3','#bebada','#fdc086'] # for three methods being compared
-    #colors = ['#beaed4','#fdc086']
+    #colors = ['#ffffb3','#bebada','#fdc086'] # for three methods being compared
+    colors = ['#beaed4','#fdc086']
 
     x_axis = np.arange(len(eosList))
 
-    spacing = [-.20,.0,.20] # for three methods being compared
-    #spacing = [-.10,.10]
+    #spacing = [-.20,.0,.20] # for three methods being compared
+    spacing = [-.10,.10]
 
     plt.clf()
     plt.rcParams.update({"font.size":18})
@@ -106,6 +106,7 @@ def singleEventPlots():
     nestedUncert_label = ["quad","worst","frac"] # the different kinds of errors we considerd for nested BFs (cause we're given evidences)
     for nestedUncert_index in range(3):
 
+        plt.clf()
         counter = 0
         for label in labels:
 
@@ -129,10 +130,9 @@ def singleEventPlots():
         plt.xticks(x_axis,eosList,rotation=90,ha="right")
         plt.ylim(1.0e-5,(max(BFs)+max(uncerts))*10.)
         plt.axhline(1.0,color="k",linestyle="--",alpha=0.2)
-        #plt.title("EoS Bayes Factors w.r.t. SLY")
         plt.ylabel("Bayes-factor w.r.t SLY")
         plt.legend()
-        plt.savefig("plots/BNS/BFs/GW170817_2D_3D_BFs1_10000samp_{}Error.png".format(nestedUncert_label[nestedUncert_index]),bbox_inches="tight") # for three methods being compared
-        #plt.savefig("plots/BNS/BFs/GW170817_2D_3D_BFs2_10000samp_{}Error.png".format(nestedUncert_label[nestedUncert_index]),bbox_inches="tight")
+        #plt.savefig("plots/BNS/BFs/GW170817_2D_3D_BFs1_10000samp_{}Error.png".format(nestedUncert_label[nestedUncert_index]),bbox_inches="tight") # for three methods being compared
+        plt.savefig("plots/BNS/BFs/GW170817_2D_3D_BFs2_10000samp_{}Error.png".format(nestedUncert_label[nestedUncert_index]),bbox_inches="tight")
         #plt.savefig("plots/NSBH/BFs/GW230529_2D_3D_BFs.png",bbox_inches="tight")
 

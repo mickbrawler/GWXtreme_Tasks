@@ -17,14 +17,18 @@ def calcConstraint1():
     # may be harder than the simple use of fig.show(). Old script used to this.
 
     #Array Containing list of paths to the .dat files  containing the posterior samples for the events:
-    uLTs_File = "/home/michael/projects/eos/GWXtreme_Tasks/year2/bilby_runs/simulations/outdir/real/uniformP_LTs/GW170817/simplified_result.json" 
-    uLs_File = "/home/michael/projects/eos/GWXtreme_Tasks/year3/GW170817_prior_L1L2/CIT_attempt_successful/outdir/simplified_result.json"
-    uLs_phenom_File = "/home/michael/projects/eos/GWXtreme_Tasks/year3/lastStretch/files/GW170817phenom.json"
-    filesToCompare = [uLTs_File,uLs_File,uLs_phenom_File]
+    #uLTs_File = "/home/michael/projects/eos/GWXtreme_Tasks/year2/bilby_runs/simulations/outdir/real/uniformP_LTs/GW170817/simplified_result.json" 
+    #uLs_File = "/home/michael/projects/eos/GWXtreme_Tasks/year3/GW170817_prior_L1L2/CIT_attempt_successful/outdir/simplified_result.json"
+    uLs_phenom_File = "/home/michael/projects/eos/GWXtreme_Tasks/year3/lastStretch/files/BNS/GW170817phenom.json"
+    #filesToCompare = [uLTs_File,uLs_File,uLs_phenom_File]
+    filesToCompare = [uLs_phenom_File] # Trying just Phenom again
 
-    labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE PhenomNRT"]
-    Labels = ["2D-KDE-TaylorF2", "3D-KDE-TaylorF2", "3D-KDE-PhenomNRT"]
-    dims = [2,3,3]
+    #labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE PhenomNRT"]
+    labels = ["3D KDE PhenomNRT"]
+    #Labels = ["2D-KDE-TaylorF2", "3D-KDE-TaylorF2", "3D-KDE-PhenomNRT"]
+    Labels = ["3D-KDE-PhenomNRT"]
+    #dims = [2,3,3]
+    dims = [3]
 
     for ii in range(len(filesToCompare)):
 
@@ -53,7 +57,8 @@ def calcConstraint1():
 def calcConstraint2(burn_in_frac=0.5,thinning=None):
     # Adopted from Anarya's GWXtreme 3d kde prod branch's plotting logic.
 
-    Labels = ["2D-KDE-TaylorF2", "3D-KDE-TaylorF2", "3D-KDE-PhenomNRT"]
+    #Labels = ["2D-KDE-TaylorF2", "3D-KDE-TaylorF2", "3D-KDE-PhenomNRT"]
+    Labels = ["3D-KDE-PhenomNRT"]
     for label in Labels:
         # Load the samples
         filename='data/BNS/constraints/{}_GW170817inference_10000samp.h5'.format(label)
@@ -133,28 +138,28 @@ def CalcConstraint2():
 def plotConstraint():
     # Adopted from Anarya's GWXtreme 3d kde prod branch's plotting logic.
 
-    #labels = ["2D-KDE-TaylorF2", "3D-KDE-TaylorF2", "3D-KDE-PhenomNRT"] # for three methods being compared
+    labels = ["2D-KDE-TaylorF2", "3D-KDE-TaylorF2", "3D-KDE-PhenomNRT"] # for three methods being compared
     #labels = ["3D-KDE-PhenomNRT", "lalsim_nest-PhenomNRT"]
-    labels = ["2D-KDE-TaylorF2", "3D-KDE-PhenomNRT", "lalsim_nest-PhenomNRT"]
+    #labels = ["2D-KDE-TaylorF2", "3D-KDE-PhenomNRT", "lalsim_nest-PhenomNRT"]
 
-    #Labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE IMRPhenomPv2_NRTidal"] # for three methods being compared
+    Labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE IMRPhenomPv2_NRTidal"] # for three methods being compared
     #Labels = ["3D KDE IMRPhenomPv2_NRTidal", "full-parameter-space Nest runs"]
-    Labels = ["2D KDE TaylorF2", "3D KDE IMRPhenomPv2_NRTidal", "full-parameter-space Nest runs"]
+    #Labels = ["2D KDE TaylorF2", "3D KDE IMRPhenomPv2_NRTidal", "full-parameter-space Nest runs"]
 
-    #Colors = ['#ffffb3','#bebada','#fb8072'] # for three methods being compared
+    Colors = ['#ffffb3','#bebada','#fb8072'] # for three methods being compared
     #Colors = ['#beaed4','#fdc086']
-    Colors = ['#ffffb3','#beaed4','#fdc086']
+    #Colors = ['#ffffb3','#beaed4','#fdc086']
 
     plt.figure(figsize=(12,12))
     plt.rc('font', size=20)
-    plt.rc('axes', facecolor='#E6E6E6', edgecolor='black')
+    #plt.rc('axes', facecolor='#E6E6E6', edgecolor='black')
     plt.rc('xtick', direction='out', color='black')
     plt.rc('ytick', direction='out', color='black')
     plt.rc('lines', linewidth=2)
 
-    #Hatches = ["|","-",""] # for three methods being compared
+    Hatches = ["|","-",""] # for three methods being compared
     #Hatches = ["","x"]
-    Hatches = ["|","","x"]
+    #Hatches = ["|","","x"]
 
     for label, Label, Color, Hatch in zip(labels,Labels,Colors,Hatches): # increment over each plot file
 
@@ -176,7 +181,7 @@ def plotConstraint():
     plt.xlabel(r'$\log10{\frac{\rho}{g cm^-3}}$',fontsize=20)
     plt.ylabel(r'$log10(\frac{p}{dyne cm^{-2}})$',fontsize=20)
     plt.legend()
-    #plt.savefig("plots/BNS/constraints/GW170817_constraint1.png", bbox_inches='tight')
-    #plt.savefig("plots/BNS/constraints/GW170817_constraint2.png", bbox_inches='tight')
-    plt.savefig("plots/BNS/constraints/GW170817_constraint3.png", bbox_inches='tight')
+    plt.savefig("plots/BNS/constraints/GW170817_constraint1_10000samp.png", bbox_inches='tight')
+    #plt.savefig("plots/BNS/constraints/GW170817_constraint2_10000samp.png", bbox_inches='tight')
+    #plt.savefig("plots/BNS/constraints/GW170817_constraint3_10000samp.png", bbox_inches='tight')
 

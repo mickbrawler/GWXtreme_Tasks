@@ -118,28 +118,28 @@ def calcConstraint2(burn_in_frac=0.5,thinning=None):
 def plotConstraint():
     # Adopted from Anarya's GWXtreme 3d kde prod branch's plotting logic.
 
-    #labels = ["2D-KDE-TaylorF2", "3D-KDE-TaylorF2", "3D-KDE-PhenomNRT"]
-    labels = ["3D-KDE-PhenomNRT"]
-    #Labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE IMRPhenomPv2_NRTidal"]
-    Labels = ["3D KDE IMRPhenomPv2_NRTidal"]
-    #Colors = ['#ffffb3','#bebada','#fb8072']
-    Colors = ["#fb8072"]
+    labels = ["2D-KDE-TaylorF2", "3D-KDE-TaylorF2", "3D-KDE-PhenomNRT"]
+    #labels = ["3D-KDE-PhenomNRT"]
+    Labels = ["2D KDE TaylorF2", "3D KDE TaylorF2", "3D KDE IMRPhenomPv2_NRTidal"]
+    #Labels = ["3D KDE IMRPhenomPv2_NRTidal"]
+    Colors = ['#ffffb3','#bebada','#fb8072']
+    #Colors = ["#fb8072"]
 
     plt.figure(figsize=(12,12))
     plt.rc('font', size=20)
-    plt.rc('axes', facecolor='#E6E6E6', edgecolor='black')
+    #plt.rc('axes', facecolor='#E6E6E6', edgecolor='black')
     plt.rc('xtick', direction='out', color='black')
     plt.rc('ytick', direction='out', color='black')
     plt.rc('lines', linewidth=2)
 
-    #Hatches = ["|","-",""]
-    Hatches = [""]
+    Hatches = ["|","-",""]
+    #Hatches = [""]
 
     for label, Label, Color, Hatch in zip(labels,Labels,Colors,Hatches): # increment over each plot file
 
         # Load the samples
-        #filename='data/BNS/constraints/{}_16simulationsInference_10000samp.txt'.format(label)
-        filename='data/NSBH/constraints/{}_18simulationsInference_10000samp.txt'.format(label)
+        filename='data/BNS/constraints/{}_16simulationsInference_10000samp.txt'.format(label)
+        #filename='data/NSBH/constraints/{}_18simulationsInference_10000samp.txt'.format(label)
         rho, lower_bound, median, upper_bound = np.loadtxt(filename).T
 
         #plt.plot(lower_bound, rho, label=Label, color=Color)
@@ -156,6 +156,6 @@ def plotConstraint():
     plt.xlabel(r'$\log10{\frac{\rho}{g cm^-3}}$',fontsize=20)
     plt.ylabel(r'$log10(\frac{p}{dyne cm^{-2}})$',fontsize=20)
     plt.legend()
-    #plt.savefig("plots/BNS/constraints/16simulations_10000samp_constraint.png", bbox_inches='tight')
-    plt.savefig("plots/NSBH/constraints/18simulations_10000samp_constraint.png", bbox_inches='tight')
+    plt.savefig("plots/BNS/constraints/16simulations_10000samp_constraint.png", bbox_inches='tight')
+    #plt.savefig("plots/NSBH/constraints/18simulations_10000samp_constraint.png", bbox_inches='tight')
 

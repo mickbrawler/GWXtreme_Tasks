@@ -13,10 +13,10 @@ def calcLambda_parametrized():
 
     for ii in range(len(labels)):
 
-        #filename='data/BNS/constraints/{}_GW170817inference_gammas_10000samp.txt'.format(labels[ii])
-        #if os.path.isfile(filename) != True: filename='data/BNS/constraints/{}_GW170817inference_gammas.txt'.format(labels[ii])
+        filename='data/BNS/constraints/{}_GW170817inference_gammas_10000samp.txt'.format(labels[ii])
+        if os.path.isfile(filename) != True: filename='data/BNS/constraints/{}_GW170817inference_gammas.txt'.format(labels[ii])
         #filename='data/BNS/constraints/{}_16simulationsInference_10000samp_gammas.txt'.format(labels[ii])
-        filename='./data/NSBH/constraints/{}_18simulationsInference_10000samp_gammas.txt'.format(labels[ii])
+        #filename='./data/NSBH/constraints/{}_18simulationsInference_10000samp_gammas.txt'.format(labels[ii])
         samples = np.loadtxt(filename)
         Lambdas = []
         m=1.4
@@ -32,9 +32,9 @@ def calcLambda_parametrized():
             Lambda = (2/3)*kk/(cc**5)
             Lambdas.append(Lambda)
 
-        #np.savetxt("data/BNS/lambdaHists/{}_GW170817inference_Lambdas_10000samp.txt".format(labels[ii]),np.array(Lambdas).T)
+        np.savetxt("data/BNS/lambdaHists/{}_GW170817inference_Lambdas_10000samp.txt".format(labels[ii]),np.array(Lambdas).T)
         #np.savetxt("data/BNS/lambdaHists/{}_16simulationsInference_Lambdas_10000samp.txt".format(labels[ii]),np.array(Lambdas).T)
-        np.savetxt("data/NSBH/lambdaHists/{}_18simulationsInference_Lambdas_10000samp.txt".format(labels[ii]),np.array(Lambdas).T)
+        #np.savetxt("data/NSBH/lambdaHists/{}_18simulationsInference_Lambdas_10000samp.txt".format(labels[ii]),np.array(Lambdas).T)
 
 
 #labels = ["2D-KDE-TaylorF2", "3D-KDE-TaylorF2", "3D-KDE-PhenomNRT"]
@@ -64,7 +64,7 @@ def plotLambda_parametrized(eosname="APR4_EPP"):
 
     plt.figure(figsize=(12,12))
     plt.rc('font', size=20)
-    plt.rc('axes', facecolor='#E6E6E6', edgecolor='black')
+    #plt.rc('axes', facecolor='#E6E6E6', edgecolor='black')
     plt.rc('xtick', direction='out', color='black')
     plt.rc('ytick', direction='out', color='black')
     plt.rc('lines', linewidth=2)

@@ -225,23 +225,23 @@ def multipleEventBFs(Trials=1000):
 
 def multipleEventPlots():
      
-    File = "data/BNS/BFs/16simulations_2D_3D_BFs_10000trial.json"
-    #File = "data/NSBH/BFs/18simulations_BFs_1000trial.json"
+    #File = "data/BNS/BFs/16simulations_2D_3D_BFs_10000trial.json"
+    File = "data/NSBH/BFs/18simulations_BFs_1000trial.json"
 
     with open(File,"r") as f:
         data = json.load(f)
  
-    #labels = ["2D KDE TaylorF2", "3D KDE TaylorF2"]
-    labels = ["3D KDE IMRPhenomPv2_NRTidal"]
+    labels = ["2D KDE TaylorF2", "3D KDE TaylorF2"]
+    #labels = ["3D KDE IMRPhenomPv2_NRTidal"]
     eosList = ["SKOP","H4","HQC18","SLY2","SLY230A","SKMP","RS","SK255","SLY9","APR4_EPP","SKI2","SKI4","SKI6","SK272","SKI3","SKI5","MPA1","MS1B_PP","MS1_PP"]
 
-    #colors = ['#ffffb3','#bebada']
-    colors = ['#beaed4']
+    colors = ['#ffffb3','#bebada']
+    #colors = ['#beaed4']
 
     x_axis = np.arange(len(eosList))
 
-    #spacing = [-.10,.10]
-    spacing = [.0]
+    spacing = [-.10,.10]
+    #spacing = [.0]
 
     plt.clf()
     plt.rcParams.update({"font.size":18})
@@ -273,6 +273,6 @@ def multipleEventPlots():
         plt.ylabel("Joint Bayes-factor w.r.t SLY")
         plt.legend()
 
-        plt.savefig("plots/BNS/BFs/16simulations_2D_3D_BFs_10000trial_{}.png".format(uncert_label),bbox_inches="tight")
-        #plt.savefig("plots/NSBH/BFs/18simulations_BFs_1000trial_stdDouble.png",bbox_inches="tight")
+        #plt.savefig("plots/BNS/BFs/16simulations_2D_3D_BFs_10000trial_{}.png".format(uncert_label[uncert_index]),bbox_inches="tight")
+        plt.savefig("plots/NSBH/BFs/18simulations_BFs_1000trial_stdDouble.png",bbox_inches="tight")
 

@@ -60,11 +60,11 @@ def plotLambda_parametrized(eosname="APR4_EPP"):
 
     Label = "3D KDE IMRPhenomPv2_NRTidal"
 
-    plt.clf()
     for injection in injections:
         print(injection)
         filename='data/NSBH/lambdaHists/{}_{}simulationsInference_Lambdas_10000samp.txt'.format(label,injection)
         Lambdas = np.loadtxt(filename).T
+        plt.clf()
         plt.hist(Lambdas, label=Label, alpha=0.45, fill=True, density=True, color=Color, histtype='step')
 
         plt.axvline(x=eosLambda, label=eosname, color="black")

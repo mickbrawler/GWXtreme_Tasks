@@ -19,6 +19,8 @@ year3/lastStretch/data/
 year3/lastStretch/files/
 year3/lastStretch/__pycache__/
 year3/BNSsim/
+year3/lastStretch/troubleshootingNSBH_plots
+year3/stuffFromYear2/
 
 year2/bilby_runs/3dkde_studies/ 
 year2/bilby_runs/.distance_marginalization_lookup.npz

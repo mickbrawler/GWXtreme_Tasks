@@ -27,8 +27,10 @@ new_margPostData = modsel.kde.resample(size=len(margPostData)).T
 resampledLambda1 = new_margPostData[:,1]
 
 plt.clf()
-plt.hist(lambda_1,density=True,color='red',alpha=0.25,label="lambda_1")
-plt.hist(resampledLambda1,density=True,color='blue',alpha=0.25,label="resampled")
+#plt.hist(lambda_1,density=True,color='red',alpha=0.25,label="lambda_1")
+#plt.hist(resampledLambda1,density=True,color='blue',alpha=0.25,label="resampled")
+plt.hist(lambda_1,color='red',alpha=0.25,label="lambda_1")
+plt.hist(resampledLambda1,color='blue',alpha=0.25,label="resampled")
 plt.xlabel("Lambda 1")
 plt.savefig("method12.png")
 # I think method 1 is already method 2 if kdedim=3. The only way to do method 1

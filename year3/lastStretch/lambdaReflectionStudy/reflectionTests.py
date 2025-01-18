@@ -24,7 +24,7 @@ q = data['q']
 modsel = ems.Model_selection(filename,kdedim=3,logq=True)
 margPostData = modsel.margPostData
 new_margPostData = modsel.kde.resample(size=len(margPostData)).T
-resampledLambda1 = new_margPostData[:,1]
+resampledLambda1 = new_margPostData[:,0]
 
 plt.clf()
 #plt.hist(lambda_1,density=True,color='red',alpha=0.25,label="lambda_1")

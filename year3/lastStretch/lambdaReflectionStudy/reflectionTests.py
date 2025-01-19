@@ -23,14 +23,37 @@ q = data['q']
 # Method 1/2:
 modsel = ems.Model_selection(filename,kdedim=3,logq=True)
 margPostData = modsel.margPostData
-new_margPostData = modsel.kde.resample(size=len(margPostData)).T
+kde = modsel.kde
+yhigh = modsel.yhigh
+logq = modsel.logq
+logyhigh = modsel.logyhigh
+#new_margPostData = modsel.kde.resample(size=len(margPostData)).T
+
+
+new_margPostData = np.array([])
+counter = 0
+while len(new_margPostData) < len(margPostData):
+    prune_adjust_factor = 1.1 + counter/10.
+    N_resample = int(len(margPostData)*prune_adjust_factor)
+    new_margPostData = kde.resample(size=N_resample).T
+    unphysical = (new_margPostData[:, 0] < 0) +\
+                 (new_margPostData[:, 1] > (yhigh if not logq else logyhigh) )
+    if not logq: unphysical + (new_margPostData[:, 1] < 0)
+    else: pass
+    new_margPostData = new_margPostData[~unphysical]
+    counter += 1
+indices = np.arange(len(new_margPostData))
+chosen = np.random.choice(indices, len(margPostData))
+new_margPostData = new_margPostData[chosen]
+
+
 resampledLambda1 = new_margPostData[:,0]
 
 plt.clf()
 #plt.hist(lambda_1,density=True,color='red',alpha=0.25,label="lambda_1")
 #plt.hist(resampledLambda1,density=True,color='blue',alpha=0.25,label="resampled")
-#plt.hist(lambda_1,color='red',label="lambda_1")
-plt.hist(resampledLambda1,color='blue',label="resampled")
+plt.hist(lambda_1,color='red',alpha=0.5,label="lambda_1")
+plt.hist(resampledLambda1,color='blue',alpha=0.5,label="resampled")
 plt.legend()
 plt.xlabel("Lambda 1")
 plt.savefig("method12.png")

@@ -56,7 +56,7 @@ plt.hist(Lambda_1,density=True,color='red',alpha=0.25,label="lambda_1")
 plt.hist(resampledLambda1,density=True,color='blue',alpha=0.25,label="resampled")
 plt.legend()
 plt.xlabel("Lambda 1")
-plt.savefig("method12.png")
+plt.savefig("low_zero_method12.png")
 # I think method 1 is already method 2 if kdedim=3. The only way to do method 1
 # as I thought would be to remove the boundary logic... I see why Anarya was surprised.
 # I had misunderstood that resample was part of an external functionality.

@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import scipy
 from GWXtreme import eos_model_selection as ems
+from scipy.stats import gaussian_kde as kde
 
 # There's three ways to test if lambda_1's (really any lambda) kde can and should be reflected
 
@@ -23,6 +24,7 @@ q = data['q']
 # Method 1/2:
 modsel = ems.Model_selection(filename,kdedim=3,logq=True)
 margPostData = modsel.margPostData
+Lambda_1 = margPostData[:,0]
 kde = modsel.kde
 yhigh = modsel.yhigh
 logq = modsel.logq
@@ -50,10 +52,8 @@ new_margPostData = new_margPostData[chosen]
 resampledLambda1 = new_margPostData[:,0]
 
 plt.clf()
-#plt.hist(lambda_1,density=True,color='red',alpha=0.25,label="lambda_1")
-#plt.hist(resampledLambda1,density=True,color='blue',alpha=0.25,label="resampled")
-plt.hist(lambda_1,color='red',alpha=0.5,label="lambda_1")
-plt.hist(resampledLambda1,color='blue',alpha=0.5,label="resampled")
+plt.hist(Lambda_1,density=True,color='red',alpha=0.25,label="lambda_1")
+plt.hist(resampledLambda1,density=True,color='blue',alpha=0.25,label="resampled")
 plt.legend()
 plt.xlabel("Lambda 1")
 plt.savefig("method12.png")

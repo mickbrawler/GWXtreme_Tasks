@@ -26,6 +26,7 @@ def calcMaxMass_parametrized():
             eos = lalsim.SimNeutronStarEOS4ParameterSpectralDecomposition(g0, g1, g2, g3)
             fam = lalsim.CreateSimNeutronStarFamily(eos)
             maxMass = lalsim.SimNeutronStarMaximumMass(fam)/lal.MSUN_SI
+            maxMasses.append(maxMass)
 
         #np.savetxt("data/BNS/massHists/{}_GW170817inference_MaxMasses_10000samp.txt".format(labels[ii]),np.array(maxMasses).T)
         #np.savetxt("data/BNS/massHists/{}_16simulationsInference_MaxMasses_10000samp.txt".format(labels[ii]),np.array(maxMasses).T)
@@ -78,7 +79,7 @@ def plotMaxMass_parametrized(eosname="APR4_EPP"):
 
     plt.axvline(x=eosMaxMass, label=eosname, color="black")
 
-    plt.xlabel("Max NS Masses",fontsize=20)
+    plt.xlabel("Max NS Mass",fontsize=20)
     plt.yticks([])
     plt.legend()
     #plt.savefig("plots/BNS/massHists/GW170817_MaxMasses1_10000samp.png", bbox_inches='tight')

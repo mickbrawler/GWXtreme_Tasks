@@ -15,8 +15,8 @@ def calcMaxMass_parametrized():
 
         #filename='data/BNS/constraints/{}_GW170817inference_gammas_10000samp.txt'.format(labels[ii])
         #if os.path.isfile(filename) != True: filename='data/BNS/constraints/{}_GW170817inference_gammas.txt'.format(labels[ii])
-        #filename='data/BNS/constraints/{}_16simulationsInference_10000samp_gammas.txt'.format(labels[ii])
-        filename='./data/NSBH/constraints/{}_18simulationsInference_10000samp_gammas.txt'.format(labels[ii])
+        filename='data/BNS/constraints/{}_16simulationsInference_10000samp_gammas.txt'.format(labels[ii])
+        #filename='./data/NSBH/constraints/{}_18simulationsInference_10000samp_gammas.txt'.format(labels[ii])
         samples = np.loadtxt(filename)
         maxMasses = []
         m=1.4
@@ -29,9 +29,9 @@ def calcMaxMass_parametrized():
             maxMasses.append(maxMass)
 
         #np.savetxt("data/BNS/massHists/{}_GW170817inference_MaxMasses_10000samp.txt".format(labels[ii]),np.array(maxMasses).T)
-        #np.savetxt("data/BNS/massHists/{}_16simulationsInference_MaxMasses_10000samp.txt".format(labels[ii]),np.array(maxMasses).T)
+        np.savetxt("data/BNS/massHists/{}_16simulationsInference_MaxMasses_10000samp.txt".format(labels[ii]),np.array(maxMasses).T)
         #np.savetxt("data/BNS/massHists/{}_GW230529inference_MaxMasses_10000samp.txt".format(labels[ii]),np.array(maxMasses).T)
-        np.savetxt("data/NSBH/massHists/{}_18simulationsInference_MaxMasses_10000samp.txt".format(labels[ii]),np.array(maxMasses).T)
+        #np.savetxt("data/NSBH/massHists/{}_18simulationsInference_MaxMasses_10000samp.txt".format(labels[ii]),np.array(maxMasses).T)
 
 
 #labels = ["2D-KDE-TaylorF2", "3D-KDE-TaylorF2", "3D-KDE-PhenomNRT"]
@@ -72,8 +72,8 @@ def plotMaxMass_parametrized(eosname="APR4_EPP"):
 
         #filename='data/BNS/massHists/{}_GW170817inference_MaxMasses_10000samp.txt'.format(labels[ii])
         #if os.path.isfile(filename) != True: filename='data/BNS/massHists/{}_GW170817inference_MaxMasses.txt'.format(labels[ii])
-        #filename='data/BNS/massHists/{}_16simulationsInference_MaxMasses_10000samp.txt'.format(labels[ii])
-        filename='data/NSBH/massHists/{}_18simulationsInference_MaxMasses_10000samp.txt'.format(labels[ii])
+        filename='data/BNS/massHists/{}_16simulationsInference_MaxMasses_10000samp.txt'.format(labels[ii])
+        #filename='data/NSBH/massHists/{}_18simulationsInference_MaxMasses_10000samp.txt'.format(labels[ii])
         MaxMasses = np.loadtxt(filename).T
         plt.hist(MaxMasses, label=Labels[ii], alpha=0.45, fill=True, density=True, color=Colors[ii], histtype='step')
 
@@ -87,6 +87,6 @@ def plotMaxMass_parametrized(eosname="APR4_EPP"):
     #plt.savefig("plots/BNS/massHists/GW170817_MaxMasses3_10000samp.png", bbox_inches='tight')
     #plt.savefig("plots/BNS/massHists/GW170817_MaxMasses4_10000samp.png", bbox_inches='tight')
 
-    #plt.savefig("plots/BNS/massHists/16simulations_MaxMasses_10000samp.png", bbox_inches='tight')
-    plt.savefig("plots/NSBH/massHists/18simulations_MaxMasses_10000samp.png", bbox_inches='tight')
+    plt.savefig("plots/BNS/massHists/16simulations_MaxMasses_10000samp.png", bbox_inches='tight')
+    #plt.savefig("plots/NSBH/massHists/18simulations_MaxMasses_10000samp.png", bbox_inches='tight')
 

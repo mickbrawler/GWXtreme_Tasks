@@ -47,8 +47,8 @@ def method12():
     resampledLambda1 = new_margPostData[:,0]
 
     plt.clf()
-    plt.hist(Lambda_1,density=True,color='red',alpha=0.25,label="lambda_1")
-    plt.hist(resampledLambda1,density=True,color='blue',alpha=0.25,label="resampled")
+    plt.hist(np.log10(Lambda_1),density=True,color='red',alpha=0.25,label="lambda_1")
+    plt.hist(np.log10(resampledLambda1),density=True,color='blue',alpha=0.25,label="resampled")
     plt.legend()
     plt.xlabel("Lambda 1")
     plt.savefig("low_zero_method12.png")

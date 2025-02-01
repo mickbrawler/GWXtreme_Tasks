@@ -12,13 +12,14 @@ from sklearn.neighbors import KernelDensity
 filename = "../files/NSBH/gw230529_phenom_lowSpin.json"
 with open(filename,"r") as f: data = json.load(f)['posterior']['content']
 
-#modsel = ems.Model_selection(filename,kdedim=3,logq=True) #uncomment later
-#margPostData = modsel.margPostData #uncomment later
+modsel = ems.Model_selection(filename,kdedim=3,logq=True) #uncomment later
+margPostData = modsel.margPostData #uncomment later
 
 def method12():
     # One is simply using the resample logic on GWXtreme
 
     Lambda_1 = margPostData[:,0]
+    print(len(Lambda_1))
     kde = modsel.kde
     yhigh = modsel.yhigh
     logq = modsel.logq
@@ -43,10 +44,11 @@ def method12():
 
     # parameter we care about for this study
     resampledLambda1 = new_margPostData[:,0]
+    print(len(resampledLambda1))
 
     plt.clf()
-    plt.hist(np.log10(Lambda_1),density=True,color='red',alpha=0.25,label="lambda_1")
-    plt.hist(np.log10(resampledLambda1),density=True,color='blue',alpha=0.25,label="resampled")
+    plt.hist(np.log10(Lambda_1),density=True,color='red',bins=80,alpha=0.25,label="lambda_1")
+    plt.hist(np.log10(resampledLambda1),density=True,color='blue',bins=80,alpha=0.25,label="resampled")
     plt.legend()
     plt.xlabel("Lambda 1")
     #plt.savefig("low_zero_method12.png")

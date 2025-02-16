@@ -67,7 +67,7 @@ def method3():
     kde = scipy.stats.gaussian_kde(lambda_1, bw_method=bw, weights=None)
     pdf = kde(lambda_1_plot)
     plt.clf()
-    plt.hist(lambda_1,density=True,color='red',alpha=0.25,label="lambda_1")
+    plt.hist(lambda_1,density=True,color='red',bins=80,alpha=0.25,label="lambda_1")
     plt.plot(lambda_1_plot,pdf,color='blue',alpha=0.50,label="pdf")
     plt.legend()
     plt.xlabel("Lambda 1")

@@ -187,8 +187,8 @@ def ksTest():
     print("dist spline ks: {}".format(splineKS))
 
     plt.clf()
-    plt.bar(bin_edgesDef[-1],histDef,width=np.diff(bin_edgesDef),align='edge',color='red',alpha=0.25)
-    plt.bar(bin_edgesResamp[-1],histResamp,width=np.diff(bin_edgesResamp),align='edge',color='blue',alpha=0.25)
+    plt.bar(bin_edgesDef[:-1],histDef,width=np.diff(bin_edgesDef),align='edge',color='red',alpha=0.25)
+    plt.bar(bin_edgesResamp[:-1],histResamp,width=np.diff(bin_edgesResamp),align='edge',color='blue',alpha=0.25)
     plt.plot(bin_centDef_smooth,histDef_smooth,color='red',label="lambda_1")
     plt.plot(bin_centResamp_smooth,histResamp_smooth,color='blue',label="resampled")
     plt.legend()

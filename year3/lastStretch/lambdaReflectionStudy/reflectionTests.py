@@ -168,6 +168,12 @@ def ksTest():
     histKS = scipy.stat.ks_2samp(resampledLambda1,Lambda_1)
 
     # Perform ks-test between the distributions' hists' smoothed out (spline)
+hist, bin_edges = np.histogram(data, bins=20)
+bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2
+x_smooth = np.linspace(bin_centers.min(), bin_centers.max(), 300)
+spl = make_interp_spline(bin_centers, hist, k=3)
+y_smooth = spl(x_smooth)
+plt.plot(x_smooth, y_smooth)
 
     # We can histogram the 
     plt.hist(np.log10(Lambda_1),density=True,color='red',bins=80,alpha=0.25,label="lambda_1")

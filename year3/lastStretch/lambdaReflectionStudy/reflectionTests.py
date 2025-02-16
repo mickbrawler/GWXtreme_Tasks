@@ -4,7 +4,7 @@ import numpy as np
 import scipy
 from GWXtreme import eos_model_selection as ems
 import scipy.stats
-from scipy.interpolation import make_interp_spline
+from scipy.interpolate import make_interp_spline
 from sklearn.neighbors import KernelDensity
 
 # There's two ways to test if lambda_1's (really any lambda) kde can and should be reflected
@@ -160,25 +160,36 @@ def ksTest():
     resampledLambda1 = new_margPostData[:,0]
 
     # Perform ks-test between the distributions' values
-    rawKS = scipy.stat.ks_2samp(resampledLambda1,Lambda_1)
+    rawKS = scipy.stats.ks_2samp(resampledLambda1,Lambda_1)
     
     # Perform ks-test between the distributions' hist heights
-    histDefault = np.histogram(Lambda_1,bins=80,density=True)
-    histResample = np.histogram(resampledLambda1,bins=80,density=True)
-    histKS = scipy.stat.ks_2samp(resampledLambda1,Lambda_1)
+    histDef, bin_edgesDef = np.histogram(Lambda_1,bins=80,density=True)
+    bin_centDef = (bin_edgesDef[:-1] + bin_edgesDef[1:]) / 2
+
+    histResamp, bin_edgesResamp = np.histogram(resampledLambda1,bins=80,density=True)
+    bin_centResamp = (bin_edgesResamp[:-1] + bin_edgesResamp[1:]) / 2
+
+    histKS = scipy.stats.ks_2samp(histResamp,histDef) # CHECK if ks-test can do hist heights?
 
     # Perform ks-test between the distributions' hists' smoothed out (spline)
-hist, bin_edges = np.histogram(data, bins=20)
-bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2
-x_smooth = np.linspace(bin_centers.min(), bin_centers.max(), 300)
-spl = make_interp_spline(bin_centers, hist, k=3)
-y_smooth = spl(x_smooth)
-plt.plot(x_smooth, y_smooth)
+    bin_centDef_smooth = np.linspace(bin_centDef.min(), bin_centDef.max(), 1000)
+    splDef = make_interp_spline(bin_centDef, histDef, k=3) # CHECK what is k?
+    histDef_smooth = splDef(bin_centDef_smooth)
 
-    # We can histogram the 
-    plt.hist(np.log10(Lambda_1),density=True,color='red',bins=80,alpha=0.25,label="lambda_1")
-    plt.hist(np.log10(resampledLambda1),density=True,color='blue',bins=80,alpha=0.25,label="resampled")
+    bin_centResamp_smooth = np.linspace(bin_centResamp.min(), bin_centResamp.max(), 1000)
+    splResamp = make_interp_spline(bin_centResamp, histResamp, k=3)
+    histResamp_smooth = splResamp(bin_centResamp_smooth)
+
+    splineKS = scipy.stats.ks_2samp(histResamp,histDef) # CHECK if ks-test can do hist splines??
+
+    print("dist vals ks: {}".format(rawKS))
+    print("dist hist ks: {}".format(histKS))
+    print("dist spline ks: {}".format(splineKS))
+
+    plt.clf()
+    plt.plot(bin_centDef_smooth,histDef_smooth,color='red',label="lambda_1")
+    plt.plot(bin_centResamp_smooth,histResamp_smooth,color='blue',label="resampled")
     plt.legend()
     plt.xlabel("Lambda 1")
-    #plt.savefig("low_zero_method12.png")
-    plt.savefig("low_neginf_method12.png")
+    plt.savefig("spline_method12.png")
+

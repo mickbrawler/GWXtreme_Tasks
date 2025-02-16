@@ -13,8 +13,13 @@ from sklearn.neighbors import KernelDensity
 filename = "../files/NSBH/gw230529_phenom_lowSpin.json"
 with open(filename,"r") as f: data = json.load(f)['posterior']['content']
 
-modsel = ems.Model_selection(filename,kdedim=3,logq=True) #uncomment later
+logq=False
+modsel = ems.Model_selection(filename,kdedim=3,logq=logq) #uncomment later
 margPostData = modsel.margPostData #uncomment later
+
+Tag = "q"
+if logq==True:
+    Tag = "logq"
 
 def method12():
     # One is simply using the resample logic on GWXtreme
@@ -49,9 +54,8 @@ def method12():
     plt.hist(np.log10(Lambda_1),density=True,color='red',bins=80,alpha=0.25,label="lambda_1")
     plt.hist(np.log10(resampledLambda1),density=True,color='blue',bins=80,alpha=0.25,label="resampled")
     plt.legend()
-    plt.xlabel("Lambda 1")
-    #plt.savefig("low_zero_method12.png")
-    plt.savefig("low_neginf_method12.png")
+    plt.xlabel("log10(Lambda 1)")
+    plt.savefig("{}_method12.png".format(Tag))
 
 
 def method3(scistat=True):
@@ -70,8 +74,8 @@ def method3(scistat=True):
         plt.hist(lambda_1,density=True,color='red',bins=80,alpha=0.25,label="lambda_1")
         plt.plot(lambda_1_plot,pdf,color='blue',alpha=0.50,label="pdf")
         plt.legend()
-        plt.xlabel("Lambda 1")
-        plt.savefig("scistat_method3.png")
+        plt.xlabel("log10(Lambda 1)")
+        plt.savefig("{}_scistat_method3.png".format(Tag))
     
     # Use scilearn.neighbors logic
     if scistat != True:
@@ -80,13 +84,13 @@ def method3(scistat=True):
         kde = KernelDensity(kernel="gaussian", bandwidth=bw).fit(Lambda_1)
         pdf = np.exp(kde.score_samples(Lambda_1_plot))
         plt.clf()
-        plt.hist(lambda_1,density=True,color='red',bins=80,alpha=0.25,label="lambda_1")
-        plt.plot(lambda_1_plot,pdf,color='blue',alpha=0.50,label="pdf")
+        plt.hist(np.log10(lambda_1),density=True,color='red',bins=80,alpha=0.25,label="lambda_1")
+        plt.plot(np.log10(lambda_1_plot),pdf,color='blue',alpha=0.50,label="pdf")
         plt.legend()
-        plt.xlabel("Lambda 1")
-        plt.savefig("scilearn_method3.png")
+        plt.xlabel("log10(Lambda 1)")
+        plt.savefig("{}_scilearn_method3.png".format(Tag))
 
-    #note: Both these pacakges have an RBF function that'll fit gaussians too (spline)
+    #note: Both these packages have an RBF function that'll fit gaussians too (spline)
 
 def twoD_kdeTest():
     # Trying to do the same lambdat studying Ghosh did for GWXtreme's 2D kde development
@@ -125,11 +129,11 @@ def twoD_kdeTest():
     plt.hist(np.log10(LambdaT),density=True,color='red',bins=80,alpha=0.25,label="LambdaT")
     plt.hist(np.log10(resampledLambdaT),density=True,color='blue',bins=80,alpha=0.25,label="resampled")
     plt.legend()
-    plt.xlabel("LambdaT")
+    plt.xlabel("log10(LambdaT)")
     plt.savefig("GW170817_LambdaT_test.png")
 
 
-def ksTest():
+def ksTest(plot=False):
     # Use Kolmogorov-Smirnov test to get a quantitative value for the discrepancy
     # between the two histograms for method12.
 
@@ -159,9 +163,11 @@ def ksTest():
     # parameter we care about for this study
     resampledLambda1 = new_margPostData[:,0]
 
+
     # Perform ks-test between the distributions' values
     rawKS = scipy.stats.ks_2samp(resampledLambda1,Lambda_1)
-    
+
+    # The below would only be necessary for a "homemade" ks-test script
     # Perform ks-test between the distributions' hist heights
     histDef, bin_edgesDef = np.histogram(Lambda_1,bins=80,density=True)
     bin_centDef = (bin_edgesDef[:-1] + bin_edgesDef[1:]) / 2
@@ -169,7 +175,8 @@ def ksTest():
     histResamp, bin_edgesResamp = np.histogram(resampledLambda1,bins=80,density=True)
     bin_centResamp = (bin_edgesResamp[:-1] + bin_edgesResamp[1:]) / 2
 
-    histKS = scipy.stats.ks_2samp(histResamp,histDef) # CHECK if ks-test can do hist heights?
+    #histKS = scipy.stats.kstest(histResamp,histDef) # CHECK if ks-test can do hist heights?
+    # PROB NOT
 
     # Perform ks-test between the distributions' hists' smoothed out (spline)
     bin_centDef_smooth = np.linspace(bin_centDef.min(), bin_centDef.max(), 1000)
@@ -180,18 +187,21 @@ def ksTest():
     splResamp = make_interp_spline(bin_centResamp, histResamp, k=3)
     histResamp_smooth = splResamp(bin_centResamp_smooth)
 
-    splineKS = scipy.stats.ks_2samp(histResamp,histDef) # CHECK if ks-test can do hist splines??
+    #splineKS = scipy.stats.kstest(histResamp_smooth,histDef_smooth) # CHECK if ks-test can do hist splines??
+    # PROB NOT
 
-    print("dist vals ks: {}".format(rawKS))
-    print("dist hist ks: {}".format(histKS))
-    print("dist spline ks: {}".format(splineKS))
+    print("raw dist ks: {}".format(rawKS))
+    #print("dist hist ks: {}".format(histKS))
+    #print("dist spline ks: {}".format(splineKS))
 
-    plt.clf()
-    plt.bar(bin_edgesDef[:-1],histDef,width=np.diff(bin_edgesDef),align='edge',color='red',alpha=0.25)
-    plt.bar(bin_edgesResamp[:-1],histResamp,width=np.diff(bin_edgesResamp),align='edge',color='blue',alpha=0.25)
-    plt.plot(bin_centDef_smooth,histDef_smooth,color='red',label="lambda_1")
-    plt.plot(bin_centResamp_smooth,histResamp_smooth,color='blue',label="resampled")
-    plt.legend()
-    plt.xlabel("Lambda 1")
-    plt.savefig("spline_method12.png")
+    if plot:
+        plt.clf()
+        plt.bar(np.log10(bin_edgesDef[:-1]),histDef,width=np.diff(bin_edgesDef),align='edge',color='red',alpha=0.25)
+        plt.bar(np.log10(bin_edgesResamp[:-1]),histResamp,width=np.diff(bin_edgesResamp),align='edge',color='blue',alpha=0.25)
+        plt.plot(np.log10(bin_centDef_smooth),histDef_smooth,color='red',label="lambda_1")
+        plt.plot(np.log10(bin_centResamp_smooth),histResamp_smooth,color='blue',label="resampled")
+        plt.legend()
+        plt.xlabel("log10(Lambda 1)")
+        plt.title("ks:{:.2f}, p:{}".format(rawKS[0],rawKS[1]))
+        plt.savefig("{}_spline_method12.png".format(Tag))
 

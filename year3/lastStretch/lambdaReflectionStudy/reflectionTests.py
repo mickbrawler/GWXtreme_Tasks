@@ -13,7 +13,7 @@ from sklearn.neighbors import KernelDensity
 filename = "../files/NSBH/gw230529_phenom_lowSpin.json"
 with open(filename,"r") as f: data = json.load(f)['posterior']['content']
 
-logq=False
+logq=True
 modsel = ems.Model_selection(filename,kdedim=3,logq=logq) #uncomment later
 margPostData = modsel.margPostData #uncomment later
 
@@ -196,10 +196,10 @@ def ksTest(plot=False):
 
     if plot:
         plt.clf()
-        plt.bar(np.log10(bin_edgesDef[:-1]),histDef,width=np.diff(bin_edgesDef),align='edge',color='red',alpha=0.25)
-        plt.bar(np.log10(bin_edgesResamp[:-1]),histResamp,width=np.diff(bin_edgesResamp),align='edge',color='blue',alpha=0.25)
-        plt.plot(np.log10(bin_centDef_smooth),histDef_smooth,color='red',label="lambda_1")
-        plt.plot(np.log10(bin_centResamp_smooth),histResamp_smooth,color='blue',label="resampled")
+        plt.bar(bin_edgesDef[:-1],histDef,width=np.diff(bin_edgesDef),align='edge',color='red',alpha=0.25)
+        plt.bar(bin_edgesResamp[:-1],histResamp,width=np.diff(bin_edgesResamp),align='edge',color='blue',alpha=0.25)
+        plt.plot(bin_centDef_smooth,histDef_smooth,color='red',label="lambda_1")
+        plt.plot(bin_centResamp_smooth,histResamp_smooth,color='blue',label="resampled")
         plt.legend()
         plt.xlabel("log10(Lambda 1)")
         plt.title("ks:{:.2f}, p:{}".format(rawKS[0],rawKS[1]))

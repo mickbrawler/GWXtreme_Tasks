@@ -120,8 +120,8 @@ def twoD_kdeTest():
     resampledLambdaT = new_margPostData[:,0]
 
     plt.clf()
-    plt.hist(np.log10(LambdaT),density=True,color='red',alpha=0.25,label="LambdaT")
-    plt.hist(np.log10(resampledLambdaT),density=True,color='blue',alpha=0.25,label="resampled")
+    plt.hist(np.log10(LambdaT),density=True,color='red',bins=80,alpha=0.25,label="LambdaT")
+    plt.hist(np.log10(resampledLambdaT),density=True,color='blue',bins=80,alpha=0.25,label="resampled")
     plt.legend()
     plt.xlabel("LambdaT")
     plt.savefig("GW170817_LambdaT_test.png")

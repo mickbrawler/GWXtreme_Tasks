@@ -54,7 +54,7 @@ def method12():
     #plt.savefig("low_zero_method12.png")
     plt.savefig("low_neginf_method12.png")
 
-def method3():
+def method3(scistat=True):
     # Second is to compare the hist of lambda_1 to the pdf of the kde of the lambda_1 distribution
     
     bw = 0.75 # is used by documentation
@@ -63,27 +63,29 @@ def method3():
     lambda_1 = data['lambda_1']
     lambda_1_plot = np.linspace(min(lambda_1),max(lambda_1),1000)
 
-    # scipy stats
-    kde = scipy.stats.gaussian_kde(lambda_1, bw_method=bw, weights=None)
-    pdf = kde(lambda_1_plot)
-    plt.clf()
-    plt.hist(lambda_1,density=True,color='red',bins=80,alpha=0.25,label="lambda_1")
-    plt.plot(lambda_1_plot,pdf,color='blue',alpha=0.50,label="pdf")
-    plt.legend()
-    plt.xlabel("Lambda 1")
-    plt.savefig("scistat_method3.png")
+    # Use scipy.stats logic
+    if scistat:
+        kde = scipy.stats.gaussian_kde(lambda_1, bw_method=bw, weights=None)
+        pdf = kde(lambda_1_plot)
+        plt.clf()
+        plt.hist(lambda_1,density=True,color='red',bins=80,alpha=0.25,label="lambda_1")
+        plt.plot(lambda_1_plot,pdf,color='blue',alpha=0.50,label="pdf")
+        plt.legend()
+        plt.xlabel("Lambda 1")
+        plt.savefig("scistat_method3.png")
     
-    # scilearn
-    #lambda_1 = lambda_1[:, np.newaxis]
-    #lambda_1_plot = lambda_1_plot[:, np.newaxis]
-    #kde = KernelDensity(kernel="gaussian", bandwidth=bw).fit(lambda_1)
-    #pdf = np.exp(kde.score_samples(lambda_1))
-    #plt.clf()
-    #plt.hist(lambda_1,density=True,color='red',alpha=0.25,label="lambda_1")
-    #plt.plot(lambda_1_plot,pdf,color='blue',alpha=0.50,label="pdf")
-    #plt.legend()
-    #plt.xlabel("Lambda 1")
-    #plt.savefig("scilearn_method3.png")
+    # Use scilearn.neighbors logic
+    if scistat != True:
+        Lambda_1 = np.array(lambda_1).reshape(-1,1)
+        Lambda_1_plot = lambda_1_plot.reshape(-1,1)
+        kde = KernelDensity(kernel="gaussian", bandwidth=bw).fit(Lambda_1)
+        pdf = np.exp(kde.score_samples(Lambda_1_plot))
+        plt.clf()
+        plt.hist(lambda_1,density=True,color='red',alpha=0.25,label="lambda_1")
+        plt.plot(Lambda_1_plot,pdf,color='blue',alpha=0.50,label="pdf")
+        plt.legend()
+        plt.xlabel("Lambda 1")
+        plt.savefig("scilearn_method3.png")
 
 
 def twoD_kdeTest():
@@ -125,3 +127,5 @@ def twoD_kdeTest():
     plt.legend()
     plt.xlabel("LambdaT")
     plt.savefig("GW170817_LambdaT_test.png")
+
+

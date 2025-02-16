@@ -4,6 +4,7 @@ import numpy as np
 import scipy
 from GWXtreme import eos_model_selection as ems
 import scipy.stats
+from scipy.interpolation import make_interp_spline
 from sklearn.neighbors import KernelDensity
 
 # There's two ways to test if lambda_1's (really any lambda) kde can and should be reflected
@@ -19,7 +20,6 @@ def method12():
     # One is simply using the resample logic on GWXtreme
 
     Lambda_1 = margPostData[:,0]
-    print(len(Lambda_1))
     kde = modsel.kde
     yhigh = modsel.yhigh
     logq = modsel.logq
@@ -44,7 +44,6 @@ def method12():
 
     # parameter we care about for this study
     resampledLambda1 = new_margPostData[:,0]
-    print(len(resampledLambda1))
 
     plt.clf()
     plt.hist(np.log10(Lambda_1),density=True,color='red',bins=80,alpha=0.25,label="lambda_1")
@@ -54,12 +53,12 @@ def method12():
     #plt.savefig("low_zero_method12.png")
     plt.savefig("low_neginf_method12.png")
 
+
 def method3(scistat=True):
     # Second is to compare the hist of lambda_1 to the pdf of the kde of the lambda_1 distribution
     
     bw = 0.75 # is used by documentation
     bw = len(margPostData)**(-1/6) # is used by GWXtreme
-    print("bw val: {}".format(bw))
     lambda_1 = data['lambda_1']
     lambda_1_plot = np.linspace(min(lambda_1),max(lambda_1),1000)
 
@@ -87,6 +86,7 @@ def method3(scistat=True):
         plt.xlabel("Lambda 1")
         plt.savefig("scilearn_method3.png")
 
+    #note: Both these pacakges have an RBF function that'll fit gaussians too (spline)
 
 def twoD_kdeTest():
     # Trying to do the same lambdat studying Ghosh did for GWXtreme's 2D kde development
@@ -129,3 +129,50 @@ def twoD_kdeTest():
     plt.savefig("GW170817_LambdaT_test.png")
 
 
+def ksTest():
+    # Use Kolmogorov-Smirnov test to get a quantitative value for the discrepancy
+    # between the two histograms for method12.
+
+    Lambda_1 = margPostData[:,0]
+    kde = modsel.kde
+    yhigh = modsel.yhigh
+    logq = modsel.logq
+    logyhigh = modsel.logyhigh
+
+    # logic from get_trials() that gets you "synthetic" data
+    new_margPostData = np.array([])
+    counter = 0
+    while len(new_margPostData) < len(margPostData):
+        prune_adjust_factor = 1.1 + counter/10.
+        N_resample = int(len(margPostData)*prune_adjust_factor)
+        new_margPostData = kde.resample(size=N_resample).T
+        unphysical = (new_margPostData[:, 0] < 0) +\
+                     (new_margPostData[:, 1] > (yhigh if not logq else logyhigh) )
+        if not logq: unphysical + (new_margPostData[:, 1] < 0)
+        else: pass
+        new_margPostData = new_margPostData[~unphysical]
+        counter += 1
+    indices = np.arange(len(new_margPostData))
+    chosen = np.random.choice(indices, len(margPostData))
+    new_margPostData = new_margPostData[chosen]
+
+    # parameter we care about for this study
+    resampledLambda1 = new_margPostData[:,0]
+
+    # Perform ks-test between the distributions' values
+    rawKS = scipy.stat.ks_2samp(resampledLambda1,Lambda_1)
+    
+    # Perform ks-test between the distributions' hist heights
+    histDefault = np.histogram(Lambda_1,bins=80,density=True)
+    histResample = np.histogram(resampledLambda1,bins=80,density=True)
+    histKS = scipy.stat.ks_2samp(resampledLambda1,Lambda_1)
+
+    # Perform ks-test between the distributions' hists' smoothed out (spline)
+
+    # We can histogram the 
+    plt.hist(np.log10(Lambda_1),density=True,color='red',bins=80,alpha=0.25,label="lambda_1")
+    plt.hist(np.log10(resampledLambda1),density=True,color='blue',bins=80,alpha=0.25,label="resampled")
+    plt.legend()
+    plt.xlabel("Lambda 1")
+    #plt.savefig("low_zero_method12.png")
+    plt.savefig("low_neginf_method12.png")

@@ -50,10 +50,11 @@ def method12():
 
     # parameter we care about for this study
     resampledLambda1 = new_margPostData[:,0]
+    bins = int(np.sqrt(len(resampledLambda1)))
 
     plt.clf()
-    plt.hist(np.log10(Lambda_1),density=True,color='red',bins=80,alpha=0.25,label="lambda_1")
-    plt.hist(np.log10(resampledLambda1),density=True,color='blue',bins=80,alpha=0.25,label="resampled")
+    plt.hist(np.log10(Lambda_1),density=True,color='red',bins=bins,alpha=0.25,label="lambda_1")
+    plt.hist(np.log10(resampledLambda1),density=True,color='blue',bins=bins,alpha=0.25,label="resampled")
     plt.legend()
     plt.xlabel("log10(Lambda 1)")
     plt.savefig("{}_method12.png".format(Tag))
@@ -66,13 +67,14 @@ def method3(scistat=True):
     bw = len(margPostData)**(-1/6) # is used by GWXtreme
     lambda_1 = data['lambda_1']
     lambda_1_plot = np.linspace(min(lambda_1),max(lambda_1),1000)
+    bins = int(np.sqrt(len(lambda_1)))
 
     # Use scipy.stats logic
     if scistat:
         kde = scipy.stats.gaussian_kde(lambda_1, bw_method=bw, weights=None)
         pdf = kde(lambda_1_plot)
         plt.clf()
-        plt.hist(lambda_1,density=True,color='red',bins=80,alpha=0.25,label="lambda_1")
+        plt.hist(lambda_1,density=True,color='red',bins=bins,alpha=0.25,label="lambda_1")
         plt.plot(lambda_1_plot,pdf,color='blue',alpha=0.50,label="pdf")
         plt.legend()
         plt.xlabel("log10(Lambda 1)")
@@ -81,11 +83,12 @@ def method3(scistat=True):
     # Use scilearn.neighbors logic
     if scistat != True:
         Lambda_1 = np.array(lambda_1).reshape(-1,1)
+        bins = int(np.sqrt(len(Lambda_1)))
         Lambda_1_plot = lambda_1_plot.reshape(-1,1)
         kde = KernelDensity(kernel="gaussian", bandwidth=bw).fit(Lambda_1)
         pdf = np.exp(kde.score_samples(Lambda_1_plot))
         plt.clf()
-        plt.hist(np.log10(lambda_1),density=True,color='red',bins=80,alpha=0.25,label="lambda_1")
+        plt.hist(np.log10(lambda_1),density=True,color='red',bins=bins,alpha=0.25,label="lambda_1")
         plt.plot(np.log10(lambda_1_plot),pdf,color='blue',alpha=0.50,label="pdf")
         plt.legend()
         plt.xlabel("log10(Lambda 1)")
@@ -104,6 +107,7 @@ def twoD_kdeTest():
     margPostData = modsel.margPostData
 
     LambdaT = margPostData[:,0]
+    bins = int(np.sqrt(len(LambdaT)))
     kde = modsel.kde
     yhigh = modsel.yhigh
 
@@ -127,8 +131,8 @@ def twoD_kdeTest():
     resampledLambdaT = new_margPostData[:,0]
 
     plt.clf()
-    plt.hist(np.log10(LambdaT),density=True,color='red',bins=80,alpha=0.25,label="LambdaT")
-    plt.hist(np.log10(resampledLambdaT),density=True,color='blue',bins=80,alpha=0.25,label="resampled")
+    plt.hist(np.log10(LambdaT),density=True,color='red',bins=bins,alpha=0.25,label="LambdaT")
+    plt.hist(np.log10(resampledLambdaT),density=True,color='blue',bins=bins,alpha=0.25,label="resampled")
     plt.legend()
     plt.xlabel("log10(LambdaT)")
     plt.savefig("GW170817_LambdaT_test.png")
@@ -168,15 +172,16 @@ def ksTest():
 
     else: # Requires recent python/scipy version :)
         resampledLambda1, Lambda_1 = np.loadtxt("./resampleL_L_samples.txt").T
+        bins = int(np.sqrt(len(Lambda_1)))
         # Perform ks-test between the distributions' values
         rawKS = scipy.stats.ks_2samp(resampledLambda1,Lambda_1)
 
         # The below would only be necessary for a "homemade" ks-test script
         # Perform ks-test between the distributions' hist heights
-        histDef, bin_edgesDef = np.histogram(Lambda_1,bins=80,density=True)
+        histDef, bin_edgesDef = np.histogram(Lambda_1,bins=bins,density=True)
         bin_centDef = (bin_edgesDef[:-1] + bin_edgesDef[1:]) / 2
 
-        histResamp, bin_edgesResamp = np.histogram(resampledLambda1,bins=80,density=True)
+        histResamp, bin_edgesResamp = np.histogram(resampledLambda1,bins=bins,density=True)
         bin_centResamp = (bin_edgesResamp[:-1] + bin_edgesResamp[1:]) / 2
 
         #histKS = scipy.stats.kstest(histResamp,histDef) # CHECK if ks-test can do hist heights?
@@ -200,7 +205,7 @@ def ksTest():
         plt.plot(bin_centDef_smooth,histDef_smooth,color='red',label="lambda_1")
         plt.plot(bin_centResamp_smooth,histResamp_smooth,color='blue',label="resampled")
         plt.vlines(rawKS.statistic_location,ymin=0,ymax=max([max(histDef),max(histResamp),max(histDef_smooth),max(histResamp_smooth)]),label="sign:{}".format(rawKS.statistic_sign),color="black")
-        plt.xlim(0,2)
+        plt.xlim(rawKS.statistic_location-1,rawKS.statistic_location+1)
         plt.legend()
         plt.xlabel("Lambda 1")
         plt.title("ks:{:.2f}, p:{}".format(rawKS[0],rawKS[1]))

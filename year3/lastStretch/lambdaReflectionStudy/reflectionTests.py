@@ -2,7 +2,6 @@ import json
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy
-from GWXtreme import eos_model_selection as ems
 import scipy.stats
 from scipy.interpolate import make_interp_spline
 from sklearn.neighbors import KernelDensity
@@ -14,12 +13,14 @@ filename = "../files/NSBH/gw230529_phenom_lowSpin.json"
 with open(filename,"r") as f: data = json.load(f)['posterior']['content']
 
 logq=True
-modsel = ems.Model_selection(filename,kdedim=3,logq=logq) #uncomment later
-margPostData = modsel.margPostData #uncomment later
+load=True
+if load!=True: 
+    from GWXtreme import eos_model_selection as ems
+    modsel = ems.Model_selection(filename,kdedim=3,logq=logq) #uncomment later
+    margPostData = modsel.margPostData #uncomment later
 
 Tag = "q"
-if logq==True:
-    Tag = "logq"
+if logq: Tag = "logq"
 
 def method12():
     # One is simply using the resample logic on GWXtreme
@@ -133,73 +134,72 @@ def twoD_kdeTest():
     plt.savefig("GW170817_LambdaT_test.png")
 
 
-def ksTest(plot=False):
+def ksTest():
     # Use Kolmogorov-Smirnov test to get a quantitative value for the discrepancy
     # between the two histograms for method12.
 
-    Lambda_1 = margPostData[:,0]
-    kde = modsel.kde
-    yhigh = modsel.yhigh
-    logq = modsel.logq
-    logyhigh = modsel.logyhigh
+    if load != True: # Requires older python/scipy version :)
+        Lambda_1 = margPostData[:,0]
+        kde = modsel.kde
+        yhigh = modsel.yhigh
+        logq = modsel.logq
+        logyhigh = modsel.logyhigh
 
-    # logic from get_trials() that gets you "synthetic" data
-    new_margPostData = np.array([])
-    counter = 0
-    while len(new_margPostData) < len(margPostData):
-        prune_adjust_factor = 1.1 + counter/10.
-        N_resample = int(len(margPostData)*prune_adjust_factor)
-        new_margPostData = kde.resample(size=N_resample).T
-        unphysical = (new_margPostData[:, 0] < 0) +\
-                     (new_margPostData[:, 1] > (yhigh if not logq else logyhigh) )
-        if not logq: unphysical + (new_margPostData[:, 1] < 0)
-        else: pass
-        new_margPostData = new_margPostData[~unphysical]
-        counter += 1
-    indices = np.arange(len(new_margPostData))
-    chosen = np.random.choice(indices, len(margPostData))
-    new_margPostData = new_margPostData[chosen]
+        # logic from get_trials() that gets you "synthetic" data
+        new_margPostData = np.array([])
+        counter = 0
+        while len(new_margPostData) < len(margPostData):
+            prune_adjust_factor = 1.1 + counter/10.
+            N_resample = int(len(margPostData)*prune_adjust_factor)
+            new_margPostData = kde.resample(size=N_resample).T
+            unphysical = (new_margPostData[:, 0] < 0) +\
+                         (new_margPostData[:, 1] > (yhigh if not logq else logyhigh) )
+            if not logq: unphysical + (new_margPostData[:, 1] < 0)
+            else: pass
+            new_margPostData = new_margPostData[~unphysical]
+            counter += 1
+        indices = np.arange(len(new_margPostData))
+        chosen = np.random.choice(indices, len(margPostData))
+        new_margPostData = new_margPostData[chosen]
 
-    # parameter we care about for this study
-    resampledLambda1 = new_margPostData[:,0]
+        # parameter we care about for this study
+        resampledLambda1 = new_margPostData[:,0]
+        np.savetxt("resampleL_L_samples.txt",np.array([resampledLambda1,Lambda_1]).T)
 
+    else: # Requires recent python/scipy version :)
+        resampledLambda1, Lambda_1 = np.loadtxt("./resampleL_L_samples.txt").T
+        # Perform ks-test between the distributions' values
+        rawKS = scipy.stats.ks_2samp(resampledLambda1,Lambda_1)
 
-    # Perform ks-test between the distributions' values
-    rawKS = scipy.stats.ks_2samp(resampledLambda1,Lambda_1)
+        # The below would only be necessary for a "homemade" ks-test script
+        # Perform ks-test between the distributions' hist heights
+        histDef, bin_edgesDef = np.histogram(Lambda_1,bins=80,density=True)
+        bin_centDef = (bin_edgesDef[:-1] + bin_edgesDef[1:]) / 2
 
-    # The below would only be necessary for a "homemade" ks-test script
-    # Perform ks-test between the distributions' hist heights
-    histDef, bin_edgesDef = np.histogram(Lambda_1,bins=80,density=True)
-    bin_centDef = (bin_edgesDef[:-1] + bin_edgesDef[1:]) / 2
+        histResamp, bin_edgesResamp = np.histogram(resampledLambda1,bins=80,density=True)
+        bin_centResamp = (bin_edgesResamp[:-1] + bin_edgesResamp[1:]) / 2
 
-    histResamp, bin_edgesResamp = np.histogram(resampledLambda1,bins=80,density=True)
-    bin_centResamp = (bin_edgesResamp[:-1] + bin_edgesResamp[1:]) / 2
+        #histKS = scipy.stats.kstest(histResamp,histDef) # CHECK if ks-test can do hist heights?
+        # PROB NOT
 
-    #histKS = scipy.stats.kstest(histResamp,histDef) # CHECK if ks-test can do hist heights?
-    # PROB NOT
+        # Perform ks-test between the distributions' hists' smoothed out (spline)
+        bin_centDef_smooth = np.linspace(bin_centDef.min(), bin_centDef.max(), 1000)
+        splDef = make_interp_spline(bin_centDef, histDef, k=3) # CHECK what is k?
+        histDef_smooth = splDef(bin_centDef_smooth)
 
-    # Perform ks-test between the distributions' hists' smoothed out (spline)
-    bin_centDef_smooth = np.linspace(bin_centDef.min(), bin_centDef.max(), 1000)
-    splDef = make_interp_spline(bin_centDef, histDef, k=3) # CHECK what is k?
-    histDef_smooth = splDef(bin_centDef_smooth)
+        bin_centResamp_smooth = np.linspace(bin_centResamp.min(), bin_centResamp.max(), 1000)
+        splResamp = make_interp_spline(bin_centResamp, histResamp, k=3)
+        histResamp_smooth = splResamp(bin_centResamp_smooth)
 
-    bin_centResamp_smooth = np.linspace(bin_centResamp.min(), bin_centResamp.max(), 1000)
-    splResamp = make_interp_spline(bin_centResamp, histResamp, k=3)
-    histResamp_smooth = splResamp(bin_centResamp_smooth)
+        #splineKS = scipy.stats.kstest(histResamp_smooth,histDef_smooth) # CHECK if ks-test can do hist splines??
+        # PROB NOT
 
-    #splineKS = scipy.stats.kstest(histResamp_smooth,histDef_smooth) # CHECK if ks-test can do hist splines??
-    # PROB NOT
-
-    print("raw dist ks: {}".format(rawKS))
-    #print("dist hist ks: {}".format(histKS))
-    #print("dist spline ks: {}".format(splineKS))
-
-    if plot:
         plt.clf()
         plt.bar(bin_edgesDef[:-1],histDef,width=np.diff(bin_edgesDef),align='edge',color='red',alpha=0.25)
         plt.bar(bin_edgesResamp[:-1],histResamp,width=np.diff(bin_edgesResamp),align='edge',color='blue',alpha=0.25)
         plt.plot(bin_centDef_smooth,histDef_smooth,color='red',label="lambda_1")
         plt.plot(bin_centResamp_smooth,histResamp_smooth,color='blue',label="resampled")
+        plt.vlines(rawKS.statistic_location,ymin=0,ymax=max([max(histDef),max(histResamp),max(histDef_smooth),max(histResamp_smooth)]),label="sign:{}".format(rawKS.statistic_sign))
         plt.legend()
         plt.xlabel("log10(Lambda 1)")
         plt.title("ks:{:.2f}, p:{}".format(rawKS[0],rawKS[1]))

@@ -199,9 +199,10 @@ def ksTest():
         plt.bar(bin_edgesResamp[:-1],histResamp,width=np.diff(bin_edgesResamp),align='edge',color='blue',alpha=0.25)
         plt.plot(bin_centDef_smooth,histDef_smooth,color='red',label="lambda_1")
         plt.plot(bin_centResamp_smooth,histResamp_smooth,color='blue',label="resampled")
-        plt.vlines(rawKS.statistic_location,ymin=0,ymax=max([max(histDef),max(histResamp),max(histDef_smooth),max(histResamp_smooth)]),label="sign:{}".format(rawKS.statistic_sign))
+        plt.vlines(rawKS.statistic_location,ymin=0,ymax=max([max(histDef),max(histResamp),max(histDef_smooth),max(histResamp_smooth)]),label="sign:{}".format(rawKS.statistic_sign),color="black")
+        plt.xlim(0,2)
         plt.legend()
-        plt.xlabel("log10(Lambda 1)")
+        plt.xlabel("Lambda 1")
         plt.title("ks:{:.2f}, p:{}".format(rawKS[0],rawKS[1]))
         plt.savefig("{}_spline_method12.png".format(Tag))
 
